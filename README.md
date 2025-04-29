@@ -12,15 +12,15 @@
 - RoomDB (SQLite)
 - GitHub 협업 (Organization 기반 브랜치 전략)
 
-## 🧵 브랜치 설명
-'develop' 모든 기능이 통합되는 브랜치. 테스트 완료 후 `main`으로 병합 예정 
-`feature/login` 로그인 기능 구현 (UI 및 인증 로직 포함) 
-`feature/api-setup`  Google Gemini API 연동 기본 설정 및 테스트 
-`feature/db-connection`  RoomDB를 통한 데이터베이스 연결 및 구조 구축 
-`feature/dream-input`  사용자가 꿈 내용을 입력하는 기능 개발 
-`feature/dream-analysis`  입력된 꿈 내용을 Gemini API로 해석하는 기능 구현 
-`feature/dream-visualization`  해석 결과를 시각적으로 출력하는 화면 개발 
-`feature/dream-list`  저장된 꿈 목록을 불러오고, 날짜별 정렬 등 UI 구현 
-`feature/dream-delete`  꿈 기록 삭제 기능 구현
-`feature/integration-test`  전체 기능 통합 테스트 및 오류 수정 전담 브랜치 
+##  브랜치 설명
+'develop' 모든 기능이 통합되는 브랜치. 테스트 완료 후 `main`으로 병합 예정<br>
+`feature/login` 로그인 기능 구현 (UI 및 인증 로직 포함) <br>
+`feature/api-setup`  Google Gemini API 연동 기본 설정 및 테스트 <br>
+`feature/db-connection`  RoomDB를 통한 데이터베이스 연결 및 구조 구축 <br>
+`feature/dream-input`  사용자가 꿈 내용을 입력하는 기능 개발 <br>
+`feature/dream-analysis`  입력된 꿈 내용을 Gemini API로 해석하는 기능 구현 <br>
+`feature/dream-visualization`  해석 결과를 시각적으로 출력하는 화면 개발 <br>
+`feature/dream-list`  저장된 꿈 목록을 불러오고, 날짜별 정렬 등 UI 구현 <br>
+`feature/dream-delete`  꿈 기록 삭제 기능 구현<br>
+`feature/integration-test`  전체 기능 통합 테스트 및 오류 수정 전담 브랜치 <br>
 `feature/ui-ux-improvement`  전체 앱의 UI/UX 개선 작업

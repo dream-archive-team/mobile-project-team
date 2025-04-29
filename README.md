@@ -7,7 +7,7 @@
 이 앱은 꿈을 창작 자원으로 활용하여 개인의 상상력과 창의력을 자극하고, 동시에 꿈의 의미를 확장하는 것을 목표로 한다.
 
 # 사용 기술
-- 개발 언어: Java, XML
+- 개발 언어: Java
 - 플랫폼: Android Studio
 - API 연동: Google Gemini API
 - 데이터베이스: RoomDB (SQLite 기반)

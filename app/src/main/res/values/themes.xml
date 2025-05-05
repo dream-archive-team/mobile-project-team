@@ -5,5 +5,5 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.MobileTeamApp" parent="Base.Theme.MobileTeamApp" />
+    <style name="Theme.MobileTeamApp" parent='Theme.AppCompat.Light'/>
 </resources>

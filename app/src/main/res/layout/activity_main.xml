@@ -6,17 +6,12 @@
     android:layout_height="match_parent"
     android:background="#F7F7F7">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:layout_centerInParent="true" />
 
     <EditText
         android:id="@+id/id_editT"
         android:layout_width="341dp"
         android:layout_height="49dp"
-        android:layout_marginTop="257dp"
+        android:layout_marginTop="240dp"
         android:layout_centerHorizontal="true"
         android:paddingStart="16dp"
         android:hint="이메일을 입력하세요."
@@ -26,7 +21,7 @@
         android:id="@+id/passward_editT"
         android:layout_width="341dp"
         android:layout_height="49dp"
-        android:layout_marginTop="329dp"
+        android:layout_marginTop="300dp"
         android:layout_centerHorizontal="true"
         android:paddingStart="16dp"
         android:hint="비밀번호를 입력하세요."
@@ -36,17 +31,27 @@
         android:id="@+id/B_login"
         android:layout_width="341dp"
         android:layout_height="65dp"
-        android:layout_marginTop="434dp"
+        android:layout_marginTop="380dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/rounded_login"
         android:text="로그인"
         android:textColor="@android:color/white"/>
 
     <Button
+        android:id="@+id/new_member_log"
+        android:layout_width="341dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="480dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/rounded_edittext"
+        android:text="회원가입"
+        android:textStyle="bold"/>
+
+    <Button
         android:id="@+id/B_member_kakao"
         android:layout_width="341dp"
         android:layout_height="49dp"
-        android:layout_marginTop="510dp"
+        android:layout_marginTop="540dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/rounded_edittext"
         android:text="카카오를 통한 회원가입"

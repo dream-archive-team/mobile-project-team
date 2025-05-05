@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 선택된 상태: 브이 아이콘 표시 -->
+    <item android:state_checked="true" android:drawable="@drawable/radio_square_checked" />
+    <!-- 비선택 상태: 빈 네모 -->
+    <item android:drawable="@drawable/radio_square_unchecked" />
+</selector>

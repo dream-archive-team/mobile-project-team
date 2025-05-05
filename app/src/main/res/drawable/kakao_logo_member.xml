@@ -1,0 +1,11 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- 여기에 카카오 로고에 해당하는 path 데이터를 넣으세요 -->
+    <!-- 아래는 예시 도형입니다. 실제 카카오 로고의 SVG 데이터를 넣어야 정확함 -->
+    <path
+        android:fillColor="#3C1E1E"
+        android:pathData="M12,2C6.48,2 2,5.58 2,10c0,2.08 1.06,3.96 2.81,5.35L4,22l5.28-3.24c0.87,0.17 1.77,0.26 2.72,0.26 5.52,0 10-3.58 10-8s-4.48-8 -10-8z"/>
+</vector>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RadioGroup
+        android:id="@+id/category_radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="45dp"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true">
+
+
+        <RadioButton
+            android:id="@+id/radio_category1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:layout_marginRight="15dp"
+            android:text="기쁨"
+            android:button="@drawable/radio_square_selector" />
+
+        <RadioButton
+            android:id="@+id/radio_category2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:layout_marginRight="15dp"
+            android:text="슬픔"
+            android:button="@drawable/radio_square_selector" />
+
+        <RadioButton
+            android:id="@+id/radio_category3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:layout_marginRight="15dp"
+            android:text="놀람"
+            android:button="@drawable/radio_square_selector" />
+
+        <RadioButton
+            android:id="@+id/radio_category4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:layout_marginRight="15dp"
+            android:text="불안"
+            android:button="@drawable/radio_square_selector" />
+
+        <RadioButton
+            android:id="@+id/radio_category5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:text="분노"
+            android:button="@drawable/radio_square_selector" />
+
+    </RadioGroup>
+
+    <View
+        android:layout_width="320dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="16dp"
+        android:background="#000000"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

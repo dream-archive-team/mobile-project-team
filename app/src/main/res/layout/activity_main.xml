@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7F7F7"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:layout_width="341dp"
+        android:layout_height="49dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="257dp"
+        android:paddingStart="16dp"
+        android:hint="이메일을 입력하세요."
+        android:id="@+id/id_editT"
+        android:background="@drawable/rounded_edittext"/>
+
+
+
+
+    <EditText
+        android:layout_width="341dp"
+        android:layout_height="49dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="329dp"
+        android:paddingStart="16dp"
+        android:hint="비밀번호를 입력하세요."
+        android:id="@+id/passward_editT"
+        android:background="@drawable/rounded_edittext"/>
+
+    <Button
+        android:layout_width="341dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="434dp"
+        android:id="@+id/B_login"
+        android:background="@drawable/rounded_button_login"
+        android:text="로그인"
+        android:textSize="15dp"
+        android:textColor="@android:color/white"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="341dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="510dp"
+        android:id="@+id/B_member_kakao"
+        android:background="@drawable/rounded_edittext"
+        android:text="카카오를 통한 회원가입"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true" />
+
+
+
+
+</RelativeLayout>

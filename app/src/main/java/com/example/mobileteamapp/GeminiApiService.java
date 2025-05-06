@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import androidx.annotation.NonNull;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -15,6 +16,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Gemini API 호출을 담당하는 서비스 클래스
@@ -79,20 +81,26 @@ public class GeminiApiService {
         // ➐ 비동기 호출 실행
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 // 요청 실패 시 에러 로그
                 Log.e("GeminiAPI", "API 요청 실패: " + e.getMessage(), e);
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 // ➑ 응답 상태 코드 확인
                 if (!response.isSuccessful()) {
                     Log.e("GeminiAPI", "응답 오류: " + response.code());
                     return;
                 }
-                // ➒ 응답 본문을 문자열로 읽어 로그에 출력
-                String result = response.body().string();
+
+                // ➒ 응답 본문을 안전하게 null 체크 후 문자열로 읽어 로그에 출력
+                ResponseBody responseBody = response.body();
+                if (responseBody == null) {
+                    Log.e("GeminiAPI", "응답 본문이 없습니다.");
+                    return;
+                }
+                String result = responseBody.string();
                 Log.d("GeminiAPI", "응답 성공: " + result);
             }
         });

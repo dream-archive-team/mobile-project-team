@@ -1,3 +1,14 @@
+import java.util.Properties
+
+// 프로젝트 루트의 local.properties 읽어오기
+val localProps = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.inputStream().use { load(it) }
+    }
+}
+
+
 plugins {
     id("com.android.application")
 }
@@ -22,10 +33,13 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "GEMINI_API_KEY", "\"${project.properties["GEMINI_API_KEY"]}\"")
+            // 여기서 직접 localProps 에서 꺼내 쓰기
+            val apiKey = localProps.getProperty("GEMINI_API_KEY")
+            buildConfigField("String", "GEMINI_API_KEY", "\"$apiKey\"")
         }
         release {
-            buildConfigField("String", "GEMINI_API_KEY", "\"${project.properties["GEMINI_API_KEY"]}\"")
+            val apiKey = localProps.getProperty("GEMINI_API_KEY")
+            buildConfigField("String", "GEMINI_API_KEY", "\"$apiKey\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

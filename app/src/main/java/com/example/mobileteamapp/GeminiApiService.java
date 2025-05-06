@@ -1,7 +1,6 @@
 package com.example.mobileteamapp;
 
 import android.util.Log;
-import com.example.mobileteamapp.BuildConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -3,6 +3,8 @@
     android:layout_width="410dp"
     android:layout_height="730dp"
     android:background="@android:color/white">
+
+    <!--간편 로그인 없이 회원가입하는 창-->
     <TextView
         android:id="@+id/signup_title"
         android:layout_width="wrap_content"
@@ -105,7 +107,7 @@
         android:hint="이메일을 입력하시오."
         android:paddingStart="14dp" />
 
-    <Button
+    <android.widget.Button
         android:layout_width="341dp"
         android:layout_height="49dp"
         android:text="다음 단계로~"

@@ -5,6 +5,7 @@
     android:background="@android:color/white">
     <!--회원가입 후 프로필 설정 창-->
 
+
     <View
         android:layout_width="355dp"
         android:layout_height="490dp"

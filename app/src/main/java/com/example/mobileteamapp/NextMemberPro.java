@@ -21,7 +21,7 @@ public class NextMemberPro extends AppCompatActivity {
 
         boolean loginSuccess = getIntent().getBooleanExtra("login_success", false);
         if (loginSuccess) {
-            Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "회원가입 성공!", Toast.LENGTH_SHORT).show();
         }
 
         spinnerYear = findViewById(R.id.spinner_year);

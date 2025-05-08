@@ -1,19 +1,14 @@
 package com.example.mobileteamapp;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-public class NewMemberActivity extends AppCompatActivity {
-
-    private String signupMethod;
+public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_member); // new_member.xml로 연결
-
+        // home.xml 레이아웃을 연결
+        setContentView(R.layout.home);  // home.xml을 레이아웃으로 설정
     }
 }

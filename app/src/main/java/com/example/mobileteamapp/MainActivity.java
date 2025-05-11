@@ -13,9 +13,6 @@ import com.kakao.sdk.auth.model.OAuthToken;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText emailEditText;
-    private EditText passwordEditText;
-    private Button loginButton;
     private Button kakaoLoginButton;
 
     @Override

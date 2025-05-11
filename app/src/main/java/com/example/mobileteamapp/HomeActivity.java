@@ -10,5 +10,6 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // home.xml 레이아웃을 연결
         setContentView(R.layout.home);  // home.xml을 레이아웃으로 설정
+
     }
 }

@@ -10,10 +10,9 @@
 - Android (Java)
 - Google Gemini API
 - RoomDB (SQLite)
-- GitHub 협업 (Organization 기반 브랜치 전략)
+- GitHub 협업
 
 ##  브랜치 설명
-'develop' 모든 기능이 통합되는 브랜치. 테스트 완료 후 `main`으로 병합 예정<br>
 `feature/login` 로그인 기능 구현 (UI 및 인증 로직 포함) <br>
 `feature/api-setup`  Google Gemini API 연동 기본 설정 및 테스트 <br>
 `feature/db-connection`  RoomDB를 통한 데이터베이스 연결 및 구조 구축 <br>

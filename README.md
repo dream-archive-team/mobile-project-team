@@ -23,3 +23,13 @@
 `feature/dream-delete`  꿈 기록 삭제 기능 구현<br>
 `feature/integration-test`  전체 기능 통합 테스트 및 오류 수정 전담 브랜치 <br>
 `feature/ui-ux-improvement`  전체 앱의 UI/UX 개선 작업
+
+### DB폴더 설명
+* MVVM 아키텍처 패턴 구조
+* 실제 기능 구현 시 viewmodel을 통해 데이터 처리와 기능을 구현
+* 전체적인 흐름 : entity → DAO → Repository → ViewModel → View
+- entity : 테이블 구조 정의
+- dao : 테이블에 대해 삽입 / 수정 / 삭제 / 조회 작업을 할 수 있게 해주는 인터페이스
+- database : entity와 dao를 가지고 Room db 생성 및 관리
+- repository : viewModel에게 전달할 데이터를 db에서 가져오는 역할
+- viewModel : Repository에서 데이터를 받아와서 UI에 (LiveData로)전달

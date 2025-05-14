@@ -15,6 +15,7 @@
         android:theme="@style/Theme.Material3.DayNight.NoActionBar"
         tools:targetApi="31">
         <activity
+
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -22,6 +23,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity android:name=".HomeActivity" />
         <activity
@@ -31,7 +33,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="kakaoa42806eea21cfe350b5719b8f3b8c288" android:host="oauth" />
+                <data android:scheme="kakaoe8f94e864e70780a25634db61c246de0" android:host="oauth" />
             </intent-filter>
         </activity>
 

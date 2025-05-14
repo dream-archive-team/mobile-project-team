@@ -8,7 +8,7 @@ public class NativeKakaoSdk extends Application {
     public void onCreate() {
         super.onCreate();
         // Kakao SDK 초기화
-        KakaoSdk.init(this, "a42806eea21cfe350b5719b8f3b8c288");
+        KakaoSdk.init(this, "e8f94e864e70780a25634db61c246de0");
 
     }
 }

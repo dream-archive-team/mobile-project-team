@@ -1,0 +1,34 @@
+package com.example.mobileteamapp.dao;
+
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Update;
+
+import com.example.mobileteamapp.entity.Novel;
+
+import java.util.List;
+
+@Dao
+public interface NovelDao {
+
+    @Insert
+    void insert(Novel novel);
+
+    @Update
+    void update(Novel novel);
+
+    @Delete
+    void delete(Novel novel);
+
+    @Query("SELECT * FROM novel")
+    LiveData<List<Novel>> getAllNovels();
+
+    @Query("SELECT * FROM novel WHERE novel_id = :id")
+    Novel getNovelById(String id);
+
+    @Query("SELECT * FROM novel WHERE dream_id = :dreamId")
+    List<Novel> getNovelsByDreamId(String dreamId);
+}

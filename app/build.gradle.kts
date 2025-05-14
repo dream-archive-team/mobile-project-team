@@ -33,6 +33,13 @@ android {
     dependencies {
         implementation("com.google.android.material:material:1.6.1" )
         implementation("com.kakao.sdk:v2-user:2.15.0")
+        implementation("com.kakao.sdk:v2-auth:2.15.0")
+
+        // Room 라이브러리
+        implementation("androidx.room:room-runtime:2.6.1")
+        annotationProcessor("androidx.room:room-compiler:2.6.1")
+
+
         // 필요한 다른 라이브러리도 여기에 추가
     }
 }

@@ -3,6 +3,8 @@ package com.example.mobileteamapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.TextView;
 
@@ -18,6 +20,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private String memberId;
     private MemberViewModel memberViewModel;
+    private Button buttonGoToDiary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +52,25 @@ public class HomeActivity extends AppCompatActivity {
                 // 날짜 문자열 생성 (선택사항)
                 String date = year + "/" + (month + 1) + "/" + dayOfMonth;
 
-                Intent intent = new Intent(HomeActivity.this, dream_look_screen_Activity_1.class);
-                intent.putExtra("year", year);
-                intent.putExtra("month", month + 1);  // 월은 0부터 시작하므로 +1
-                intent.putExtra("day", dayOfMonth);
+                Intent intent = new Intent(HomeActivity.this, DiaryActivity.class);
+                intent.putExtra("member_id", getIntent().getStringExtra("member_id")); // MainActivity에서 받은 member_id를 그대로 전달
+                startActivity(intent);
+
+
+            }
+        });
+
+        // 메인페이지 -> 꿈 일기 작성 화면 이동 버튼
+        buttonGoToDiary = findViewById(R.id.buttonGoToDiary);
+
+        buttonGoToDiary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, DiaryActivity.class);
+                intent.putExtra("member_id", memberId); // ← memberId 전달
                 startActivity(intent);
             }
         });
+
     }
 }

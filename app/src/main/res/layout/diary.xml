@@ -10,7 +10,7 @@
         android:id="@+id/tvDreamPrompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="오늘 꾼 꿈은 무엇인가요?"
+        android:text="@string/button_label_8"
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_marginBottom="8dp" />
@@ -22,16 +22,17 @@
         android:layout_weight="1"
         android:gravity="top"
         android:background="@android:drawable/editbox_background"
-        android:hint="꿈을 입력하세요"
+        android:hint="@string/button_label_7"
         android:inputType="textMultiLine"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:autofillHints="username"/>
 
     <!-- 해몽 결과 -->
     <TextView
         android:id="@+id/tvAnalysisLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="<꿈 분석 내용>"
+        android:text="@string/button_label_6"
         android:textStyle="bold"
         android:layout_marginBottom="8dp" />
 
@@ -54,19 +55,19 @@
         android:weightSum="2"
         android:gravity="center">
 
-        <Button
+        <android.widget.Button
             android:id="@+id/btnAnalyze"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="꿈 분석 내용 확인" />
+            android:text="@string/button_label_5" />
 
-        <Button
+        <android.widget.Button
             android:id="@+id/btnGenerateStory"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="소설 생성"
+            android:text="@string/button_label_4"
             android:layout_marginStart="8dp" />
     </LinearLayout>
 

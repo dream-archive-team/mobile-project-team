@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- 꿈 입력 -->
+    <TextView
+        android:id="@+id/tvDreamPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="오늘 꾼 꿈은 무엇인가요?"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/etDreamInput"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top"
+        android:background="@android:drawable/editbox_background"
+        android:hint="꿈을 입력하세요"
+        android:inputType="textMultiLine"
+        android:layout_marginBottom="16dp" />
+
+    <!-- 해몽 결과 -->
+    <TextView
+        android:id="@+id/tvAnalysisLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="<꿈 분석 내용>"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tvDreamAnalysis"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#EEEEEE"
+        android:padding="8dp"
+        android:text=""
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- 버튼들 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnAnalyze"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="꿈 분석 내용 확인" />
+
+        <Button
+            android:id="@+id/btnGenerateStory"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="소설 생성"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+</LinearLayout>

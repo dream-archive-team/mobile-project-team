@@ -6,10 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import androidx.annotation.NonNull;
 
+import androidx.annotation.NonNull;
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -21,86 +20,95 @@ import okhttp3.ResponseBody;
  * Gemini API 호출을 담당하는 서비스 클래스
  */
 public class GeminiApiService {
-    // ➊ 요청할 Gemini API 엔드포인트 URL 상수
+    // ➊ Gemini API 엔드포인트 URL (키는 뒤에 붙여서 사용)
     private static final String BASE_URL =
-            // 모델 이름과 엔드포인트 경로, 뒤에 키를 붙여 사용
             "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=";
 
-    // ➋ OkHttp 클라이언트 인스턴스 생성
+    // ➋ 영어 시스템 프롬프트(영어가 더 좋은 해석 결과를 제공함) + “응답은 한국어로만”
+    private static final String SYSTEM_PROMPT =
+            "You are a creative novelist and an expert in psychological analysis. "
+                    + "When you hear the user’s dream, delve into its symbols and emotions, "
+                    +"interpret it in a richly narrative style, respond only in Korean without any English translation or additional languages, "
+                    + "limit your response to 1500 characters, "
+                    + "and focus solely on analyzing the dream content provided—do not ask any clarifying or follow-up questions."
+                    + "and conclude with a warm, uplifting sentence that leaves the user feeling encouraged and hopeful.";
+
+
+    // ➌ OkHttpClient 인스턴스
     private final OkHttpClient client = new OkHttpClient();
 
+    /** 콜백 인터페이스 정의 */
+    public interface Callback {
+        void onSuccess(String result);
+        void onFailure(String errorMsg);
+    }
+
     /**
-     * Gemini에 지정된 텍스트(userInput)를 보내고, 결과를 로그로 출력
+     * 꿈 텍스트를 보내고, 해석 결과(JSON)를 콜백으로 전달
      *
-     * @param userInput 꿈 내용 등 요청할 텍스트
+     * @param userInput 사용자 꿈 텍스트
+     * @param callback  결과 콜백
      */
-    public void requestGemini(String userInput) {
-        // ➌ API 키를 붙여 최종 URL 생성
+    public void requestGemini(String userInput, Callback callback) {
         String apiUrl = BASE_URL + BuildConfig.GEMINI_API_KEY;
 
-        // ➍ 요청 바디용 JSON 객체 생성
         JSONObject json = new JSONObject();
         try {
-            //     ① 텍스트 부분 생성
-            JSONObject part = new JSONObject();
-            part.put("text", userInput);
+            // 시스템 프롬프트 + 사용자 입력을 하나의 text로 합침
+            String combined = SYSTEM_PROMPT
+                    + "\n\nUser Dream:\n"
+                    + userInput;
 
-            //     ② parts 배열에 추가
+            JSONObject part = new JSONObject();
+            part.put("text", combined);
+
             JSONArray parts = new JSONArray();
             parts.put(part);
 
-            //     ③ content 객체에 parts만 담음 (role 필드 불필요)
             JSONObject content = new JSONObject();
             content.put("parts", parts);
 
-            //     ④ contents 배열에 content 객체 추가
             JSONArray contents = new JSONArray();
             contents.put(content);
 
-            //     ⑤ 최종 JSON 구조에 담기
             json.put("contents", contents);
+
         } catch (Exception e) {
-            // JSON 생성 중 오류 발생 시 로그 출력 후 메서드 종료
             Log.e("GeminiAPI", "JSON 생성 오류", e);
+            callback.onFailure("JSON 생성 오류");
             return;
         }
 
-        // ➎ 생성된 JSON 문자열을 요청 바디로 변환
         RequestBody body = RequestBody.create(
                 json.toString(),
                 MediaType.get("application/json; charset=utf-8")
         );
 
-        // ➏ HTTP POST 요청 빌드
         Request request = new Request.Builder()
                 .url(apiUrl)
                 .post(body)
                 .build();
 
-        // ➐ 비동기 호출 실행
-        client.newCall(request).enqueue(new Callback() {
+        client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                // 요청 실패 시 에러 로그
-                Log.e("GeminiAPI", "API 요청 실패: " + e.getMessage(), e);
+                callback.onFailure(e.getMessage());
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                // ➑ 응답 상태 코드 확인
                 if (!response.isSuccessful()) {
-                    Log.e("GeminiAPI", "응답 오류: " + response.code());
+                    String err = response.body() != null ? response.body().string() : "no body";
+                    callback.onFailure("Error " + response.code() + ": " + err);
                     return;
                 }
-
-                // ➒ 응답 본문을 안전하게 null 체크 후 문자열로 읽어 로그에 출력
                 ResponseBody responseBody = response.body();
                 if (responseBody == null) {
-                    Log.e("GeminiAPI", "응답 본문이 없습니다.");
+                    callback.onFailure("응답 본문이 없습니다.");
                     return;
                 }
                 String result = responseBody.string();
-                Log.d("GeminiAPI", "응답 성공: " + result);
+                callback.onSuccess(result);
             }
         });
     }

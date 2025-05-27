@@ -104,7 +104,7 @@ public class DiaryActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         fullText = "파싱 오류: " + e.getMessage();
                     }
-
+                    /*
                     // 1000자 제한 + 줄바꿈 삽입
                     StringBuilder sb = new StringBuilder();
                     int nonWsCount = 0;
@@ -116,10 +116,15 @@ public class DiaryActivity extends AppCompatActivity {
                         }
                     }
                     String trimmed = sb.toString();
+
                     String formatted = trimmed
                             .replaceAll("([.!?])\\s+", "$1\n\n")
                             .replaceAll("\\n{3,}", "\n\n");
 
+                     */
+                    String formatted = fullText
+                            .replaceAll("([.!?])\\s+", "$1\n\n")
+                            .replaceAll("\\n{3,}", "\n\n");
                     runOnUiThread(() -> tvDreamAnalysis.setText(formatted));
                 }
 

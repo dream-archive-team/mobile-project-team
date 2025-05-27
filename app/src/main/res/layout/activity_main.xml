@@ -1,79 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="#FFFFFF">
+    android:background="#F7F7F7">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <!-- 1. 꿈 일기 레이블 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="오늘 꾼 꿈은 무엇인가요?"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="4dp"/>
-
-        <!-- 2. 꿈 일기 입력 박스 -->
-        <EditText
-            android:id="@+id/etDiary"
-            android:layout_width="match_parent"
-            android:layout_height="280dp"
-            android:background="@drawable/box_bg"
-            android:gravity="top"
-            android:inputType="textMultiLine"
-            android:padding="8dp"
-            android:overScrollMode="always"
-            android:scrollbars="vertical"/>
-
-        <!-- 3. 해석 요청 버튼 -->
-        <Button
-            android:id="@+id/btnAnalyze"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="꿈 분석 내용 확인"
-            android:layout_marginTop="12dp"
-            android:layout_gravity="center_horizontal"/>
-
-        <!-- 4. 구분 여백 -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="16dp"/>
-
-        <!-- 5. 꿈 분석 레이블 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="꿈 분석 내용"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="4dp"/>
-
-        <!-- 6. 꿈 분석 결과 출력 박스 (inner ScrollView) -->
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="280dp"
-            android:background="@drawable/box_bg"
-            android:overScrollMode="always"
-            android:scrollbars="vertical"
-            android:nestedScrollingEnabled="true">
-
-            <TextView
-                android:id="@+id/tvAnalysis"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="여기에 Gemini API 해석 결과가 표시됩니다."
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#000000"/>
-        </ScrollView>
-
-    </LinearLayout>
-</ScrollView>
+    <android.widget.Button
+        android:id="@+id/B_member_kakao"
+        android:layout_width="341dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="350dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/rounded_edittext"
+        android:text="@string/button_label_3"
+        android:textStyle="bold"/>
+</RelativeLayout>

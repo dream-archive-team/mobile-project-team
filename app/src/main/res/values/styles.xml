@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.MobileTeamApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- 여기에 추가적인 스타일 설정 -->
+    </style>
+</resources>

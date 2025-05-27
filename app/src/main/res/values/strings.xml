@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">MobileTeamApp</string>
+    <string name="button_label">장르별 소설 보러가기</string>
+    <string name="button_label_2">"오늘의 꿈 일기\n 작성하러가기"</string>
+    <string name="button_label_3">"카카오를 통한 회원가입"</string>
+    <string name="button_label_4">"소설 생성"</string>
+    <string name="button_label_5">"꿈 분석 내용 확인"</string>
+    <string name="button_label_6">"꿈 분석 내용"</string>
+    <string name="button_label_7">"꿈을 입력하세요"</string>
+    <string name="button_label_8">"오늘 꾼 꿈은 무엇인가요?"</string>
+
 </resources>

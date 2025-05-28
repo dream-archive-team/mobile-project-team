@@ -2,29 +2,34 @@
 
 모바일 프로그래밍 팀 프로젝트
 
-## Google Gemini API 연동 기본 설정 및 테스트<br>
+# 꿈 보관소 (Dream Archive)
+이 앱은 사용자가 자유롭게 꿈을 기록하면, AI가 꿈의 내용을 분석하여 그 의미를 해석하고, 이를 바탕으로 창작 소설을 자동으로 생성한다.
+사용자는 자신의 꿈을 새로운 시각으로 바라볼 수 있으며, 꿈이 흥미로운 이야기로 재구성되는 과정을 통해 기록을 넘어 창작의 즐거움을 경험할 수 있다.
+이 앱은 꿈을 창작 자원으로 활용하여 개인의 상상력과 창의력을 자극하고, 동시에 꿈의 의미를 확장하는 것을 목표로 한다.
 
-* API 키 발급 및 보안 설정<br>
-* API 요청 함수 기본 코드 작성<br>
-* API 실패 및 오류 처리 로직 작성
+## 기술 스택
+- Android (Java)
+- Google Gemini API
+- RoomDB (SQLite)
+- GitHub 협업
 
-## API 연동 및 API 키 보안설정 완료<br>
+##  브랜치 설명
+`feature/login` 로그인 기능 구현 (UI 및 인증 로직 포함) <br>
+`feature/api-setup`  Google Gemini API 연동 및 해석 결과 출력 <br>
+`feature/db-connection`  RoomDB를 통한 데이터베이스 연결 및 구조 구축 <br>
+`feature/dream-input`  사용자가 꿈 내용을 입력하는 기능 개발 <br>
+`feature/dream-visualization`  해석 결과를 시각적으로 출력하는 화면 개발 <br>
+`feature/dream-list`  저장된 꿈 목록을 불러오고, 날짜별 정렬 등 UI 구현 <br>
+`feature/dream-delete`  꿈 기록 삭제 기능 구현<br>
+`feature/integration-test`  전체 기능 통합 테스트 및 오류 수정 전담 브랜치 <br>
+`feature/ui-ux-improvement`  전체 앱의 UI/UX 개선 작업
 
-*`local.properties`를 사용해 API 키 보안 설정
-* LogCat에서 API 응답 성공 메시지 출력 확인
-
-## 꿈 분석 기능 구현 완료<br>
-
-* 시스템 프롬프트를 활용하여 꿈 분석 요청 구성:
-"You are a creative novelist and an expert in psychological analysis. "
-"Listen to the user’s dream and interpret its symbols and emotions in a richly narrative style. "
-"Respond only in Korean, use at least five sentences across multiple paragraphs, and do not ask any follow-up questions. "
-"Keep it concise—around 1,000 characters—and finish with a warm, encouraging sentence.";
-
-* 한국어 번역:
-  당신은 창의적인 소설가이자 심리 분석 전문가입니다.
-  사용자의 꿈을 듣고 상징과 감정을 서사적으로 해석하세요.
-  한국어로만 답하고, 여러 단락으로 다섯 문장 이상 작성하며 추가 질문은 하지 마세요.
-  간결하게—약 1,000자 내외—정리하고, 마지막엔 따뜻한 격려의 문장을 덧붙이세요.
-
-* 5월 27일 기준 main과 병합 테스트 완료
+### DB폴더 설명
+* MVVM 아키텍처 패턴 구조
+* 실제 기능 구현 시 viewmodel을 통해 데이터 처리와 기능을 구현
+* 전체적인 흐름 : entity → DAO → Repository → ViewModel → View
+- entity : 테이블 구조 정의
+- dao : 테이블에 대해 삽입 / 수정 / 삭제 / 조회 작업을 할 수 있게 해주는 인터페이스
+- database : entity와 dao를 가지고 Room db 생성 및 관리
+- repository : viewModel에게 전달할 데이터를 db에서 가져오는 역할
+- viewModel : Repository에서 데이터를 받아와서 UI에 (LiveData로)전달

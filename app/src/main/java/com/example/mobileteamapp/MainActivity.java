@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
+
 
 
 import com.example.mobileteamapp.entity.Member;
@@ -19,6 +21,10 @@ import com.kakao.sdk.auth.model.OAuthToken;
 
 // 카카오 로그인 기능
 public class MainActivity extends AppCompatActivity {
+    private EditText etDiary;
+    private Button btnAnalyze;
+    private TextView tvAnalysis;
+    private GeminiApiService service;
 
     private Button kakaoLoginButton;
     private MemberViewModel memberViewModel;
@@ -27,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         kakaoLoginButton = findViewById(R.id.B_member_kakao);
         memberViewModel = new ViewModelProvider(
@@ -116,4 +123,3 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
-

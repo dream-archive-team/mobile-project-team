@@ -25,6 +25,8 @@
             </intent-filter>
 
         </activity>
+        <activity android:name=".DreamBasedNovActivity" />
+        <activity android:name=".SelectNovGenreActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".DiaryActivity" />
         <activity android:name=".dream_look_screen_Activity_1" />

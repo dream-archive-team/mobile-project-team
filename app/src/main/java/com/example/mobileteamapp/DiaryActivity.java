@@ -1,5 +1,6 @@
 package com.example.mobileteamapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +32,7 @@ public class DiaryActivity extends AppCompatActivity {
 
         etDreamInput = findViewById(R.id.etDreamInput);
         Button btnAnalyze = findViewById(R.id.btnAnalyze);
+        Button btnGenerateStory = findViewById(R.id.btnGenerateStory);
 
         dreamViewModel = new ViewModelProvider(this).get(DreamViewModel.class);
 
@@ -78,12 +80,26 @@ public class DiaryActivity extends AppCompatActivity {
             }
 
         });
+
+        //소설 생성 버튼 클릭 시
+        btnGenerateStory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // DreamBasedNovActivity로 이동
+                Intent intent = new Intent(DiaryActivity.this, SelectNovGenreActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     // 현재 로그인한 사용자 ID를 가져오는 메서드
     private String getCurrentUserId() {
         return getIntent().getStringExtra("member_id");
     }
+
+
 
 
 

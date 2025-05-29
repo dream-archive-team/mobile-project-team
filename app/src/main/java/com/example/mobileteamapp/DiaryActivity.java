@@ -1,5 +1,6 @@
 package com.example.mobileteamapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +32,8 @@ public class DiaryActivity extends AppCompatActivity {
 
         etDreamInput = findViewById(R.id.etDreamInput);
         Button btnAnalyze = findViewById(R.id.btnAnalyze);
+        Button  btnGenerateStory= findViewById(R.id.btnGenerateStory);
+
 
         dreamViewModel = new ViewModelProvider(this).get(DreamViewModel.class);
 
@@ -77,6 +80,14 @@ public class DiaryActivity extends AppCompatActivity {
                 }
             }
 
+        });
+
+        btnGenerateStory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DiaryActivity.this, SelectNovGenreActivity.class);
+                startActivity(intent);
+            }
         });
     }
 

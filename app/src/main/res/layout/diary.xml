@@ -37,17 +37,21 @@
         android:textStyle="bold"
         android:layout_marginBottom="8dp" />
 
-    <TextView
-        android:id="@+id/tvDreamAnalysis"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="#EEEEEE"
-        android:padding="8dp"
-        android:text=""
-        android:textSize="14sp"
-        android:layout_marginBottom="16dp" />
+        android:overScrollMode="always"
+        android:scrollbars="vertical">
 
+        <TextView
+            android:id="@+id/tvDreamAnalysis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textSize="14sp" />
+    </ScrollView>
     <!-- 버튼들 -->
     <LinearLayout
         android:layout_width="match_parent"

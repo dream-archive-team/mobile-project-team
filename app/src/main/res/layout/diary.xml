@@ -3,29 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#FFFFFF">
 
     <!-- 꿈 입력 -->
     <TextView
+        android:layout_marginStart="13dp"
         android:id="@+id/tvDreamPrompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_label_8"
+        android:layout_marginTop="20dp"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
-
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/spoqahansansneo_bold"
+        />
 
     <EditText
         android:id="@+id/etDreamInput"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_width="355dp"
+        android:layout_height="250dp"
         android:gravity="top"
-        android:background="@android:drawable/editbox_background"
+        android:background="@drawable/tv_border"
         android:hint="@string/button_label_7"
+        android:layout_marginLeft="12dp"
+        android:paddingStart="5dp"
         android:inputType="textMultiLine"
-        android:layout_marginBottom="16dp"
         android:autofillHints="username"/>
 
     <!-- 해몽 결과 -->
@@ -34,45 +38,63 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_label_6"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:layout_marginStart="13dp"
+        android:fontFamily="@font/spoqahansansneo_bold"
+        android:textStyle="bold" />
+
+    <!-- 버튼들 -->
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="355dp"
+        android:layout_height="250dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="2dp"
         android:layout_weight="1"
-        android:background="#EEEEEE"
+        android:background="@drawable/box_border"
         android:overScrollMode="always"
         android:scrollbars="vertical">
 
         <TextView
             android:id="@+id/tvDreamAnalysis"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="355dp"
+            android:layout_height="500dp"
             android:padding="8dp"
             android:textSize="14sp" />
     </ScrollView>
-    <!-- 버튼들 -->
+
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="355dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:layout_margin="10dp"
         android:orientation="horizontal"
+        android:layout_marginBottom="30dp"
         android:weightSum="2"
         android:gravity="center">
 
         <android.widget.Button
             android:id="@+id/btnAnalyze"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_weight="1"
+            android:textSize="15dp"
+            android:background="@drawable/rounded_login"
+            android:textColor="@color/white"
+            android:fontFamily="@font/spoqahansansneo_bold"
             android:text="@string/button_label_5" />
 
         <android.widget.Button
             android:id="@+id/btnGenerateStory"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_weight="1"
             android:text="@string/button_label_4"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:textSize="15dp"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_login"
             android:layout_marginStart="8dp" />
     </LinearLayout>
 

@@ -134,11 +134,22 @@ public class DiaryActivity extends AppCompatActivity {
 
         });
 
+        //소설 생성 버튼 반응
         btnGenerateStory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DiaryActivity.this, SelectNovGenreActivity.class);
-                startActivity(intent);
+                String analysisResult = tvDreamAnalysis.getText().toString().trim();
+
+                // 해몽 결과가 없거나, "꿈 해석 결과가 없습니다." 또는 "로딩 중..."이면 이동 금지
+                if (analysisResult.isEmpty() ||
+                        analysisResult.equals("꿈 해석 결과가 없습니다.") ||
+                        analysisResult.equals("로딩 중...") ||
+                        analysisResult.startsWith("파싱 오류")) {
+                    Toast.makeText(DiaryActivity.this, "해몽 결과가 있을 때만 소설을 생성할 수 있습니다.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(DiaryActivity.this, SelectNovGenreActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }

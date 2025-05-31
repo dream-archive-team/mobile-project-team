@@ -55,83 +55,79 @@ public class DiaryActivity extends AppCompatActivity {
         });
 
         // '분석' 버튼 클릭 시 DB에 저장
-        btnAnalyze.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String dreamContent = etDreamInput.getText().toString().trim();
+        btnAnalyze.setOnClickListener(v -> {
+            String dreamContent = etDreamInput.getText().toString().trim();
 
-                if (!dreamContent.isEmpty()) {
-                    // 1. UUID로 꿈 ID 생성
-                    String dreamId = UUID.randomUUID().toString();
+            if (!dreamContent.isEmpty()) {
+                // 1. UUID로 꿈 ID 생성
+                String dreamId = UUID.randomUUID().toString();
 
-                    // 2. 로그인된 사용자 ID 받아오기 (예: sharedPreferences, intent 등)
-                    String memberId = getCurrentUserId(); // 이 부분은 상황에 맞게 구현 필요
+                // 2. 로그인된 사용자 ID 받아오기 (예: sharedPreferences, intent 등)
+                String memberId = getCurrentUserId(); // 이 부분은 상황에 맞게 구현 필요
 
-                    // 3. 오늘 날짜 저장
-                    String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                // 3. 오늘 날짜 저장
+                String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
-                    // 4. Dream 객체 생성 및 저장
-                    Dream dream = new Dream();
-                    dream.setDream_id(dreamId);
-                    dream.setMember_id(memberId);
-                    dream.setDream_date(today);
-                    dream.setDream_content(dreamContent);
-                    dream.setInterpretation(""); // 해몽 결과는 아직 없음
+                // 4. Dream 객체 생성 및 저장
+                Dream dream = new Dream();
+                dream.setDream_id(dreamId);
+                dream.setMember_id(memberId);
+                dream.setDream_date(today);
+                dream.setDream_content(dreamContent);
+                dream.setInterpretation(""); // 해몽 결과는 아직 없음
 
-                    dreamViewModel.insert(dream);
+                dreamViewModel.insert(dream);
 
-                    Toast.makeText(DiaryActivity.this, "꿈이 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DiaryActivity.this, "꿈이 저장되었습니다.", Toast.LENGTH_SHORT).show();
 
-                    tvDreamAnalysis.setText("로딩 중...");  // 즉시 “로딩 중” 메시지
+                tvDreamAnalysis.setText("로딩 중...");  // 즉시 “로딩 중” 메시지
 
-                    service.requestGemini(dreamContent, new GeminiApiService.Callback() {
-                        @Override
-                        public void onSuccess(String result) {
-                            // JSON 파싱: candidates[0].content.parts[0].text
-                            String fullText;
-                            try {
-                                JSONObject root      = new JSONObject(result);
-                                JSONArray candidates = root.optJSONArray("candidates");
-                                if (candidates != null && candidates.length() > 0) {
-                                    JSONObject contentObj = candidates.getJSONObject(0)
-                                            .optJSONObject("content");
-                                    JSONArray parts       = (contentObj != null)
-                                            ? contentObj.optJSONArray("parts")
-                                            : null;
-                                    if (parts != null && parts.length() > 0) {
-                                        fullText = parts.getJSONObject(0).optString("text", "");
-                                    } else {
-                                        fullText = "꿈 해석 결과가 없습니다.";
-                                    }
+                service.requestGemini(dreamContent, new GeminiApiService.Callback() {
+                    @Override
+                    public void onSuccess(String result) {
+                        // JSON 파싱: candidates[0].content.parts[0].text
+                        String fullText;
+                        try {
+                            JSONObject root      = new JSONObject(result);
+                            JSONArray candidates = root.optJSONArray("candidates");
+                            if (candidates != null && candidates.length() > 0) {
+                                JSONObject contentObj = candidates.getJSONObject(0)
+                                        .optJSONObject("content");
+                                JSONArray parts       = (contentObj != null)
+                                        ? contentObj.optJSONArray("parts")
+                                        : null;
+                                if (parts != null && parts.length() > 0) {
+                                    fullText = parts.getJSONObject(0).optString("text", "");
                                 } else {
                                     fullText = "꿈 해석 결과가 없습니다.";
                                 }
-                            } catch (Exception e) {
-                                fullText = "파싱 오류: " + e.getMessage();
+                            } else {
+                                fullText = "꿈 해석 결과가 없습니다.";
                             }
-
-                            // 줄바꿈 포맷팅
-                            String formatted = fullText
-                                    .replaceAll("([.!?])\\s+", "$1\n\n")
-                                    .replaceAll("\\n{3,}", "\n\n");
-
-                            // UI 스레드에서 결과 TextView에 반영
-                            runOnUiThread(() -> tvDreamAnalysis.setText(formatted));
+                        } catch (Exception e) {
+                            fullText = "파싱 오류: " + e.getMessage();
                         }
 
-                        @Override
-                        public void onFailure(String errorMsg) {
-                            runOnUiThread(() ->
-                                    tvDreamAnalysis.setText("오류: " + errorMsg)
-                            );
-                        }
-                    });
+                        // 줄바꿈 포맷팅
+                        String formatted = fullText
+                                .replaceAll("([.!?])\\s+", "$1\n\n")
+                                .replaceAll("\\n{3,}", "\n\n");
 
-                } else {
-                    Toast.makeText(DiaryActivity.this, "꿈 내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
-                }
+                        // UI 스레드에서 결과 TextView에 반영
+                        runOnUiThread(() -> tvDreamAnalysis.setText(formatted));
+                    }
+
+                    @Override
+                    public void onFailure(String errorMsg) {
+                        runOnUiThread(() ->
+                                tvDreamAnalysis.setText("오류: " + errorMsg)
+                        );
+                    }
+                });
+
+            } else {
+                Toast.makeText(DiaryActivity.this, "꿈 내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
             }
-
         });
 
         btnGenerateStory.setOnClickListener(new View.OnClickListener() {

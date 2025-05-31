@@ -13,10 +13,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_label_8"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="0dp"
         android:fontFamily="@font/spoqahansansneo_bold"
         />
 
@@ -27,8 +27,9 @@
         android:gravity="top"
         android:background="@drawable/tv_border"
         android:hint="@string/button_label_7"
-        android:layout_marginLeft="12dp"
+        android:layout_margin="12dp"
         android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         android:inputType="textMultiLine"
         android:autofillHints="username"/>
 
@@ -48,7 +49,7 @@
 
     <ScrollView
         android:layout_width="355dp"
-        android:layout_height="250dp"
+        android:layout_height="0dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="2dp"
         android:layout_weight="1"
@@ -59,7 +60,7 @@
         <TextView
             android:id="@+id/tvDreamAnalysis"
             android:layout_width="355dp"
-            android:layout_height="500dp"
+            android:layout_height="wrap_content"
             android:padding="8dp"
             android:textSize="14sp" />
     </ScrollView>
@@ -70,29 +71,29 @@
         android:layout_marginStart="13dp"
         android:layout_margin="10dp"
         android:orientation="horizontal"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="40dp"
         android:weightSum="2"
         android:gravity="center">
 
-        <android.widget.Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnAnalyze"
             android:layout_width="0dp"
-            android:layout_height="45dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:background="@drawable/rounded_login"
             android:textColor="@color/white"
             android:fontFamily="@font/spoqahansansneo_bold"
             android:text="@string/button_label_5" />
 
-        <android.widget.Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnGenerateStory"
             android:layout_width="0dp"
-            android:layout_height="45dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
             android:text="@string/button_label_4"
             android:fontFamily="@font/spoqahansansneo_bold"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:textColor="@color/white"
             android:background="@drawable/rounded_login"
             android:layout_marginStart="8dp" />

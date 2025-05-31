@@ -82,7 +82,7 @@ public class DiaryActivity extends AppCompatActivity {
 
                     Toast.makeText(DiaryActivity.this, "꿈이 저장되었습니다.", Toast.LENGTH_SHORT).show();
 
-                    tvDreamAnalysis.setText("로딩 중...");  // 즉시 “로딩 중” 메시지
+                    tvDreamAnalysis.setText("로딩 중...");  // “로딩 중” 메시지
 
                     service.requestGemini(dreamContent, new GeminiApiService.Callback() {
                         @Override

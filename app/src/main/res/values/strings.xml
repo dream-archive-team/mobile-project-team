@@ -8,5 +8,31 @@
     <string name="button_label_6">"꿈 분석 내용"</string>
     <string name="button_label_7">"꿈을 입력하세요"</string>
     <string name="button_label_8">"오늘 꾼 꿈은 무엇인가요?"</string>
+    <string name="button_label_9">"소설 생성하기"</string>
+
+    <string name="custom_radio_se_1">"기쁨"</string>
+    <string name="custom_radio_se_2">"슬픔"</string>
+    <string name="custom_radio_se_3">"놀람"</string>
+    <string name="custom_radio_se_4">"분노"</string>
+    <string name="custom_radio_se_5">"불안"</string>
+
+    <string name="custom_radio_se_6">"열린결말"</string>
+    <string name="custom_radio_se_7">"해피엔딩"</string>
+    <string name="custom_radio_se_8">"새드엔딩"</string>
+    <string name="custom_radio_se_9">"권선징악 결말"</string>
+    <string name="custom_radio_se_10">"성장형 결말"</string>
+    <string name="custom_radio_se_11">"반전 결말"</string>
+
+    <string name="que_1">"1. 꿈을 쓴 후 기분이 어땠나요?"</string>
+    <string name="que_2">"2. 가장 뚜렷했던 장면이 무엇이었나요?"</string>
+    <string name="que_3">"3. 꿈 속에 나온 물건이 무엇인가요?"</string>
+    <string name="que_4">"4. 소설 엔딩은 어떻게 할까요?"</string>
+    <string name="que_5">"5. 반드시 들어갔으면 하는 문장이나 단어"</string>
+
+    <string name="que_h_1">"꿈의 가장 뚜렷했던 장면을 입력하시오."</string>
+    <string name="que_h_2">"꿈 속 물건을 입력하시오."</string>
+    <string name="que_h_3">"필수 단어를 입력하시오."</string>
+
+
 
 </resources>

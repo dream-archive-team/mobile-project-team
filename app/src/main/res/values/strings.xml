@@ -19,7 +19,7 @@
     <string name="custom_radio_se_6">"열린결말"</string>
     <string name="custom_radio_se_7">"해피엔딩"</string>
     <string name="custom_radio_se_8">"새드엔딩"</string>
-    <string name="custom_radio_se_9">"권선징악 결말"</string>
+    <string name="custom_radio_se_9">"권선징악"</string>
     <string name="custom_radio_se_10">"성장형 결말"</string>
     <string name="custom_radio_se_11">"반전 결말"</string>
 
@@ -49,6 +49,8 @@
     <string name="btn_tit_1">" 홈으로"</string>
     <string name="btn_tit_2">" 새 장르"</string>
     <string name="btn_tit_3">" 수정"</string>
+
+    <string name="q_btn_1">"소설 생성 하러가기"</string>
 
 
 

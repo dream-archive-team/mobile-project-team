@@ -176,6 +176,7 @@
     <!-- 작은 입력 영역 -->
 
     <!-- 하단 버튼들 -->
+
     <EditText
         android:id="@+id/etDreamInput_1"
         android:layout_width="355dp"

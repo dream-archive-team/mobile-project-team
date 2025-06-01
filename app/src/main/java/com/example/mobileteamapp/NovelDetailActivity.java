@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ScrollView;
-import android.widget.RadioGroup;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +44,7 @@ public class NovelDetailActivity extends AppCompatActivity {
     private ScrollView scrollGenerated;
     private TextView   tvDreamAnalysis;
 
-    // 엔딩용 라디오그룹과 내부 버튼들
+    // 엔딩용 라디오그룹과 내부 버튼들 (선택된 장르에 맞춰 미리 체크용)
     private RadioGroup  rgEnding;
     private RadioButton rbEndingOpen;
     private RadioButton rbEndingHappy;
@@ -57,8 +57,7 @@ public class NovelDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // 반드시 dream_based_new_nov.xml을 가리켜야 레이아웃이 로드됩니다.
+        // ★ 반드시 dream_based_new_nov.xml을 가리켜야 레이아웃이 로드됩니다.
         setContentView(R.layout.dream_based_new_nov);
 
         // ─────────── 1) 뷰 바인딩 ───────────
@@ -74,8 +73,9 @@ public class NovelDetailActivity extends AppCompatActivity {
         rbEndingGrowth    = findViewById(R.id.rbEndingGrowth);
         rbEndingSad       = findViewById(R.id.rbEndingSad);
 
-        // ─── 초기 상태: ScrollView 숨김 처리 ───
-        scrollGenerated.setVisibility(View.GONE);
+        // ─── 초기 상태: ScrollView는 항상 보여주고, 내용만 “로딩 중…”으로 세팅 ───
+        // 이전에 숨겼던 scrollGenerated.setVisibility(View.GONE); 코드를 제거했습니다.
+        tvDreamAnalysis.setText("로딩 중...");
 
         // ─────────── 2) Intent로부터 데이터 가져오기 ───────────
         Intent intent = getIntent();
@@ -104,6 +104,7 @@ public class NovelDetailActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: Received requiredWords = " + requiredWords);
 
         // ─────────── 3) ‘selected_genre’에 맞춘 엔딩 버튼 미리 체크 ───────────
+        // (XML에서 rgEnding을 터치 불가능하게 disabled 처리하지 않았다면, 여기서도 다시 disable 처리해도 좋습니다.)
         switch (selectedGenre) {
             case "판타지":
                 rbEndingOpen.setChecked(true);
@@ -127,6 +128,11 @@ public class NovelDetailActivity extends AppCompatActivity {
                 rgEnding.clearCheck();
                 break;
         }
+        // 라디오 버튼 자체를 비활성화하려면 아래 코드처럼 해도 됩니다.
+        // rgEnding.setEnabled(false);
+        // for (int i = 0; i < rgEnding.getChildCount(); i++) {
+        //     rgEnding.getChildAt(i).setEnabled(false);
+        // }
 
         // ─────────── 4) 프롬프트 빌딩 ───────────
         String prompt = buildPrompt(
@@ -146,15 +152,6 @@ public class NovelDetailActivity extends AppCompatActivity {
 
     /**
      * 프롬프트를 생성하는 메서드
-     *
-     * @param dreamText     사용자가 입력한 꿈 내용
-     * @param genre         사용자가 선택한 소설 장르
-     * @param mood          사용자가 선택한 기분
-     * @param vividScene    사용자가 입력한 가장 뚜렷했던 장면
-     * @param dreamObjects  사용자가 입력한 꿈 속 물건
-     * @param ending        사용자가 선택한 엔딩 유형
-     * @param requiredWords 사용자가 지정한 필수 단어/문구 (선택사항)
-     * @return 최종 전송할 프롬프트 문자열
      */
     private String buildPrompt(
             String dreamText,
@@ -206,17 +203,15 @@ public class NovelDetailActivity extends AppCompatActivity {
     }
 
     /**
-     * AI 서버(Gemini 등)에 프롬프트를 보내는 메서드 (OkHttp 예시)
-     *
-     * @param promptText 생성된 프롬프트 문자열
+     * AI 서버에 프롬프트를 보내는 메서드 (OkHttp 예시)
      */
     private void sendNovelDetailsToApi(String promptText) {
-
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(10, java.util.concurrent.TimeUnit.SECONDS)
                 .writeTimeout(10, java.util.concurrent.TimeUnit.SECONDS)
                 .readTimeout(20, java.util.concurrent.TimeUnit.SECONDS)
                 .build();
+
         // 1) JSON 생성: contents → [ { parts: [ { text: promptText } ] } ]
         JSONObject partObj = new JSONObject();
         try {
@@ -268,11 +263,10 @@ public class NovelDetailActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e(TAG, "API 호출 실패: " + e.getMessage());
                 runOnUiThread(() -> {
-                    // 오류 시 ScrollView를 보이도록 하고 토스트만 띄웁니다.
-                    scrollGenerated.setVisibility(View.VISIBLE);
+                    // 오류 시에도 ScrollView는 보이도록 유지
+                    tvDreamAnalysis.setText("네트워크 오류: " + e.getMessage());
                     Toast.makeText(NovelDetailActivity.this,
-                            "네트워크 오류: " + e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
+                            "네트워크 오류: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -285,10 +279,9 @@ public class NovelDetailActivity extends AppCompatActivity {
                             : "응답 본문이 없습니다.";
                     Log.e(TAG, "API 에러 응답: " + errorBody);
                     runOnUiThread(() -> {
-                        scrollGenerated.setVisibility(View.VISIBLE);
+                        tvDreamAnalysis.setText("서버 오류: " + errorBody);
                         Toast.makeText(NovelDetailActivity.this,
-                                "서버 오류: " + errorBody,
-                                Toast.LENGTH_SHORT).show();
+                                "서버 오류: " + errorBody, Toast.LENGTH_SHORT).show();
                     });
                     return;
                 }
@@ -323,12 +316,10 @@ public class NovelDetailActivity extends AppCompatActivity {
                 // 6) UI 업데이트 (메인 스레드)
                 String finalGeneratedNovel = generatedNovel;
                 runOnUiThread(() -> {
-                    // ScrollView를 표시하고, 내부 TextView에 소설 텍스트를 채웁니다.
-                    scrollGenerated.setVisibility(View.VISIBLE);
+                    // ScrollView는 항상 보이며, 텍스트만 업데이트
                     tvDreamAnalysis.setText(finalGeneratedNovel);
                     Toast.makeText(NovelDetailActivity.this,
-                            "소설 생성 완료! 로그를 확인하세요.",
-                            Toast.LENGTH_LONG).show();
+                            "소설 생성 완료! 로그를 확인하세요.", Toast.LENGTH_LONG).show();
                 });
             }
         });

@@ -16,6 +16,7 @@
 ##  브랜치 설명
 `feature/login` 로그인 기능 구현 (UI 및 인증 로직 포함) <br>
 `feature/api-setup`  Google Gemini API 연동 및 해석 결과 출력 <br>
+`feature/5q-novel`  5가지 질문의 사용자 답변에 따른 소설 생성 개발 <br>
 `feature/db-connection`  RoomDB를 통한 데이터베이스 연결 및 구조 구축 <br>
 `feature/dream-input`  사용자가 꿈 내용을 입력하는 기능 개발 <br>
 `feature/dream-visualization`  해석 결과를 시각적으로 출력하는 화면 개발 <br>

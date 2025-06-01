@@ -193,105 +193,95 @@
                 android:background="#000000"
                 android:layout_marginBottom="10dp"/>
 
+            <!-- dream_based_nov.xml 중 4번 질문 부분 (수정 후) -->
             <RadioGroup
                 android:id="@+id/rgEnding"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginBottom="12dp">
 
-                <LinearLayout
+                <!-- ① 모든 RadioButton을 RadioGroup의 직계 자식으로 배치 -->
+                <RadioButton
+                    android:id="@+id/rbEndingOpen"
                     android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_radio_se_6"
+                    android:textSize="18sp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:fontFamily="@font/spoqahansansneo_bold"
+                    android:button="@drawable/custom_radio_selector"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp" />
 
-                    <RadioButton
-                        android:id="@+id/rbEndingOpen"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:text="@string/custom_radio_se_6"
-                        android:textSize="18sp"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        android:fontFamily="@font/spoqahansansneo_bold"
-                        android:button="@drawable/custom_radio_selector"
-                        android:gravity="center"
-                        />
+                <RadioButton
+                    android:id="@+id/rbEndingHappy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_radio_se_7"
+                    android:textSize="18sp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:button="@drawable/custom_radio_selector"
+                    android:fontFamily="@font/spoqahansansneo_bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp" />
 
-                    <RadioButton
-                        android:id="@+id/rbEndingHappy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:text="@string/custom_radio_se_7"
-                        android:textSize="18sp"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        android:button="@drawable/custom_radio_selector"
-                        android:fontFamily="@font/spoqahansansneo_bold"
-                        android:gravity="center"/>
+                <RadioButton
+                    android:id="@+id/rbEndingTwist2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_radio_se_11"
+                    android:textSize="18sp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:button="@drawable/custom_radio_selector"
+                    android:fontFamily="@font/spoqahansansneo_bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp" />
 
-                    <RadioButton
-                        android:id="@+id/rbEndingTwist2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:button="@drawable/custom_radio_selector"
-                        android:fontFamily="@font/spoqahansansneo_bold"
-                        android:gravity="center"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        android:text="@string/custom_radio_se_11"
-                        android:textSize="18sp" />
+                <RadioButton
+                    android:id="@+id/rbEndingTwist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_radio_se_9"
+                    android:textSize="18sp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:button="@drawable/custom_radio_selector"
+                    android:fontFamily="@font/spoqahansansneo_bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp" />
 
-                </LinearLayout>
+                <RadioButton
+                    android:id="@+id/rbEndingGrowth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_radio_se_10"
+                    android:textSize="18sp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:button="@drawable/custom_radio_selector"
+                    android:fontFamily="@font/spoqahansansneo_bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp" />
 
-                <LinearLayout
-                    android:layout_width="370dp"
-                    android:layout_height="48dp"
-                    android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/rbEndingSad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_radio_se_8"
+                    android:textSize="18sp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:button="@drawable/custom_radio_selector"
+                    android:fontFamily="@font/spoqahansansneo_bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp" />
 
-                    <RadioButton
-                        android:id="@+id/rbEndingTwist"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/custom_radio_se_9"
-                        android:textSize="18sp"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        android:button="@drawable/custom_radio_selector"
-                        android:layout_marginEnd="8dp"
-                        android:fontFamily="@font/spoqahansansneo_bold"
-                        android:gravity="center"/>
-
-                    <RadioButton
-                        android:id="@+id/rbEndingGrowth"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/custom_radio_se_10"
-                        android:textSize="18sp"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        android:button="@drawable/custom_radio_selector"
-                        android:layout_marginEnd="8dp"
-                        android:fontFamily="@font/spoqahansansneo_bold"
-                        android:gravity="center"/>
-
-                    <RadioButton
-                        android:id="@+id/rbEndingSad"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/custom_radio_se_8"
-                        android:textSize="18sp"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        android:button="@drawable/custom_radio_selector"
-                        android:fontFamily="@font/spoqahansansneo_bold"
-                        android:gravity="center"/>
-
-
-                </LinearLayout>
             </RadioGroup>
+
 
             <!-- 5. 반드시 들어갔으면 하는 문장이나 단어 -->
             <TextView

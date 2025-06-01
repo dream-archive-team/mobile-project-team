@@ -71,7 +71,7 @@ public class SelectNovGenreActivity extends AppCompatActivity {
                     Toast.makeText(SelectNovGenreActivity.this, "선택된 장르: " + selectedGenre, Toast.LENGTH_SHORT).show();
 
                     // 예: 다음 액티비티로 데이터 전달
-                    Intent intent = new Intent(SelectNovGenreActivity.this, DreamBasedNovActivity.class);
+                    Intent intent = new Intent(SelectNovGenreActivity.this, DreamBasedNewNovActivity.class);
                     intent.putExtra("selected_genre", selectedGenre);
                     intent.putExtra("dream_content", finalDreamContent);
                     startActivity(intent);

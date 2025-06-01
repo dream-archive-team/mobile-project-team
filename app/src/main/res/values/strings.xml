@@ -33,6 +33,23 @@
     <string name="que_h_2">"꿈 속 물건을 입력하시오."</string>
     <string name="que_h_3">"필수 단어를 입력하시오."</string>
 
+    <string name="nov_1">"판타지"</string>
+    <string name="nov_2">"로맨틱"</string>
+    <string name="nov_3">"SF"</string>
+    <string name="nov_4">"다큐맨터리"</string>
+    <string name="nov_5">"스릴러"</string>
+    <string name="nov_6">"코미디"</string>
+    <string name="nov_7">"액션"</string>
+
+    <string name="title_1">"꿈 소설"</string>
+    <string name="title_que_2">" 수정할 내용을 입력하시오."</string>
+    <string name="title_que_h_4">" 구체적으로 입력하시오."</string>
+
+
+    <string name="btn_tit_1">" 홈으로"</string>
+    <string name="btn_tit_2">" 새 장르"</string>
+    <string name="btn_tit_3">" 수정"</string>
+
 
 
 </resources>

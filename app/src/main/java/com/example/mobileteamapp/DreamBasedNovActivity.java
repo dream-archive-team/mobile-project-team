@@ -10,10 +10,15 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
+import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class DreamBasedNovActivity extends AppCompatActivity {
+
+    private static final String TAG = "DreamBasedNovActivity";
+
+    private String dreamContent;
+    private String selectedGenre;
 
     // UI 컴포넌트 선언
     private RadioGroup rgMood;
@@ -31,6 +36,23 @@ public class DreamBasedNovActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dream_based_nov);
+
+        Log.d(TAG, "onCreate: DreamBasedNovActivity 진입");
+        Toast.makeText(this, "DreamBasedNovActivity onCreate 호출됨", Toast.LENGTH_SHORT).show();
+
+        // ───────────────────────────────────────────────────────────
+        // 1) Intent 로부터 “dream_content”와 “selected_genre” 받아오기
+        Intent intent = getIntent();
+        dreamContent   = intent.getStringExtra("dream_content");
+        selectedGenre  = intent.getStringExtra("selected_genre");
+        if (dreamContent == null)  dreamContent = "";
+        if (selectedGenre == null) selectedGenre = "";
+
+        // 받아온 값 로그로 확인
+        Log.d(TAG, "onCreate: Received dreamContent = " + dreamContent);
+        Log.d(TAG, "onCreate: Received selectedGenre = " + selectedGenre);
+
+
 
         // UI 컴포넌트 초기화
         initViews();
@@ -107,6 +129,8 @@ public class DreamBasedNovActivity extends AppCompatActivity {
         btnGenerateNovel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 버튼 클릭 시 바로 로그 찍기
+                Log.d(TAG, "btnGenerateNovel clicked");
                 if (validateAllInputs()) {
                     generateNovel();
                 }
@@ -157,8 +181,22 @@ public class DreamBasedNovActivity extends AppCompatActivity {
         String selectedEnding = getSelectedEnding();
         String requiredWords = etRequiredWords.getText().toString().trim();
 
+        // 입력된 모든 값을 로그로 확인
+        Log.d(TAG, "generateNovel: dreamContent   = " + dreamContent);
+        Log.d(TAG, "generateNovel: selectedGenre  = " + selectedGenre);
+        Log.d(TAG, "generateNovel: selectedMood   = " + selectedMood);
+        Log.d(TAG, "generateNovel: vividScene     = " + vividScene);
+        Log.d(TAG, "generateNovel: dreamObjects   = " + dreamObjects);
+        Log.d(TAG, "generateNovel: selectedEnding = " + selectedEnding);
+        Log.d(TAG, "generateNovel: requiredWords  = " + requiredWords);
+
+
+
         // 다음 액티비티에 데이터 전달
-        Intent intent = new Intent(DreamBasedNovActivity.this, DreamBasedNewNovActivity.class);
+
+        Intent intent = new Intent(DreamBasedNovActivity.this, NovelDetailActivity.class);
+        intent.putExtra("dream_content",  dreamContent);
+        intent.putExtra("selected_genre", selectedGenre);
         intent.putExtra("mood", selectedMood);
         intent.putExtra("vivid_scene", vividScene);
         intent.putExtra("dream_objects", dreamObjects);

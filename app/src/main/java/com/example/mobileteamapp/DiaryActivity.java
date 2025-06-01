@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.TextView;      // ✔ 추가: TextView import
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,20 +28,20 @@ public class DiaryActivity extends AppCompatActivity {
 
     private EditText etDreamInput;
     private DreamViewModel dreamViewModel;
-    private TextView tvDreamAnalysis;     // ✔ 추가: 해몽 결과를 표시할 TextView
-    private GeminiApiService service;     // ✔ 추가: GeminiApiService 인스턴스
+    private TextView tvDreamAnalysis;
+    private GeminiApiService service;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary);
-
+        Log.d("DiaryActivity", "onCreate called");
         etDreamInput = findViewById(R.id.etDreamInput);
         Button btnAnalyze = findViewById(R.id.btnAnalyze);
         Button  btnGenerateStory= findViewById(R.id.btnGenerateStory);
-        tvDreamAnalysis  = findViewById(R.id.tvDreamAnalysis);  // ✔ 추가: 결과 TextView 바인딩
+        tvDreamAnalysis  = findViewById(R.id.tvDreamAnalysis);
 
         dreamViewModel = new ViewModelProvider(this).get(DreamViewModel.class);
-        service = new GeminiApiService();   // ✔ 추가: GeminiApiService 생성
+        service = new GeminiApiService();
 
         // 저장된 모든 꿈 데이터를 로그로 출력(DB 확인용)
         dreamViewModel.getAllDreams().observe(this, dreams -> {
@@ -140,6 +140,8 @@ public class DiaryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String analysisResult = tvDreamAnalysis.getText().toString().trim();
 
+
+
                 // 해몽 결과가 없거나, "꿈 해석 결과가 없습니다." 또는 "로딩 중..."이면 이동 금지
                 if (analysisResult.isEmpty() ||
                         analysisResult.equals("꿈 해석 결과가 없습니다.") ||
@@ -147,7 +149,16 @@ public class DiaryActivity extends AppCompatActivity {
                         analysisResult.startsWith("파싱 오류")) {
                     Toast.makeText(DiaryActivity.this, "해몽 결과가 있을 때만 소설을 생성할 수 있습니다.", Toast.LENGTH_SHORT).show();
                 } else {
+                    String dreamContent = etDreamInput.getText().toString().trim();
+
+                    //Logcat에 꿈 내용 찍기
+                    Log.d("DiaryActivity", "Sending dreamContent: " + dreamContent);
+
                     Intent intent = new Intent(DiaryActivity.this, SelectNovGenreActivity.class);
+
+                    // "dream_content" 키로 꿈 내용(dreamContent)을 담아 보냅니다.
+                    intent.putExtra("dream_content", dreamContent);
+
                     startActivity(intent);
                 }
             }

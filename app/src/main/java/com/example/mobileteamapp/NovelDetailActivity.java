@@ -1,10 +1,12 @@
 package com.example.mobileteamapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.RadioGroup;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,39 +41,94 @@ public class NovelDetailActivity extends AppCompatActivity {
     private String moodText, vividScene, dreamObjects, endingText, requiredWords;
 
     // 결과 표시용 뷰
-    private ProgressBar progressLoading;
     private ScrollView scrollGenerated;
-    private TextView tvGeneratedNovel;
+    private TextView   tvDreamAnalysis;
+
+    // 엔딩용 라디오그룹과 내부 버튼들
+    private RadioGroup  rgEnding;
+    private RadioButton rbEndingOpen;
+    private RadioButton rbEndingHappy;
+    private RadioButton rbEndingTwist2;
+    private RadioButton rbEndingTwist3;
+    private RadioButton rbEndingTwist;
+    private RadioButton rbEndingGrowth;
+    private RadioButton rbEndingSad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // ★ 변경된 부분: 두 번째 화면에서는 “질문 레이아웃”이 아닌 “결과 전용 레이아웃”을 로드
+
+        // 반드시 dream_based_new_nov.xml을 가리켜야 레이아웃이 로드됩니다.
         setContentView(R.layout.dream_based_new_nov);
 
-        // (A) 레이아웃 바인딩
-        progressLoading  = findViewById(R.id.progressLoading);
-        scrollGenerated  = findViewById(R.id.scrollGenerated);
-        tvGeneratedNovel = findViewById(R.id.tvGeneratedNovel);
+        // ─────────── 1) 뷰 바인딩 ───────────
+        scrollGenerated   = findViewById(R.id.scrollGenerated);
+        tvDreamAnalysis   = findViewById(R.id.tvDreamAnalysis);
 
-        // (B) Intent에서 모든 값 꺼내기
-        dreamContent  = getIntent().getStringExtra("dream_content");
-        selectedGenre = getIntent().getStringExtra("selected_genre");
-        moodText      = getIntent().getStringExtra("mood");
-        vividScene    = getIntent().getStringExtra("vivid_scene");
-        dreamObjects  = getIntent().getStringExtra("dream_objects");
-        endingText    = getIntent().getStringExtra("ending");
-        requiredWords = getIntent().getStringExtra("required_words");
+        rgEnding          = findViewById(R.id.rgEnding);
+        rbEndingOpen      = findViewById(R.id.rbEndingOpen);
+        rbEndingHappy     = findViewById(R.id.rbEndingHappy);
+        rbEndingTwist2    = findViewById(R.id.rbEndingTwist2);
+        rbEndingTwist3    = findViewById(R.id.rbEndingTwist3);
+        rbEndingTwist     = findViewById(R.id.rbEndingTwist);
+        rbEndingGrowth    = findViewById(R.id.rbEndingGrowth);
+        rbEndingSad       = findViewById(R.id.rbEndingSad);
+
+        // ─── 초기 상태: ScrollView 숨김 처리 ───
+        scrollGenerated.setVisibility(View.GONE);
+
+        // ─────────── 2) Intent로부터 데이터 가져오기 ───────────
+        Intent intent = getIntent();
+        dreamContent  = intent.getStringExtra("dream_content");
+        selectedGenre = intent.getStringExtra("selected_genre");
+        moodText      = intent.getStringExtra("mood");
+        vividScene    = intent.getStringExtra("vivid_scene");
+        dreamObjects  = intent.getStringExtra("dream_objects");
+        endingText    = intent.getStringExtra("ending");
+        requiredWords = intent.getStringExtra("required_words");
+
+        if (dreamContent == null)  dreamContent  = "";
+        if (selectedGenre == null) selectedGenre = "";
+        if (moodText == null)      moodText      = "";
+        if (vividScene == null)    vividScene    = "";
+        if (dreamObjects == null)  dreamObjects  = "";
+        if (endingText == null)    endingText    = "";
+        if (requiredWords == null) requiredWords = "";
 
         Log.d(TAG, "onCreate: Received dreamContent  = " + dreamContent);
         Log.d(TAG, "onCreate: Received selectedGenre = " + selectedGenre);
         Log.d(TAG, "onCreate: Received mood         = " + moodText);
-        Log.d(TAG, "onCreate: Received vividScene   = " + vividScene);
-        Log.d(TAG, "onCreate: Received dreamObjects = " + dreamObjects);
-        Log.d(TAG, "onCreate: Received ending       = " + endingText);
-        Log.d(TAG, "onCreate: Received requiredWords= " + requiredWords);
+        Log.d(TAG, "onCreate: Received vividScene    = " + vividScene);
+        Log.d(TAG, "onCreate: Received dreamObjects  = " + dreamObjects);
+        Log.d(TAG, "onCreate: Received ending        = " + endingText);
+        Log.d(TAG, "onCreate: Received requiredWords = " + requiredWords);
 
-        // (C) 빌드된 프롬프트 생성
+        // ─────────── 3) ‘selected_genre’에 맞춘 엔딩 버튼 미리 체크 ───────────
+        switch (selectedGenre) {
+            case "판타지":
+                rbEndingOpen.setChecked(true);
+                break;
+            case "로맨스":
+                rbEndingHappy.setChecked(true);
+                break;
+            case "판타지/로맨스":
+                rbEndingTwist2.setChecked(true);
+                break;
+            case "스릴러":
+                rbEndingTwist3.setChecked(true);
+                break;
+            case "성장":
+                rbEndingGrowth.setChecked(true);
+                break;
+            case "비극":
+                rbEndingSad.setChecked(true);
+                break;
+            default:
+                rgEnding.clearCheck();
+                break;
+        }
+
+        // ─────────── 4) 프롬프트 빌딩 ───────────
         String prompt = buildPrompt(
                 dreamContent,
                 selectedGenre,
@@ -83,11 +140,7 @@ public class NovelDetailActivity extends AppCompatActivity {
         );
         Log.d(TAG, "Prompt built: " + prompt);
 
-        // (D) API 요청 전 “로딩 중” 표시
-        progressLoading.setVisibility(View.VISIBLE);
-        scrollGenerated.setVisibility(View.GONE);
-
-        // (E) API 호출
+        // ─────────── 5) API 호출 ───────────
         sendNovelDetailsToApi(prompt);
     }
 
@@ -113,6 +166,7 @@ public class NovelDetailActivity extends AppCompatActivity {
             String requiredWords
     ) {
         StringBuilder sb = new StringBuilder();
+
         // 1) 역할 및 지침
         sb.append("당신은 창의적인 소설가이자 심리 분석 전문가입니다. ");
         sb.append("사용자의 꿈 설명을 바탕으로 상상력이 풍부한 ")
@@ -214,7 +268,8 @@ public class NovelDetailActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e(TAG, "API 호출 실패: " + e.getMessage());
                 runOnUiThread(() -> {
-                    progressLoading.setVisibility(View.GONE);
+                    // 오류 시 ScrollView를 보이도록 하고 토스트만 띄웁니다.
+                    scrollGenerated.setVisibility(View.VISIBLE);
                     Toast.makeText(NovelDetailActivity.this,
                             "네트워크 오류: " + e.getMessage(),
                             Toast.LENGTH_SHORT).show();
@@ -223,13 +278,14 @@ public class NovelDetailActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String generatedNovel;
                 if (!response.isSuccessful()) {
                     String errorBody = response.body() != null
                             ? response.body().string()
                             : "응답 본문이 없습니다.";
                     Log.e(TAG, "API 에러 응답: " + errorBody);
                     runOnUiThread(() -> {
-                        progressLoading.setVisibility(View.GONE);
+                        scrollGenerated.setVisibility(View.VISIBLE);
                         Toast.makeText(NovelDetailActivity.this,
                                 "서버 오류: " + errorBody,
                                 Toast.LENGTH_SHORT).show();
@@ -237,9 +293,8 @@ public class NovelDetailActivity extends AppCompatActivity {
                     return;
                 }
 
-                // 성공 시: JSON 파싱 ― 꿈 해몽 때와 동일하게, candidates 배열을 찾아서 content → parts → text 꺼내기
+                // 5) 성공 시: JSON 파싱 ― candidates → content → parts → text
                 String responseBody = response.body().string();
-                String generatedNovel;
                 try {
                     JSONObject respJson = new JSONObject(responseBody);
                     JSONArray candidates = respJson.optJSONArray("candidates");
@@ -265,12 +320,12 @@ public class NovelDetailActivity extends AppCompatActivity {
 
                 Log.d(TAG, "생성된 소설: \n" + generatedNovel);
 
-                // UI 업데이트
+                // 6) UI 업데이트 (메인 스레드)
                 String finalGeneratedNovel = generatedNovel;
                 runOnUiThread(() -> {
-                    progressLoading.setVisibility(View.GONE);
+                    // ScrollView를 표시하고, 내부 TextView에 소설 텍스트를 채웁니다.
                     scrollGenerated.setVisibility(View.VISIBLE);
-                    tvGeneratedNovel.setText(finalGeneratedNovel);
+                    tvDreamAnalysis.setText(finalGeneratedNovel);
                     Toast.makeText(NovelDetailActivity.this,
                             "소설 생성 완료! 로그를 확인하세요.",
                             Toast.LENGTH_LONG).show();
@@ -278,5 +333,4 @@ public class NovelDetailActivity extends AppCompatActivity {
             }
         });
     }
-
 }

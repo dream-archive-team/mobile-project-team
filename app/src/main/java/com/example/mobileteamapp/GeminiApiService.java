@@ -30,7 +30,10 @@ public class GeminiApiService {
                     + "Listen to the user’s dream and interpret its symbols and emotions in a richly narrative style. "
                     + "Respond only in Korean, use at least five sentences across multiple paragraphs, and do not ask any follow-up questions. "
                     + "Keep it concise—around 1,000 characters—and finish with a warm, encouraging sentence.";
-
+            /*"당신은 창의적인 소설가이자 심리 분석 전문가입니다."
+                    + 사용자의 꿈을 듣고 그 상징과 감정을 풍부한 서사 스타일로 해석하세요
+                    + "한국어로만 응답하고, 여러 문단에 걸쳐 최소 다섯 문장을 사용하며, 후속 질문은 하지 마세요."
+                    + "약 1,000자 정도의 간결함을 유지하고 따뜻하고 고무적인 문장으로 마무리하세요.";*/
 
     // ➌ OkHttpClient 인스턴스
     private final OkHttpClient client = new OkHttpClient();

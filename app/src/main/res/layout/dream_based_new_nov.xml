@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- (1) API 호출 중일 때 보일 프로그레스바 -->
+    <ProgressBar
+        android:id="@+id/progressLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <!-- (2) API 응답으로 생성된 소설을 보여줄 ScrollView -->
+    <ScrollView
+        android:id="@+id/scrollGenerated"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:visibility="gone">  <!-- 기본은 숨김 -->
+
+        <TextView
+            android:id="@+id/tvGeneratedNovel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000000" />
+    </ScrollView>
+</FrameLayout>

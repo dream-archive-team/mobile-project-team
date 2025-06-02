@@ -3,7 +3,6 @@ package com.example.mobileteamapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
@@ -33,8 +32,8 @@ import java.io.IOException;
  *
  * Layout: res/layout/dream_based_new_nov.xml
  */
-public class NovelDetailActivity extends AppCompatActivity {
-    private static final String TAG = "NovelDetailActivity";
+public class DreamBasedNewNov extends AppCompatActivity {
+    private static final String TAG = "DreamBasedNewNov";
 
     // Intent로 넘어온 값들
     private String dreamContent, selectedGenre;
@@ -265,7 +264,7 @@ public class NovelDetailActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     // 오류 시에도 ScrollView는 보이도록 유지
                     tvDreamAnalysis.setText("네트워크 오류: " + e.getMessage());
-                    Toast.makeText(NovelDetailActivity.this,
+                    Toast.makeText(DreamBasedNewNov.this,
                             "네트워크 오류: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
             }
@@ -280,7 +279,7 @@ public class NovelDetailActivity extends AppCompatActivity {
                     Log.e(TAG, "API 에러 응답: " + errorBody);
                     runOnUiThread(() -> {
                         tvDreamAnalysis.setText("서버 오류: " + errorBody);
-                        Toast.makeText(NovelDetailActivity.this,
+                        Toast.makeText(DreamBasedNewNov.this,
                                 "서버 오류: " + errorBody, Toast.LENGTH_SHORT).show();
                     });
                     return;
@@ -318,7 +317,7 @@ public class NovelDetailActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     // ScrollView는 항상 보이며, 텍스트만 업데이트
                     tvDreamAnalysis.setText(finalGeneratedNovel);
-                    Toast.makeText(NovelDetailActivity.this,
+                    Toast.makeText(DreamBasedNewNov.this,
                             "소설 생성 완료! 로그를 확인하세요.", Toast.LENGTH_LONG).show();
                 });
             }

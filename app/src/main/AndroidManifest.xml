@@ -32,7 +32,7 @@
         <activity android:name=".HomeActivity" />
         <activity android:name=".DiaryActivity" />
         <activity android:name=".dream_look_screen_Activity_1" />
-        <activity android:name=".NovelDetailActivity" />
+        <activity android:name=".DreamBasedNewNov" />
 
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"

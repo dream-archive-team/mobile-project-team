@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * 사용자가 네 가지 질문(기분, 뚜렷했던 장면, 꿈 속 물건, 엔딩 선택)을 답변하면
- * 모든 데이터를 Intent에 담아 NovelDetailActivity로 넘기는 역할만 수행합니다.
+ * 모든 데이터를 Intent에 담아 DreamBasedNewNov로 넘기는 역할만 수행합니다.
  */
 public class DreamBasedNovActivity extends AppCompatActivity {
     private static final String TAG = "DreamBasedNovActivity";
@@ -125,7 +125,7 @@ public class DreamBasedNovActivity extends AppCompatActivity {
     }
 
     /**
-     * 모든 입력값을 Intent에 담아서 NovelDetailActivity로 보냅니다.
+     * 모든 입력값을 Intent에 담아서 DreamBasedNewNov로 보냅니다.
      * 이전에 얻어 놓은 dreamContent, selectedGenre와
      * 여기서 새로 수집한 mood, vividScene, dreamObjects, ending, requiredWords를 함께 실어 보냄.
      */
@@ -155,8 +155,8 @@ public class DreamBasedNovActivity extends AppCompatActivity {
 
         String requiredWords = etRequiredWords.getText().toString().trim();
 
-        // (E) Intent 생성 → NovelDetailActivity로 데이터 전달
-        Intent intent = new Intent(DreamBasedNovActivity.this, NovelDetailActivity.class);
+        // (E) Intent 생성 → DreamBasedNewNov로 데이터 전달
+        Intent intent = new Intent(DreamBasedNovActivity.this, DreamBasedNewNov.class);
         intent.putExtra("dream_content",  dreamContent);
         intent.putExtra("selected_genre", selectedGenre);
         intent.putExtra("mood",           moodText);

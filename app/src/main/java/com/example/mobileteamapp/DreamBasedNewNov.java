@@ -1,6 +1,7 @@
 package com.example.mobileteamapp;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -67,6 +68,8 @@ public class DreamBasedNewNov extends AppCompatActivity {
         // ─────────── 1) 뷰 바인딩 ───────────
         scrollGenerated   = findViewById(R.id.scrollGenerated);
         tvDreamAnalysis   = findViewById(R.id.tvDreamAnalysis);
+
+        ColorStateList blackColor = ColorStateList.valueOf(Color.BLACK);
 
         btnHome = findViewById(R.id.btn_home);
 
@@ -135,7 +138,7 @@ public class DreamBasedNewNov extends AppCompatActivity {
         rbEndingSad.setEnabled(false);
 
 
-// 텍스트 색상을 검은색으로 설정 (비활성화 시 회색이 되는 것을 방지)
+// 텍스트 색상, 체크박스를 검은색으로 설정 (비활성화 시 회색이 되는 것을 방지)
         rbEndingOpen.setTextColor(Color.BLACK);
         rbEndingHappy.setTextColor(Color.BLACK);
         rbEndingTwist2.setTextColor(Color.BLACK);
@@ -143,6 +146,14 @@ public class DreamBasedNewNov extends AppCompatActivity {
         rbEndingTwist.setTextColor(Color.BLACK);
         rbEndingGrowth.setTextColor(Color.BLACK);
         rbEndingSad.setTextColor(Color.BLACK);
+
+        rbEndingOpen.setButtonTintList(blackColor);
+        rbEndingHappy.setButtonTintList(blackColor);
+        rbEndingTwist2.setButtonTintList(blackColor);
+        rbEndingTwist3.setButtonTintList(blackColor);
+        rbEndingTwist.setButtonTintList(blackColor);
+        rbEndingGrowth.setButtonTintList(blackColor);
+        rbEndingSad.setButtonTintList(blackColor);
 
 
         // 전달받은 장르에 따라 해당 라디오버튼만 자동 체크

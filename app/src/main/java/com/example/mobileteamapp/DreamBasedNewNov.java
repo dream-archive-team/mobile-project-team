@@ -178,7 +178,7 @@ public class DreamBasedNewNov extends AppCompatActivity {
                 case "SF":
                     rbEndingTwist2.setChecked(true);
                     break;
-                case "다큐맨터리":
+                case "다큐멘터리":
                     rbEndingTwist3.setChecked(true);
                     break;
                 case "스릴러":

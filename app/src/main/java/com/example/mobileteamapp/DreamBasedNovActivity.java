@@ -29,6 +29,14 @@ public class DreamBasedNovActivity extends AppCompatActivity {
     private RadioGroup rgEnding;
     private Button btnGenerateNovel;
 
+    private RadioButton rbEndingOpen;
+    private RadioButton rbEndingHappy;
+    private RadioButton rbEndingTwist2;
+    private RadioButton rbEndingTwist;
+    private RadioButton rbEndingGrowth;
+    private RadioButton rbEndingSad;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +63,14 @@ public class DreamBasedNovActivity extends AppCompatActivity {
         btnGenerateNovel = findViewById(R.id.btnGenerateNovel);
 
         // ───────────────────────────────────────────────────────────
+
+        rbEndingOpen   = findViewById(R.id.rbEndingOpen);
+        rbEndingHappy  = findViewById(R.id.rbEndingHappy);
+        rbEndingTwist2 = findViewById(R.id.rbEndingTwist2);
+        rbEndingTwist  = findViewById(R.id.rbEndingTwist);
+        rbEndingGrowth = findViewById(R.id.rbEndingGrowth);
+        rbEndingSad    = findViewById(R.id.rbEndingSad);
+
         // 3) “소설 생성하기” 버튼 클릭 리스너
         btnGenerateNovel.setOnClickListener(v -> {
             Log.d(TAG, "btnGenerateNovel clicked");
@@ -92,8 +108,13 @@ public class DreamBasedNovActivity extends AppCompatActivity {
         }
 
         // 4) 엔딩 선택 확인
-        int selectedEndingId = rgEnding.getCheckedRadioButtonId();
-        if (selectedEndingId == -1) {
+        if (!rbEndingOpen.isChecked()
+                && !rbEndingHappy.isChecked()
+                && !rbEndingTwist2.isChecked()
+                && !rbEndingTwist.isChecked()
+                && !rbEndingGrowth.isChecked()
+                && !rbEndingSad.isChecked()) {
+
             Toast.makeText(this, "4번 질문: 엔딩 유형을 하나 선택해주세요.", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -116,8 +137,21 @@ public class DreamBasedNovActivity extends AppCompatActivity {
         String vividScene = etMostVividScene.getText().toString().trim();
         String dreamObjects = etDreamObjects.getText().toString().trim();
 
-        RadioButton rbEnding = findViewById(rgEnding.getCheckedRadioButtonId());
-        String endingText = rbEnding.getText().toString();
+        String endingText;
+        if (rbEndingOpen.isChecked()) {
+            endingText = rbEndingOpen.getText().toString();
+        } else if (rbEndingHappy.isChecked()) {
+            endingText = rbEndingHappy.getText().toString();
+        } else if (rbEndingTwist2.isChecked()) {
+            endingText = rbEndingTwist2.getText().toString();
+        } else if (rbEndingTwist.isChecked()) {
+            endingText = rbEndingTwist.getText().toString();
+        } else if (rbEndingGrowth.isChecked()) {
+            endingText = rbEndingGrowth.getText().toString();
+        } else {  // rbEndingSad.isChecked()
+            endingText = rbEndingSad.getText().toString();
+        }
+
 
         String requiredWords = etRequiredWords.getText().toString().trim();
 

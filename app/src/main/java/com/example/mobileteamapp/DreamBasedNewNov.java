@@ -1,6 +1,7 @@
 package com.example.mobileteamapp;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RadioButton;
@@ -59,10 +60,12 @@ public class DreamBasedNewNov extends AppCompatActivity {
         // ★ 반드시 dream_based_new_nov.xml을 가리켜야 레이아웃이 로드됩니다.
         setContentView(R.layout.dream_based_new_nov);
 
+
         // ─────────── 1) 뷰 바인딩 ───────────
         scrollGenerated   = findViewById(R.id.scrollGenerated);
         tvDreamAnalysis   = findViewById(R.id.tvDreamAnalysis);
 
+        //장르 라디오 버튼 연결
         rgEnding          = findViewById(R.id.rgEnding);
         rbEndingOpen      = findViewById(R.id.rbEndingOpen);
         rbEndingHappy     = findViewById(R.id.rbEndingHappy);
@@ -71,6 +74,8 @@ public class DreamBasedNewNov extends AppCompatActivity {
         rbEndingTwist     = findViewById(R.id.rbEndingTwist);
         rbEndingGrowth    = findViewById(R.id.rbEndingGrowth);
         rbEndingSad       = findViewById(R.id.rbEndingSad);
+
+
 
         // ─── 초기 상태: ScrollView는 항상 보여주고, 내용만 “로딩 중…”으로 세팅 ───
         // 이전에 숨겼던 scrollGenerated.setVisibility(View.GONE); 코드를 제거했습니다.
@@ -103,29 +108,68 @@ public class DreamBasedNewNov extends AppCompatActivity {
         Log.d(TAG, "onCreate: Received requiredWords = " + requiredWords);
 
         // ─────────── 3) ‘selected_genre’에 맞춘 엔딩 버튼 미리 체크 ───────────
-        // (XML에서 rgEnding을 터치 불가능하게 disabled 처리하지 않았다면, 여기서도 다시 disable 처리해도 좋습니다.)
-        switch (selectedGenre) {
-            case "판타지":
-                rbEndingOpen.setChecked(true);
-                break;
-            case "로맨스":
-                rbEndingHappy.setChecked(true);
-                break;
-            case "판타지/로맨스":
-                rbEndingTwist2.setChecked(true);
-                break;
-            case "스릴러":
-                rbEndingTwist3.setChecked(true);
-                break;
-            case "성장":
-                rbEndingGrowth.setChecked(true);
-                break;
-            case "비극":
-                rbEndingSad.setChecked(true);
-                break;
-            default:
-                rgEnding.clearCheck();
-                break;
+
+
+        // RadioButton들을 비활성화
+        rbEndingOpen.setEnabled(false);
+        rbEndingHappy.setEnabled(false);
+        rbEndingTwist2.setEnabled(false);
+        rbEndingTwist3.setEnabled(false);
+        rbEndingTwist.setEnabled(false);
+        rbEndingGrowth.setEnabled(false);
+        rbEndingSad.setEnabled(false);
+
+
+// 텍스트 색상을 검은색으로 설정 (비활성화 시 회색이 되는 것을 방지)
+        rbEndingOpen.setTextColor(Color.BLACK);
+        rbEndingHappy.setTextColor(Color.BLACK);
+        rbEndingTwist2.setTextColor(Color.BLACK);
+        rbEndingTwist3.setTextColor(Color.BLACK);
+        rbEndingTwist.setTextColor(Color.BLACK);
+        rbEndingGrowth.setTextColor(Color.BLACK);
+        rbEndingSad.setTextColor(Color.BLACK);
+
+
+        // 전달받은 장르에 따라 해당 라디오버튼만 자동 체크
+        if (selectedGenre != null) {
+            // 모든 라디오버튼 체크 해제
+            rbEndingOpen.setChecked(false);
+            rbEndingHappy.setChecked(false);
+            rbEndingTwist2.setChecked(false);
+            rbEndingTwist3.setChecked(false);
+            rbEndingTwist.setChecked(false);
+            rbEndingGrowth.setChecked(false);
+            rbEndingSad.setChecked(false);
+
+            // 전달받은 장르와 일치하는 라디오버튼만 체크
+            switch (selectedGenre) {
+                case "로맨스":
+                    rbEndingOpen.setChecked(true);
+                    break;
+                case "판타지":
+                    rbEndingHappy.setChecked(true);
+                    break;
+                case "SF":
+                    rbEndingTwist2.setChecked(true);
+                    break;
+                case "액션":
+                    rbEndingTwist3.setChecked(true);
+                    break;
+                case "다큐멘터리":
+                    rbEndingTwist.setChecked(true);
+                    break;
+                case "스릴러":
+                    rbEndingGrowth.setChecked(true);
+                    break;
+                case "코미디":
+                    rbEndingSad.setChecked(true);
+                    break;
+                default:
+                    Toast.makeText(this, "알 수 없는 장르: " + selectedGenre, Toast.LENGTH_SHORT).show();
+                    break;
+            }
+
+            Toast.makeText(this, "선택된 장르: " + selectedGenre, Toast.LENGTH_SHORT).show();
         }
         // 라디오 버튼 자체를 비활성화하려면 아래 코드처럼 해도 됩니다.
         // rgEnding.setEnabled(false);

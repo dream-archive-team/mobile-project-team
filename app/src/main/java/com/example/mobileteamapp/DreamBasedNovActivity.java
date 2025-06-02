@@ -64,12 +64,27 @@ public class DreamBasedNovActivity extends AppCompatActivity {
 
         // ───────────────────────────────────────────────────────────
 
-        rbEndingOpen   = findViewById(R.id.rbEndingOpen);
-        rbEndingHappy  = findViewById(R.id.rbEndingHappy);
-        rbEndingTwist2 = findViewById(R.id.rbEndingTwist2);
-        rbEndingTwist  = findViewById(R.id.rbEndingTwist);
-        rbEndingGrowth = findViewById(R.id.rbEndingGrowth);
-        rbEndingSad    = findViewById(R.id.rbEndingSad);
+        RadioButton rbEndingOpen = findViewById(R.id.rbEndingOpen);
+        RadioButton rbEndingHappy = findViewById(R.id.rbEndingHappy);
+        RadioButton rbEndingTwist2 = findViewById(R.id.rbEndingTwist2);
+        RadioButton rbEndingTwist = findViewById(R.id.rbEndingTwist);
+        RadioButton rbEndingGrowth = findViewById(R.id.rbEndingGrowth);
+        RadioButton rbEndingSad = findViewById(R.id.rbEndingSad);
+
+// 여기서 endingButtons 배열 정의
+        RadioButton[] endingButtons = {rbEndingOpen, rbEndingHappy, rbEndingTwist2, rbEndingTwist, rbEndingGrowth, rbEndingSad};
+
+// 그 다음에 for문에서 사용
+        for (RadioButton rb : endingButtons) {
+            rb.setOnClickListener(v -> {
+                // 모든 RadioButton 해제
+                for (RadioButton button : endingButtons) {
+                    button.setChecked(false);
+                }
+                // 클릭된 RadioButton만 선택
+                ((RadioButton) v).setChecked(true);
+            });
+        }
 
         // 3) “소설 생성하기” 버튼 클릭 리스너
         btnGenerateNovel.setOnClickListener(v -> {

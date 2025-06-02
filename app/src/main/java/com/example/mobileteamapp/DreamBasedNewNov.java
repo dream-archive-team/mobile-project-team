@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
@@ -53,6 +55,7 @@ public class DreamBasedNewNov extends AppCompatActivity {
     private RadioButton rbEndingTwist;
     private RadioButton rbEndingGrowth;
     private RadioButton rbEndingSad;
+    private Button btnHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,18 @@ public class DreamBasedNewNov extends AppCompatActivity {
         // ─────────── 1) 뷰 바인딩 ───────────
         scrollGenerated   = findViewById(R.id.scrollGenerated);
         tvDreamAnalysis   = findViewById(R.id.tvDreamAnalysis);
+
+        btnHome = findViewById(R.id.btn_home);
+
+        // 홈으로 가기 버튼 반응
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DreamBasedNewNov.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         //장르 라디오 버튼 연결
         rgEnding          = findViewById(R.id.rgEnding);
@@ -143,25 +158,25 @@ public class DreamBasedNewNov extends AppCompatActivity {
 
             // 전달받은 장르와 일치하는 라디오버튼만 체크
             switch (selectedGenre) {
-                case "로맨스":
+                case "판타지":
                     rbEndingOpen.setChecked(true);
                     break;
-                case "판타지":
+                case "로맨틱":
                     rbEndingHappy.setChecked(true);
                     break;
                 case "SF":
                     rbEndingTwist2.setChecked(true);
                     break;
-                case "액션":
+                case "다큐맨터리":
                     rbEndingTwist3.setChecked(true);
                     break;
-                case "다큐멘터리":
+                case "스릴러":
                     rbEndingTwist.setChecked(true);
                     break;
-                case "스릴러":
+                case "코미디":
                     rbEndingGrowth.setChecked(true);
                     break;
-                case "코미디":
+                case "액션":
                     rbEndingSad.setChecked(true);
                     break;
                 default:

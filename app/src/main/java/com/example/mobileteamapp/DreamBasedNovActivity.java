@@ -64,12 +64,12 @@ public class DreamBasedNovActivity extends AppCompatActivity {
 
         // ───────────────────────────────────────────────────────────
 
-        RadioButton rbEndingOpen = findViewById(R.id.rbEndingOpen);
-        RadioButton rbEndingHappy = findViewById(R.id.rbEndingHappy);
-        RadioButton rbEndingTwist2 = findViewById(R.id.rbEndingTwist2);
-        RadioButton rbEndingTwist = findViewById(R.id.rbEndingTwist);
-        RadioButton rbEndingGrowth = findViewById(R.id.rbEndingGrowth);
-        RadioButton rbEndingSad = findViewById(R.id.rbEndingSad);
+        rbEndingOpen   = findViewById(R.id.rbEndingOpen);
+        rbEndingHappy  = findViewById(R.id.rbEndingHappy);
+        rbEndingTwist2 = findViewById(R.id.rbEndingTwist2);
+        rbEndingTwist  = findViewById(R.id.rbEndingTwist);
+        rbEndingGrowth = findViewById(R.id.rbEndingGrowth);
+        rbEndingSad    = findViewById(R.id.rbEndingSad);
 
 // 여기서 endingButtons 배열 정의
         RadioButton[] endingButtons = {rbEndingOpen, rbEndingHappy, rbEndingTwist2, rbEndingTwist, rbEndingGrowth, rbEndingSad};

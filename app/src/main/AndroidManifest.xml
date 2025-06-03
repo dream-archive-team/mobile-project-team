@@ -26,7 +26,6 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".DreamBasedNewNovActivity" />
         <activity android:name=".DreamBasedNovActivity" />
         <activity android:name=".SelectNovGenreActivity" />
         <activity android:name=".HomeActivity" />

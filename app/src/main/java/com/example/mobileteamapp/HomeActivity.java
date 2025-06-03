@@ -21,6 +21,7 @@ public class HomeActivity extends AppCompatActivity {
     private String memberId;
     private MemberViewModel memberViewModel;
     private Button buttonGoToDiary, buttonnov;
+    private String moodText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.home);  // home.xml을 레이아웃으로 설정
 
         // 로그인된 사용자 ID 받아오기
+        moodText = getIntent().getStringExtra("mood");
         memberId = getIntent().getStringExtra("member_id");
         CalendarView calendarView = findViewById(R.id.calendarView);
 

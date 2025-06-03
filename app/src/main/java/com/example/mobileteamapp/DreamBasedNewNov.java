@@ -85,6 +85,7 @@ public class DreamBasedNewNov extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DreamBasedNewNov.this, HomeActivity.class);
+                intent.putExtra("mood_data", moodText);  // 감정 데이터 전달
                 startActivity(intent);
             }
         });

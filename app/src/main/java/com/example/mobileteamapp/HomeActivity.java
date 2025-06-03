@@ -20,7 +20,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private String memberId;
     private MemberViewModel memberViewModel;
-    private Button buttonGoToDiary;
+    private Button buttonGoToDiary, buttonnov;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // 메인페이지 -> 꿈 일기 작성 화면 이동 버튼
         buttonGoToDiary = findViewById(R.id.buttonGoToDiary);
-
+        buttonnov = findViewById(R.id.btn_nov);
         buttonGoToDiary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,6 +71,16 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        buttonnov.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, StoryQueryActivity.class);
+                intent.putExtra("member_id", memberId); // ← memberId 전달
+                startActivity(intent);
+            }
+        });
+
 
     }
 }

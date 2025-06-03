@@ -15,12 +15,12 @@
         android:weightSum="2">
 
         <!-- 주별 날짜 선택 버튼 -->
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnSelectDate"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="주별 날짜"
+            android:text="@string/button_select_date"
             android:textColor="@android:color/white"
             android:background="@drawable/rounded_button_5"
             android:layout_marginEnd="8dp"
@@ -51,7 +51,7 @@
     <!-- 소설 제목 -->
     <TextView
         android:id="@+id/tvStoryTitle"
-        android:text="꿈 제목"
+        android:text="@string/story_title"
         android:textStyle="bold"
         android:textSize="16sp"
         android:layout_width="match_parent"
@@ -84,9 +84,9 @@
         android:background="#DDDDDD" />
 
     <!-- 홈으로 버튼 -->
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnHome"
-        android:text="홈으로"
+        android:text="@string/button_home"
         android:textColor="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

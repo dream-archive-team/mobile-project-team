@@ -64,5 +64,9 @@
             <item>다큐멘터리</item>
     </string-array>
 
+    <string name="button_select_date">주별 날짜</string>
+    <string name="button_home">홈으로</string>
+    <string name="story_title">꿈 제목</string>
+
 
 </resources>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
@@ -47,6 +48,8 @@ public class DreamBasedNewNov extends AppCompatActivity {
     private ScrollView scrollGenerated;
     private TextView   tvDreamAnalysis;
 
+    private EditText etModification;
+    private androidx.appcompat.widget.AppCompatButton btnSubmit;
     // 엔딩용 라디오그룹과 내부 버튼들 (선택된 장르에 맞춰 미리 체크용)
     private RadioGroup  rgEnding;
     private RadioButton rbEndingOpen;
@@ -57,6 +60,9 @@ public class DreamBasedNewNov extends AppCompatActivity {
     private RadioButton rbEndingGrowth;
     private RadioButton rbEndingSad;
     private Button btnHome;
+    private String basePrompt;
+    private String lastNovel = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +74,8 @@ public class DreamBasedNewNov extends AppCompatActivity {
         // ─────────── 1) 뷰 바인딩 ───────────
         scrollGenerated   = findViewById(R.id.scrollGenerated);
         tvDreamAnalysis   = findViewById(R.id.tvDreamAnalysis);
-
+        etModification  = findViewById(R.id.etDreamInput_1);
+        btnSubmit       = findViewById(R.id.btn_submit);
         ColorStateList blackColor = ColorStateList.valueOf(Color.BLACK);
 
         btnHome = findViewById(R.id.btn_home);
@@ -95,9 +102,9 @@ public class DreamBasedNewNov extends AppCompatActivity {
 
 
 
-        // ─── 초기 상태: ScrollView는 항상 보여주고, 내용만 “로딩 중…”으로 세팅 ───
+        // ─── 초기 상태: ScrollView는 항상 보여주고, 내용만 “생성 중…”으로 세팅 ───
         // 이전에 숨겼던 scrollGenerated.setVisibility(View.GONE); 코드를 제거했습니다.
-        tvDreamAnalysis.setText("로딩 중...");
+        tvDreamAnalysis.setText("생성 중...");
 
         // ─────────── 2) Intent로부터 데이터 가져오기 ───────────
         Intent intent = getIntent();
@@ -138,7 +145,7 @@ public class DreamBasedNewNov extends AppCompatActivity {
         rbEndingSad.setEnabled(false);
 
 
-// 텍스트 색상, 체크박스를 검은색으로 설정 (비활성화 시 회색이 되는 것을 방지)
+        // 텍스트 색상, 체크박스를 검은색으로 설정 (비활성화 시 회색이 되는 것을 방지)
         rbEndingOpen.setTextColor(Color.BLACK);
         rbEndingHappy.setTextColor(Color.BLACK);
         rbEndingTwist2.setTextColor(Color.BLACK);
@@ -204,7 +211,7 @@ public class DreamBasedNewNov extends AppCompatActivity {
         // }
 
         // ─────────── 4) 프롬프트 빌딩 ───────────
-        String prompt = buildPrompt(
+        basePrompt = buildPrompt(
                 dreamContent,
                 selectedGenre,
                 moodText,
@@ -213,10 +220,47 @@ public class DreamBasedNewNov extends AppCompatActivity {
                 endingText,
                 requiredWords
         );
-        Log.d(TAG, "Prompt built: " + prompt);
+        Log.d(TAG, "Prompt built: " + basePrompt);
 
         // ─────────── 5) API 호출 ───────────
-        sendNovelDetailsToApi(prompt);
+        sendNovelDetailsToApi(basePrompt);
+
+        btnSubmit.setOnClickListener(v -> {
+            // (7-1) 사용자가 입력한 수정 문구 가져오기
+            String userModification = etModification.getText().toString().trim();
+            if (userModification.isEmpty()) {
+                Toast.makeText(DreamBasedNewNov.this,
+                        "먼저 수정할 내용을 입력하세요.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // (7-2) 버튼 중복 클릭 방지 및 상태 표시
+            btnSubmit.setEnabled(false);
+            tvDreamAnalysis.setText("수정 요청 중...");
+
+            // (7-3) basePrompt 뒤에 수정 요청 문구 추가. 기존 소설 내용도 보내서 기존 소설 내용 유지.
+            String modifiedPrompt =
+                    // 고정 프롬프트(basePrompt)
+                    basePrompt.trim() + "\n\n" +
+                            //  이전 생성된 소설 전체 (lastNovel)을 반드시 태그로 둘러싸기
+                            "===START ORIGINAL===\n" +
+                            lastNovel.trim() + "\n" +
+                            "===END ORIGINAL===\n\n" +
+                            "바꿀 부분을 제외한 모든 텍스트는 절대 수정하면 안 됩니다.\n\n" +
+                            //  수정 지시사항 (userModification)
+                            "수정 지시사항:\n" +
+                            userModification.trim() + "\n\n" +
+                            //  출력 형식 지시
+                            "위 지시사항만 반영하여, 기존 소설의 내용을 수정해 주세요.\n" +
+                            "결과 값에는 '제목:'과 '내용:'만 포함하고, 그 외 설명은 쓰지 마세요.";
+
+            Log.d(TAG, "Modified Prompt: " + modifiedPrompt);
+
+            // (7-4) 다시 API 요청
+            sendNovelDetailsToApi(modifiedPrompt);
+        });
+
+
     }
 
     /**
@@ -387,6 +431,8 @@ public class DreamBasedNewNov extends AppCompatActivity {
                 runOnUiThread(() -> {
                     // ScrollView는 항상 보이며, 텍스트만 업데이트
                     tvDreamAnalysis.setText(finalGeneratedNovel);
+                    lastNovel = finalGeneratedNovel;
+                    btnSubmit.setEnabled(true);
                     Toast.makeText(DreamBasedNewNov.this,
                             "소설 생성 완료! 로그를 확인하세요.", Toast.LENGTH_LONG).show();
                 });

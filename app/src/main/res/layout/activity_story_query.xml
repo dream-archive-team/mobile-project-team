@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <!-- 주별 날짜 + 장르 선택 -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:weightSum="2">
+
+        <!-- 주별 날짜 선택 버튼 -->
+        <Button
+            android:id="@+id/btnSelectDate"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="주별 날짜"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_button_5"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:textSize="15sp" />
+
+        <!-- 장르 선택 Spinner -->
+        <Spinner
+            android:id="@+id/spinnerGenre"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!-- 체크박스 목록 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginBottom="8dp">
+
+        <LinearLayout
+            android:id="@+id/layoutDateCheckboxes"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
+
+    <!-- 소설 제목 -->
+    <TextView
+        android:id="@+id/tvStoryTitle"
+        android:text="꿈 제목"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:fontFamily="@font/spoqahansansneo_bold" />
+
+    <!-- 소설 내용 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/tvStoryContent"
+            android:text=""
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#EEEEEE"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp" />
+    </ScrollView>
+
+    <!-- 그래프 자리 -->
+    <FrameLayout
+        android:id="@+id/graphContainer"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="8dp"
+        android:background="#DDDDDD" />
+
+    <!-- 홈으로 버튼 -->
+    <Button
+        android:id="@+id/btnHome"
+        android:text="홈으로"
+        android:textColor="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_button_5"
+        android:fontFamily="@font/spoqahansansneo_bold"
+        android:textSize="15sp" />
+
+</LinearLayout>

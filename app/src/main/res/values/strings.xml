@@ -52,6 +52,17 @@
 
     <string name="q_btn_1">"소설 생성 하러가기"</string>
 
+    <string-array name="genre_array">
+            <item>선택</item>
+            <item>스릴러</item>
+            <item>멜로</item>
+            <item>로맨틱</item>
+            <item>코미디</item>
+            <item>액션</item>
+            <item>SF</item>
+            <item>판타지</item>
+            <item>다큐멘터리</item>
+    </string-array>
 
 
 </resources>

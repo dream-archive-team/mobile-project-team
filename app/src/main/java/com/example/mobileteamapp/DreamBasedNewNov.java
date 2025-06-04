@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,8 +45,7 @@ public class DreamBasedNewNov extends AppCompatActivity {
 
     // 결과 표시용 뷰
     private ScrollView scrollGenerated;
-    private EditText   tvDreamAnalysis;
-
+    private EditText tvDreamAnalysis;
     private EditText etModification;
     private androidx.appcompat.widget.AppCompatButton btnSubmit;
     // 엔딩용 라디오그룹과 내부 버튼들 (선택된 장르에 맞춰 미리 체크용)
@@ -229,11 +227,18 @@ public class DreamBasedNewNov extends AppCompatActivity {
         btnSubmit.setOnClickListener(v -> {
             // (7-1) 사용자가 입력한 수정 문구 가져오기
             String userModification = etModification.getText().toString().trim();
+            String userEditedNovel = tvDreamAnalysis.getText().toString().trim();
+            if (userEditedNovel.isEmpty()) {
+                Toast.makeText(DreamBasedNewNov.this,
+                        "먼저 소설을 편집하거나 입력하세요.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             if (userModification.isEmpty()) {
                 Toast.makeText(DreamBasedNewNov.this,
                         "먼저 수정할 내용을 입력하세요.", Toast.LENGTH_SHORT).show();
                 return;
             }
+            lastNovel = userEditedNovel; // 사용자가 수정했을 수도 있는 소설 최종본을 프롬프트로 보내기
 
             // (7-2) 버튼 중복 클릭 방지 및 상태 표시
             btnSubmit.setEnabled(false);

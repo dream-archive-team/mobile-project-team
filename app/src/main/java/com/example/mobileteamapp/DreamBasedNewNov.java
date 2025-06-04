@@ -46,7 +46,7 @@ public class DreamBasedNewNov extends AppCompatActivity {
 
     // 결과 표시용 뷰
     private ScrollView scrollGenerated;
-    private TextView   tvDreamAnalysis;
+    private EditText   tvDreamAnalysis;
 
     private EditText etModification;
     private androidx.appcompat.widget.AppCompatButton btnSubmit;

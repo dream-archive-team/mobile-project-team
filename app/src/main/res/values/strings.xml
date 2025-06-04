@@ -50,6 +50,8 @@
     <string name="btn_tit_2">" 새 장르"</string>
     <string name="btn_tit_3">" 수정"</string>
 
+    <string name="h_null">""</string>
+
     <string name="q_btn_1">"소설 생성 하러가기"</string>
 
     <string-array name="genre_array">

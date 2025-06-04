@@ -53,6 +53,7 @@
     <string name="h_null">""</string>
 
     <string name="q_btn_1">"소설 생성 하러가기"</string>
+    <string name="q_btn_2">"다음 질문으로~"</string>
 
     <string-array name="genre_array">
             <item>선택</item>

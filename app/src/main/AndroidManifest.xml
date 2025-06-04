@@ -27,6 +27,7 @@
 
         </activity>
         <activity android:name=".DreamBasedNovActivity" />
+        <activity android:name=".DreamBasedNov2Activity" />
         <activity android:name=".SelectNovGenreActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".DiaryActivity" />

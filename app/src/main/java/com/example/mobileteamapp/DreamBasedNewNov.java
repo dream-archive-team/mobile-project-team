@@ -57,7 +57,7 @@ public class DreamBasedNewNov extends AppCompatActivity {
     private RadioButton rbEndingTwist;
     private RadioButton rbEndingGrowth;
     private RadioButton rbEndingSad;
-    private Button btnHome;
+    private Button btnHome,  newGenreButton;
     private String basePrompt;
     private String lastNovel = "";
 
@@ -77,6 +77,7 @@ public class DreamBasedNewNov extends AppCompatActivity {
         ColorStateList blackColor = ColorStateList.valueOf(Color.BLACK);
 
         btnHome = findViewById(R.id.btn_home);
+        newGenreButton = findViewById(R.id.btn_save);
 
         // 홈으로 가기 버튼 반응
         btnHome.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +85,24 @@ public class DreamBasedNewNov extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(DreamBasedNewNov.this, HomeActivity.class);
                 intent.putExtra("mood_data", moodText);  // 감정 데이터 전달
+                startActivity(intent);
+            }
+        });
+
+        // 새 장르 버튼 클릭 리스너
+        newGenreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 엔딩 라디오버튼 선택과 상관없이 동작하도록 수정
+                Intent intent = new Intent(DreamBasedNewNov.this, SelectNovGenreActivity.class);
+                intent.putExtra("from", "DreamBasedNewNov");
+                intent.putExtra("dream_content", dreamContent);
+                intent.putExtra("selected_genre", selectedGenre);
+                intent.putExtra("mood", moodText);
+                intent.putExtra("vivid_scene", vividScene);
+                intent.putExtra("dream_objects", dreamObjects);
+                // 필요시 다른 정보도 추가
+
                 startActivity(intent);
             }
         });

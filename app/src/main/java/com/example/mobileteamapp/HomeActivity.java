@@ -70,6 +70,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, DiaryActivity.class);
                 intent.putExtra("member_id", memberId); // ← memberId 전달
+                intent.putExtra("from", "HomeActivity");
                 startActivity(intent);
             }
         });

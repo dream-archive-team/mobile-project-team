@@ -253,6 +253,7 @@ public class DreamBasedNewNov extends AppCompatActivity {
                             userModification.trim() + "\n\n" +
                             //  출력 형식 지시
                             "위 지시사항만 반영하여, 기존 소설의 내용을 수정해 주세요.\n" +
+                            "소설 원본을 구분하는 '===START ORIGINAL===', '===END ORIGINAL==='는 포함하지마세요.\n" +
                             "결과 값에는 '제목:'과 '내용:'만 포함하고, 그 외 설명은 쓰지 마세요.";
 
             Log.d(TAG, "Modified Prompt: " + modifiedPrompt);
@@ -311,7 +312,8 @@ public class DreamBasedNewNov extends AppCompatActivity {
                 .append(genre)
                 .append("' 장르에 '")
                 .append(ending)
-                .append("' 엔딩을 가진 약 1000자에서 1500자 사이의 소설을 작성해 주세요.");
+                .append("' 엔딩을 가진 약 1000자에서 1500자 사이의 소설을 작성해 주세요.")
+                .append("' 결과 값에는 '제목:'과 '내용:'만 포함해주세요.");
 
         return sb.toString();
     }

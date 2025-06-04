@@ -238,7 +238,7 @@ public class DreamBasedNewNov extends AppCompatActivity {
                         "먼저 수정할 내용을 입력하세요.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            lastNovel = userEditedNovel;
+            lastNovel = userEditedNovel; // 사용자가 수정했을 수도 있는 소설 최종본을 프롬프트로 보내기
 
             // (7-2) 버튼 중복 클릭 방지 및 상태 표시
             btnSubmit.setEnabled(false);

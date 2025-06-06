@@ -67,6 +67,9 @@ android {
         implementation("androidx.room:room-runtime:2.6.1")
         annotationProcessor("androidx.room:room-compiler:2.6.1")
 
+        //그래프
+        implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
         // 테스트
         testImplementation("junit:junit:4.13.2")
         androidTestImplementation("androidx.test.ext:junit:1.2.1")

@@ -13,8 +13,9 @@ import android.widget.Toast;
 import android.content.Intent;
 
 
-
+import com.example.mobileteamapp.entity.Emotion;
 import com.example.mobileteamapp.entity.Member;
+import com.example.mobileteamapp.viewModel.EmotionViewModel;
 import com.example.mobileteamapp.viewModel.MemberViewModel;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.auth.model.OAuthToken;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // 감정 초기화 (앱 시작 시 한 번 실행)
+        initializeEmotions();
 
         kakaoLoginButton = findViewById(R.id.B_member_kakao);
         memberViewModel = new ViewModelProvider(
@@ -52,6 +55,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void initializeEmotions() {
+        EmotionViewModel emotionViewModel = new ViewModelProvider(this).get(EmotionViewModel.class);
+
+        // 미리 저장할 감정 목록 (id와 이름 일치)
+        int[] ids = {1, 2, 3, 4, 5};
+        String[] names = {"기쁨", "슬픔", "분노", "놀람", "불안"};
+
+        for (int i = 0; i < ids.length; i++) {
+            Emotion emotion = new Emotion();
+            emotion.setEmotion_id(ids[i]);
+            emotion.setEmotion_name(names[i]);
+            emotionViewModel.insert(emotion);
+        }
+    }
+
 
     /**
      * 카카오 로그인 토큰이 유효한지 확인하여

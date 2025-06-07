@@ -96,7 +96,7 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <!-- ScrollView: 내부에 꿈일기를 표시 -->
+    <!-- ScrollView: 내부에 “로딩 중…” 혹은 생성된 소설을 표시 -->
     <ScrollView
         android:id="@+id/scrollGenerated"
         android:layout_width="350dp"
@@ -115,7 +115,8 @@
             <TextView
                 android:id="@+id/dreamViewModel"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:hint="@string/h_null"
                 android:minLines="3"
                 android:padding="8dp"
                 android:textSize="15sp" />
@@ -134,6 +135,7 @@
         android:fontFamily="@font/spoqahansansneo_bold"
         android:textStyle="bold" />
 
+    <!-- 버튼들 -->
 
     <ScrollView
         android:layout_width="355dp"

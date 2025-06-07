@@ -147,7 +147,7 @@ public class HomeActivity extends AppCompatActivity {
                 // 날짜 문자열 생성 (선택사항)
                 String date = year + "/" + (month + 1) + "/" + dayOfMonth;
 
-                Intent intent = new Intent(HomeActivity.this, DiaryActivity.class);
+                Intent intent = new Intent(HomeActivity.this, dream_look_screen_Activity_1.class);
                 intent.putExtra("member_id", getIntent().getStringExtra("member_id")); // MainActivity에서 받은 member_id를 그대로 전달
                 startActivity(intent);
 

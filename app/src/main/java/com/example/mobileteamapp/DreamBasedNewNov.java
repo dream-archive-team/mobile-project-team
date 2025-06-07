@@ -461,7 +461,7 @@ public class DreamBasedNewNov extends AppCompatActivity {
                     lastNovel = finalGeneratedNovel;
                     btnSubmit.setEnabled(true);
                     Toast.makeText(DreamBasedNewNov.this,
-                            "소설 생성 완료! 로그를 확인하세요.", Toast.LENGTH_LONG).show();
+                            "소설 생성 완료!", Toast.LENGTH_LONG).show();
                 });
             }
         });

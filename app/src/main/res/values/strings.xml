@@ -71,5 +71,16 @@
     <string name="button_home">홈으로</string>
     <string name="story_title">꿈 제목</string>
 
+    <string name="button_label_10">"꿈 일기"</string>
+    <string name="btn_delete">꿈 일기 삭제</string>
+    <string name="btn_go_to_novel">소설 보러 가기</string>
+
+    <string name="button_novel_delete">소설 삭제</string>
+    <string name="button_sharing">공유</string>
+    <string name="button_back">이전</string>
+    <string name="button_home">홈으로</string>
+
+    <string name="button_URL">URL</string>
+
 
 </resources>

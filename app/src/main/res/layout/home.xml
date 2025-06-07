@@ -38,12 +38,66 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"/>
 
-    <com.github.mikephil.charting.charts.LineChart
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="400dp"
+        android:padding="8dp">
+
+        <RadioGroup
+            android:id="@+id/radioGroupPeriod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioWeekly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="주간"
+                android:checked="true"/>
+
+            <RadioButton
+                android:id="@+id/radioMonthly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="월별"
+                android:layout_marginStart="8dp"/>
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnPrev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="〈"
+            android:layout_marginStart="16dp"/>
+
+        <TextView
+            android:id="@+id/tvPeriod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8.1~8.7"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="〉"/>
+    </LinearLayout>
+
+    <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barChart"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_margin="10dp"
         android:layout_below="@id/calendarView"
-        android:layout_marginTop="24dp" />
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="50dp" />
 
 </RelativeLayout>

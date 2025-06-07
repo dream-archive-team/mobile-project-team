@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#FFFFFF">
+
+    <!-- 감정 선택 -->
+    <RadioGroup
+        android:id="@+id/rgEmotions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"/>
+
+    <RadioGroup
+        android:id="@+id/rgMood"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="10dp">
+
+        <RadioButton
+            android:id="@+id/rbMoodJoy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/custom_radio_se_1"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:textSize="18sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:button="@drawable/custom_radio_selector"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"/>
+
+        <RadioButton
+            android:id="@+id/rbMoodSad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/custom_radio_se_2"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:textSize="18sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:button="@drawable/custom_radio_selector"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"/>
+
+        <RadioButton
+            android:id="@+id/rbMoodAnger"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/custom_radio_se_4"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:textSize="18sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:button="@drawable/custom_radio_selector"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"/>
+
+        <RadioButton
+            android:id="@+id/rbMoodSurprise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/custom_radio_se_3"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:textSize="18sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:button="@drawable/custom_radio_selector"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"/>
+
+        <RadioButton
+            android:id="@+id/rbMoodAnxiety"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/custom_radio_se_5"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:textSize="18sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:button="@drawable/custom_radio_selector"
+            android:gravity="center"/>
+    </RadioGroup>
+
+    <!-- 꿈 일기 -->
+    <TextView
+        android:id="@+id/tvDreamDiaryLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:fontFamily="@font/spoqahansansneo_bold"
+        android:text="@string/button_label_10"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- ScrollView: 내부에 꿈일기를 표시 -->
+    <ScrollView
+        android:id="@+id/scrollGenerated"
+        android:layout_width="350dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/box_border"
+        android:overScrollMode="always"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/dreamViewModel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/h_null"
+                android:minLines="3"
+                android:padding="8dp"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- 꿈 해석 레이블 -->
+    <TextView
+        android:id="@+id/tvAnalysisLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_label_6"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:layout_marginStart="13dp"
+        android:fontFamily="@font/spoqahansansneo_bold"
+        android:textStyle="bold" />
+
+
+    <ScrollView
+        android:layout_width="355dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="2dp"
+        android:layout_weight="1"
+        android:background="@drawable/box_border"
+        android:overScrollMode="always"
+        android:scrollbars="vertical">
+
+        <TextView
+            android:id="@+id/tvDreamAnalysis"
+            android:layout_width="355dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textSize="14sp" />
+    </ScrollView>
+
+    <!-- 버튼 영역 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="16dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnDelete"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_delete"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:background="@drawable/rounded_login"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnGoToNovel"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_go_to_novel"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:background="@drawable/rounded_login"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+</LinearLayout>

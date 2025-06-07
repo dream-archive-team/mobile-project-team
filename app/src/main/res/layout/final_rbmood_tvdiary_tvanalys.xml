@@ -112,11 +112,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <EditText
+            <TextView
                 android:id="@+id/dreamViewModel"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/h_null"
+                android:layout_height="wrap_content"
                 android:minLines="3"
                 android:padding="8dp"
                 android:textSize="15sp" />

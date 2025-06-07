@@ -17,37 +17,20 @@ public class Final_novelActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.final_novel); // 해당 레이아웃 XML 이름으로 수정
+        setContentView(R.layout.final_novel); // 레이아웃 설정
 
-        btnSharing = findViewById(R.id.btnSharing);
+        setButtonListener(R.id.btnSharing, Sharing.class);
+        setButtonListener(R.id.btnBack, final_rbmood_tvdiary_tvanalys.class);
+        setButtonListener(R.id.btnHome, HomeActivity.class);
+    }
 
-        btnSharing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Final_novelActivity.this, Sharing.class);
-                startActivity(intent);
-            }
-        });
-
-        btnBack = findViewById(R.id.btnBack);
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Final_novelActivity.this, final_rbmood_tvdiary_tvanalys.class);
-                startActivity(intent);
-            }
-        });
-
-        btnHome = findViewById(R.id.btnHome);
-
-        btnHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Final_novelActivity.this, HomeActivity.class);
-                startActivity(intent);
-            }
+    // 버튼 클릭 리스너를 설정하는 헬퍼 메서드
+    private void setButtonListener(int buttonId, Class<?> destination) {
+        findViewById(buttonId).setOnClickListener(view -> {
+            Intent intent = new Intent(Final_novelActivity.this, destination);
+            startActivity(intent);
         });
     }
+
 
 }

@@ -146,7 +146,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <EditText
+            <TextView
                 android:id="@+id/tvDreamAnalysis"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

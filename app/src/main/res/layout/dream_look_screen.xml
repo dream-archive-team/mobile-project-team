@@ -1,7 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <!-- 꿈 조회 화면(1) : 꿈 일기, 해몽  -->
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#FFFFFF">
 
-</RelativeLayout>
+    <RadioGroup
+        android:id="@+id/rgMood"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbMoodJoy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:button="@drawable/custom_radio_selector"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:text="@string/custom_radio_se_1"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/rbMoodSad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:button="@drawable/custom_radio_selector"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:text="@string/custom_radio_se_2"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/rbMoodAnger"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:button="@drawable/custom_radio_selector"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:text="@string/custom_radio_se_4"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/rbMoodSurprise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:button="@drawable/custom_radio_selector"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:text="@string/custom_radio_se_3"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/rbMoodAnxiety"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/custom_radio_selector"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:text="@string/custom_radio_se_5"
+            android:textSize="18sp" />
+
+    </RadioGroup>
+
+
+    <!-- 꿈 조회 -->
+    <TextView
+        android:layout_marginStart="13dp"
+        android:id="@+id/tvDreamPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="꿈 일기"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="0dp"
+        android:fontFamily="@font/spoqahansansneo_bold"
+        />
+
+    <ScrollView
+        android:layout_width="355dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="2dp"
+        android:layout_weight="1"
+        android:background="@drawable/box_border"
+        android:overScrollMode="always"
+        android:scrollbars="vertical">
+
+        <TextView
+            android:id="@+id/tvDreamView"
+            android:layout_width="355dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textSize="14sp" />
+    </ScrollView>
+
+    <!-- 해몽 결과 -->
+    <TextView
+        android:id="@+id/tvAnalysisLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_label_6"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:layout_marginStart="13dp"
+        android:fontFamily="@font/spoqahansansneo_bold"
+        android:textStyle="bold" />
+
+    <!-- 버튼들 -->
+
+    <ScrollView
+        android:layout_width="355dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="2dp"
+        android:layout_weight="1"
+        android:background="@drawable/box_border"
+        android:overScrollMode="always"
+        android:scrollbars="vertical">
+
+        <TextView
+            android:id="@+id/tvDreamAnalysis"
+            android:layout_width="355dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textSize="14sp" />
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="355dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="40dp"
+        android:weightSum="2"
+        android:gravity="center">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnDelete"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:background="@drawable/rounded_login"
+            android:textColor="@color/white"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:text="꿈 일기 삭제" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnViewNovel"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="소설 보러 가기"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_login"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+</LinearLayout>

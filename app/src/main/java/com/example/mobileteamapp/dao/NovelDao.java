@@ -26,6 +26,8 @@ public interface NovelDao {
     @Query("SELECT * FROM novel")
     LiveData<List<Novel>> getAllNovels();
 
+
+
     @Query("SELECT * FROM novel WHERE novel_id = :id")
     Novel getNovelById(String id);
 

@@ -51,4 +51,10 @@ public class DreamRepository {
     public void delete(Dream dream) {
         executorService.execute(() -> dreamDao.delete(dream));
     }
+
+    // 특정날짜, 사용자 여부 확인 (꿈 작성 하루에 한 개 제한)
+    public int countDreamsByMemberAndDate(String memberId, String date) {
+        return dreamDao.countDreamsByMemberAndDate(memberId, date);
+    }
+
 }

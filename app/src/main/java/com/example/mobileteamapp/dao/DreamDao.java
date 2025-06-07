@@ -31,5 +31,10 @@ public interface DreamDao {
 
     @Query("SELECT * FROM dream WHERE member_id = :memberId")
     List<Dream> getDreamsByMemberId(String memberId);
+
+    // 특정날짜, 사용자 여부 확인 쿼리(꿈 작성 하루에 한 개 제한)
+    @Query("SELECT COUNT(*) FROM dream WHERE member_id = :memberId AND dream_date = :date")
+    int countDreamsByMemberAndDate(String memberId, String date);
+
 }
 

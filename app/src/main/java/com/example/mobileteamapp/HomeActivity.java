@@ -2,6 +2,8 @@ package com.example.mobileteamapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
 import com.example.mobileteamapp.database.AppDatabase;
+import com.example.mobileteamapp.viewModel.DreamViewModel;
 import com.example.mobileteamapp.viewModel.MemberViewModel;
 import com.example.mobileteamapp.entity.Member;
 
@@ -29,19 +32,22 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarData;
 
 import android.graphics.Color;
+import android.widget.Toast;
+
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+import java.util.concurrent.Executors;
 
 
 public class HomeActivity extends AppCompatActivity {
 
     private String memberId;
     private MemberViewModel memberViewModel;
+    private DreamViewModel dreamViewModel;
     private Button buttonGoToDiary, buttonnov;
     private String moodText;
 
@@ -59,6 +65,9 @@ public class HomeActivity extends AppCompatActivity {
         // 로그인된 사용자 ID 받아오기
         moodText = getIntent().getStringExtra("mood");
         memberId = getIntent().getStringExtra("member_id");
+
+        // viewModel 초기화
+        dreamViewModel = new ViewModelProvider(this).get(DreamViewModel.class);
 
         String[] yLabels = {"", "불안", "놀람", "분노", "슬픔", "기쁨"};
 
@@ -161,10 +170,21 @@ public class HomeActivity extends AppCompatActivity {
         buttonGoToDiary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, DiaryActivity.class);
-                intent.putExtra("member_id", memberId); // ← memberId 전달
-                intent.putExtra("from", "HomeActivity");
-                startActivity(intent);
+                String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    int alreadyExist = dreamViewModel.countDreamsByMemberAndDate(memberId, today);
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        if (alreadyExist > 0) {
+                            Toast.makeText(HomeActivity.this, "이미 오늘의 꿈 일기를 작성하셨습니다.", Toast.LENGTH_SHORT).show();
+                            // 이동하지 않음
+                        } else {
+                            Intent intent = new Intent(HomeActivity.this, DiaryActivity.class);
+                            intent.putExtra("member_id", memberId);
+                            intent.putExtra("from", "HomeActivity");
+                            startActivity(intent);
+                        }
+                    });
+                });
             }
         });
 

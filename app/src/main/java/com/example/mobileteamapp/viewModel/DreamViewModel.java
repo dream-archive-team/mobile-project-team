@@ -39,4 +39,9 @@ public class DreamViewModel extends AndroidViewModel {
     public void delete(Dream dream) {
         repository.delete(dream);
     }
+
+    // 특정날짜, 사용자 여부 확인 (꿈 작성 하루에 한 개 제한)
+    public int countDreamsByMemberAndDate(String memberId, String date) {
+        return repository.countDreamsByMemberAndDate(memberId, date);
+    }
 }

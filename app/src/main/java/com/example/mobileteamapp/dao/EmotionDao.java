@@ -1,23 +1,24 @@
 package com.example.mobileteamapp.dao;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
-import com.example.mobileteamapp.EmotionRecord;
-
 
 import com.example.mobileteamapp.entity.Emotion;
+import com.example.mobileteamapp.entity.EmotionRecord;
 
 import java.util.List;
 
 @Dao
 public interface EmotionDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE) // 중복 시 무시
+
+    @Insert
+    long insertAndReturnId(Emotion emotion);
+
+    @Insert
     void insert(Emotion emotion);
 
     @Update
@@ -26,31 +27,27 @@ public interface EmotionDao {
     @Delete
     void delete(Emotion emotion);
 
-    @Query("SELECT * FROM emotion")
-    LiveData<List<Emotion>> getAllEmotions();
-
+    // id로 감정 1개 조회
     @Query("SELECT * FROM emotion WHERE emotion_id = :id")
     Emotion getEmotionById(int id);
 
-    // 예시: 주간(기간별) 감정 데이터 조회
-    @Query("SELECT d.dream_date, e.emotion_name " +
-            "FROM answer a " +
-            "JOIN dream d ON a.dream_id = d.dream_id " +
-            "JOIN emotion e ON a.emotion_id = e.emotion_id " +
-            "WHERE d.member_id = :memberId " +
-            "AND d.dream_date BETWEEN :startDate AND :endDate " +
-            "ORDER BY d.dream_date ASC")
-    List<EmotionRecord> getEmotionRecordsByPeriod(String memberId, String startDate, String endDate);
+    // 이름으로 감정 1개 조회
+    @Query("SELECT * FROM emotion WHERE emotion_name = :name")
+    Emotion getEmotionByName(String name);
 
-    // 예시: 월별 감정 데이터 조회
-    @Query("SELECT d.dream_date, e.emotion_name " +
-            "FROM answer a " +
-            "JOIN dream d ON a.dream_id = d.dream_id " +
-            "JOIN emotion e ON a.emotion_id = e.emotion_id " +
-            "WHERE d.member_id = :memberId " +
-            "AND substr(d.dream_date, 1, 7) = :yearMonth " +
-            "ORDER BY d.dream_date ASC")
-    List<EmotionRecord> getEmotionRecordsByMonth(String memberId, String yearMonth);
+    // 감정 전체 리스트 조회
+    @Query("SELECT * FROM emotion")
+    List<Emotion> getAllEmotions();
+
+
+    // 주간 감정기록(조인)
+    @Query("SELECT d.dream_date, e.emotion_name FROM dream d LEFT JOIN emotion e ON d.emotion_id = e.emotion_id " +
+            "WHERE d.dream_date BETWEEN :startDate AND :endDate ORDER BY d.dream_date")
+    List<EmotionRecord> getEmotionRecordsByPeriod(String startDate, String endDate);
+
+    // 월간 감정기록(조인)
+    @Query("SELECT d.dream_date, e.emotion_name FROM dream d LEFT JOIN emotion e ON d.emotion_id = e.emotion_id " +
+            "WHERE d.dream_date LIKE :yearMonth || '%' ORDER BY d.dream_date")
+    List<EmotionRecord> getEmotionRecordsByMonth(String yearMonth);
+
 }
-
-

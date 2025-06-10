@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#FFFFFF">
+
+    <!-- 첫째 줄 RadioGroup -->
+    <RadioGroup
+        android:id="@+id/radioGroup_genre1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="4dp">
+
+        <RadioButton
+            android:id="@+id/radio_fantasy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="판타지"
+            android:textSize="18sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:button="@drawable/custom_radio_selector"
+            android:gravity="center"/>
+
+        <RadioButton
+            android:id="@+id/radio_romantic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="로맨틱"
+            android:textSize="18sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:button="@drawable/custom_radio_selector"
+            android:gravity="center"/>
+
+        <RadioButton
+            android:id="@+id/radio_sf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SF"
+            android:textSize="18sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:button="@drawable/custom_radio_selector"
+            android:gravity="center"/>
+
+        <RadioButton
+            android:id="@+id/radio_documentary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="다큐멘터리"
+            android:textSize="18sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:button="@drawable/custom_radio_selector"
+            android:gravity="center"/>
+    </RadioGroup>
+
+    <!-- 둘째 줄 RadioGroup -->
+    <RadioGroup
+        android:id="@+id/radioGroup_genre2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <RadioButton
+            android:id="@+id/radio_thriller"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="스릴러"
+            android:textSize="18sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:button="@drawable/custom_radio_selector"
+            android:gravity="center"/>
+
+        <RadioButton
+            android:id="@+id/radio_comedy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="코미디"
+            android:textSize="18sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:button="@drawable/custom_radio_selector"
+            android:gravity="center"/>
+
+        <RadioButton
+            android:id="@+id/radio_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="액션"
+            android:textSize="18sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:button="@drawable/custom_radio_selector"
+            android:gravity="center"/>
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="-10dp"
+        android:background="#000000" />
+
+    <!-- 상단 버튼 영역 (소설삭제 / 공유) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/tvDreamTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text="소설 제목"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingEnd="8dp"
+            android:gravity="center_vertical" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnGenNovel"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
+            android:background="@drawable/rounded_login"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:text="소설 생성"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnDeleteNovel"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
+            android:background="@drawable/rounded_login"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:text="소설 삭제"
+            android:textColor="@android:color/white"
+            android:layout_marginStart="5dp"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/box_border"
+        android:overScrollMode="always"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvDreamAnalysis"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="생성된 소설 내용이 여기에 표시됩니다."
+                android:minLines="3"
+                android:padding="8dp"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnBack"
+            android:layout_width="90dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="60dp"
+            android:background="@drawable/rounded_login"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:text="이전"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSharing"
+            android:layout_width="90dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="50dp"
+            android:background="@drawable/rounded_login"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:text="공유"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnHome"
+            android:layout_width="90dp"
+            android:layout_height="48dp"
+            android:background="@drawable/rounded_login"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:text="홈"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+    </LinearLayout>
+</LinearLayout>

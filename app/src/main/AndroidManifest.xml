@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <!-- 인터넷 권한 추가 -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -16,7 +16,33 @@
         android:theme="@style/Theme.Material3.DayNight.NoActionBar"
         tools:targetApi="31">
         <activity
-
+            android:name=".StoryQueryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".dream_look_screen_Activity_2"
+            android:exported="false" />
+        <activity
+            android:name=".dream_look_screen_Activity_1"
+            android:exported="false" />
+        <activity
+            android:name=".DreamBasedNewNovActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DreamBasedNov2Activity"
+            android:exported="false" />
+        <activity
+            android:name=".DreamBasedNovActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SelectNovGenreActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DiaryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -24,28 +50,19 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name=".DreamBasedNovActivity" />
-        <activity android:name=".DreamBasedNov2Activity" />
-        <activity android:name=".SelectNovGenreActivity" />
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".DiaryActivity" />
-        <activity android:name=".dream_look_screen_Activity_1" />
-        <activity android:name=".DreamBasedNewNov" />
-        <activity android:name=".StoryQueryActivity" />
-
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="kakaoe8f94e864e70780a25634db61c246de0" android:host="oauth" />
+
+                <data android:scheme="kakao89a395ea9e3d5adeb7874ac8789884a4" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

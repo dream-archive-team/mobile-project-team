@@ -1,86 +1,54 @@
 package com.example.mobileteamapp.repository;
 
-import android.app.Application;
-import android.os.AsyncTask;
-
-import androidx.lifecycle.LiveData;
+import android.content.Context;
 
 import com.example.mobileteamapp.dao.EmotionDao;
-import com.example.mobileteamapp.database.AppDatabase;
-import com.example.mobileteamapp.database.AppDatabaseInstance;
+import com.example.mobileteamapp.db.AppDatabaseInstance;
 import com.example.mobileteamapp.entity.Emotion;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class EmotionRepository {
-    private final EmotionDao emotionDao;
-    private final LiveData<List<Emotion>> allEmotions;
+    private EmotionDao emotionDao;
+    private ExecutorService executorService;
 
-    public EmotionRepository(Application application) {
-        AppDatabase db = AppDatabaseInstance.getDatabase(application);
-        emotionDao = db.emotionDao();
-        allEmotions = emotionDao.getAllEmotions();
-    }
-
-    public LiveData<List<Emotion>> getAllEmotions() {
-        return allEmotions;
+    public EmotionRepository(Context context) {
+        emotionDao = AppDatabaseInstance.getInstance(context).emotionDao();
+        executorService = Executors.newSingleThreadExecutor();
     }
 
     public void insert(Emotion emotion) {
-        new InsertAsyncTask(emotionDao).execute(emotion);
+        executorService.execute(() -> emotionDao.insert(emotion));
     }
 
     public void update(Emotion emotion) {
-        new UpdateAsyncTask(emotionDao).execute(emotion);
+        executorService.execute(() -> emotionDao.update(emotion));
     }
 
     public void delete(Emotion emotion) {
-        new DeleteAsyncTask(emotionDao).execute(emotion);
+        executorService.execute(() -> emotionDao.delete(emotion));
     }
 
+    // id로 감정 1개 조회
     public Emotion getEmotionById(int id) {
         return emotionDao.getEmotionById(id);
     }
 
-    private static class InsertAsyncTask extends AsyncTask<Emotion, Void, Void> {
-        private final EmotionDao dao;
-
-        InsertAsyncTask(EmotionDao dao) {
-            this.dao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(Emotion... emotions) {
-            dao.insert(emotions[0]);
-            return null;
-        }
+    // 이름으로 감정 1개 조회
+    public Emotion getEmotionByName(String name) {
+        return emotionDao.getEmotionByName(name);
     }
 
-    private static class UpdateAsyncTask extends AsyncTask<Emotion, Void, Void> {
-        private final EmotionDao dao;
-
-        UpdateAsyncTask(EmotionDao dao) {
-            this.dao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(Emotion... emotions) {
-            dao.update(emotions[0]);
-            return null;
-        }
+    // 감정 전체 리스트 조회
+    public List<Emotion> getAllEmotions() {
+        return emotionDao.getAllEmotions();
     }
 
-    private static class DeleteAsyncTask extends AsyncTask<Emotion, Void, Void> {
-        private final EmotionDao dao;
-
-        DeleteAsyncTask(EmotionDao dao) {
-            this.dao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(Emotion... emotions) {
-            dao.delete(emotions[0]);
-            return null;
-        }
+    // 감정을 동기적으로 삽입하고 생성된 ID 반환
+    public long insertAndReturnId(Emotion emotion) {
+        return emotionDao.insertAndReturnId(emotion);
     }
+
 }

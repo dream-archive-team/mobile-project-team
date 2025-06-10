@@ -38,7 +38,7 @@
 
             <!-- RadioGroup 안에 RadioButton을 직접 자식으로 나열해야 getCheckedRadioButtonId()가 정상 동작합니다. -->
 
-                <!-- 첫 번째 줄 (3개) -->
+            <!-- 첫 번째 줄 (3개) -->
             <RadioGroup
                 android:id="@+id/rgEnding"
                 android:layout_width="match_parent"

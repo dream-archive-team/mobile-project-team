@@ -1,122 +1,140 @@
 package com.example.mobileteamapp;
 
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
-//소설 장르 선택 화면
+import com.example.mobileteamapp.entity.Genre;
+import com.example.mobileteamapp.entity.Novel;
+import com.example.mobileteamapp.viewmodel.GenreViewModel;
+import com.example.mobileteamapp.viewmodel.NovelViewModel;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class SelectNovGenreActivity extends AppCompatActivity {
-    private static final String TAG = "SelectNovGenreActivity";
+
+    private String selectedGenre = "";
+    private GenreViewModel genreViewModel;
+    private NovelViewModel novelViewModel;
+
+    private RadioButton radioFantasy, radioRomantic, radioSF, radioDocumentary,
+            radioThriller, radioComedy, radioAction;
+
+    private boolean fromLookScreen = false; // 진입 경로 플래그
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.select_nov_genre);  // XML 파일 연동
+        setContentView(R.layout.activity_select_nov_genre);
 
-        // 1) DiaryActivity에서 넘어온 'dream_content' 받기
-        Intent intent = getIntent();
-        String from = intent.getStringExtra("from");
-
-        String dreamContent = getIntent().getStringExtra("dream_content");
-        String memberId = null;
-        String selectedGenre = null;
-        String mood = null;
-        String vividScene = null;
-        String dreamObjects = null;
-
-
-        if (dreamContent == null) {
-            dreamContent = "";
-        }
-
-        if ("HomeActivity".equals(from)) {
-            memberId = intent.getStringExtra("member_id");
-            Log.d(TAG, "from HomeActivity, memberId: " + memberId);
-        } else if ("DreamBasedNewNov".equals(from)) {
-            dreamContent = intent.getStringExtra("dream_content");
-            selectedGenre = intent.getStringExtra("selected_genre");
-            mood = intent.getStringExtra("mood");
-            vividScene = intent.getStringExtra("vivid_scene");
-            dreamObjects = intent.getStringExtra("dream_objects");
-            Log.d(TAG, "from DreamBasedNewNov, dreamContent: " + dreamContent
-                    + ", selectedGenre: " + selectedGenre
-                    + ", mood: " + mood
-                    + ", vividScene: " + vividScene
-                    + ", dreamObjects: " + dreamObjects);
-        }
-
-        // Log로 실제로 넘어왔는지 확인
-        Log.d(TAG, "onCreate called. Received dreamContent: " + dreamContent);
-
+        // UI 연결
         RadioGroup radioGroup = findViewById(R.id.radioGroup_genre);
-        Button nextButton = findViewById(R.id.button_next);
-        // 만약 selectedGenre가 null이 아니면 라디오버튼 비활성화 및 체크
-        // selectedGenre가 null이 아니고 빈 문자열이 아니면
-        if (selectedGenre != null && !selectedGenre.isEmpty()) {
-            for (int i = 0; i < radioGroup.getChildCount(); i++) {
-                View child = radioGroup.getChildAt(i);
-                if (child instanceof RadioButton) {
-                    RadioButton rb = (RadioButton) child;
-                    if (rb.getText().toString().equals(selectedGenre)) {
-                        rb.setEnabled(false); // 이 버튼만 비활성화(선택 불가)
-                        rb.setChecked(false); // 혹시 체크되어 있다면 해제
-                    } else {
-                        rb.setEnabled(true);  // 나머지는 선택 가능
-                    }
+        Button buttonNext = findViewById(R.id.button_next);
+
+        radioFantasy      = findViewById(R.id.radio_fantasy);
+        radioRomantic     = findViewById(R.id.radio_romantic);
+        radioSF           = findViewById(R.id.radio_sf);
+        radioDocumentary  = findViewById(R.id.radio_documentary);
+        radioThriller     = findViewById(R.id.radio_thriller);
+        radioComedy       = findViewById(R.id.radio_comedy);
+        radioAction       = findViewById(R.id.radio_action);
+
+        // ViewModel 연결
+        genreViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()))
+                .get(GenreViewModel.class);
+        novelViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()))
+                .get(NovelViewModel.class);
+
+        // 인텐트 값 받기
+        Intent intent = getIntent();
+        String dreamContent = intent.getStringExtra("dream_content");
+        String dreamInterpretation = intent.getStringExtra("dream_interpretation");
+        String dreamId = intent.getStringExtra("dream_id");
+        String dreamDate = intent.getStringExtra("dream_date");
+        String selectedMood = intent.getStringExtra("selected_mood");
+        String vividScene = intent.getStringExtra("vivid_scene");
+        String dreamObjects = intent.getStringExtra("dream_objects");
+        String nickname = intent.getStringExtra("nickname");
+        String kakaoId = intent.getStringExtra("kakaoId");
+
+        // 진입 경로 확인 (dream_look_screen_Activity_2에서 진입하면 true)
+        fromLookScreen = intent.getBooleanExtra("from_look_screen", false);
+
+        // 이미 생성된 장르 비활성화 처리 (dreamId 있을 때만)
+        if (dreamId != null && !dreamId.isEmpty()) {
+            new Thread(() -> {
+                List<Novel> novels = novelViewModel.getNovelsByDreamId(dreamId);
+                Set<String> createdGenres = new HashSet<>();
+                for (Novel n : novels) {
+                    if (n.genre != null) createdGenres.add(n.genre);
                 }
-            }
+                runOnUiThread(() -> {
+                    if (createdGenres.contains("판타지"))     radioFantasy.setEnabled(false);
+                    if (createdGenres.contains("로맨틱"))     radioRomantic.setEnabled(false);
+                    if (createdGenres.contains("SF"))         radioSF.setEnabled(false);
+                    if (createdGenres.contains("다큐멘터리")) radioDocumentary.setEnabled(false);
+                    if (createdGenres.contains("스릴러"))     radioThriller.setEnabled(false);
+                    if (createdGenres.contains("코미디"))     radioComedy.setEnabled(false);
+                    if (createdGenres.contains("액션"))       radioAction.setEnabled(false);
+                });
+            }).start();
         }
 
-        // 선택 변경 리스너 설정 (선택사항)
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // 선택된 RadioButton 찾기
-                RadioButton selectedRadioButton = findViewById(checkedId);
-
-                // 선택된 장르 확인 (예시)
-                if (selectedRadioButton != null) {
-                    String selectedGenre = selectedRadioButton.getText().toString();
-                    Toast.makeText(SelectNovGenreActivity.this, selectedGenre + " 선택됨", Toast.LENGTH_SHORT).show();
-                }
+        // 라디오 그룹 체크
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            RadioButton checkedRadio = findViewById(checkedId);
+            if (checkedRadio != null && checkedRadio.isEnabled()) {
+                selectedGenre = checkedRadio.getText().toString();
+            } else {
+                selectedGenre = "";
             }
         });
 
-        // "다음" 버튼 클릭 리스너 - 여기에 선택된 값 가져오기 코드 추가
-        String finalDreamContent = dreamContent;
-
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int selectedId = radioGroup.getCheckedRadioButtonId();
-                if (selectedId != -1) {
-                    RadioButton selectedRadioButton = findViewById(selectedId);
-                    String selectedGenre = selectedRadioButton.getText().toString();
-
-                    Intent nextIntent;
-                    if ("HomeActivity".equals(from)) {
-                        nextIntent = new Intent(SelectNovGenreActivity.this, DreamBasedNovActivity.class);
-                    } else if ("DreamBasedNewNov".equals(from)) {
-                        nextIntent = new Intent(SelectNovGenreActivity.this, DreamBasedNov2Activity.class);
-                    } else {
-                        // 기본값 또는 예외 처리
-                        nextIntent = new Intent(SelectNovGenreActivity.this, DreamBasedNovActivity.class);
-                    }
-                    nextIntent.putExtra("selected_genre", selectedGenre);
-                    nextIntent.putExtra("dream_content", finalDreamContent);
-                    startActivity(nextIntent);
-                } else {
-                    Toast.makeText(SelectNovGenreActivity.this, "장르를 선택해주세요", Toast.LENGTH_SHORT).show();
-                }
+        // 다음 버튼
+        buttonNext.setOnClickListener(v -> {
+            if (selectedGenre.isEmpty()) {
+                Toast.makeText(this, "장르를 선택하세요.", Toast.LENGTH_SHORT).show();
+                return;
             }
-        });
+            Genre genre = new Genre(selectedGenre);
+            genreViewModel.insert(genre);
 
+            Intent nextIntent;
+            if (fromLookScreen) {
+                // 감정 이미 있음 → DreamBasedNov2Activity로 바로 이동
+                nextIntent = new Intent(this, DreamBasedNov2Activity.class);
+                nextIntent.putExtra("dream_content", dreamContent);
+                nextIntent.putExtra("dream_interpretation", dreamInterpretation);
+                nextIntent.putExtra("selected_genre", selectedGenre);
+                nextIntent.putExtra("selected_mood", selectedMood);
+                nextIntent.putExtra("vivid_scene", vividScene);
+                nextIntent.putExtra("dream_objects", dreamObjects);
+                nextIntent.putExtra("dream_date", dreamDate);
+                nextIntent.putExtra("dream_id", dreamId);
+                nextIntent.putExtra("nickname", nickname);
+                nextIntent.putExtra("kakaoId", kakaoId);
+                Log.d("GenreActivity: dream_date확인 : ", dreamDate);  // ⭐ 로그 확인
+            } else {
+                // DiaryActivity에서 진입 → DreamBasedNovActivity로
+                nextIntent = new Intent(this, DreamBasedNovActivity.class);
+                nextIntent.putExtra("dream_content", dreamContent);
+                nextIntent.putExtra("dream_interpretation", dreamInterpretation);
+                nextIntent.putExtra("selected_genre", selectedGenre);
+                nextIntent.putExtra("dream_date", dreamDate);
+                nextIntent.putExtra("dream_id", dreamId);
+                // DreamBasedNovActivity → 이후 DreamBasedNov2Activity로 넘어감
+            }
+            startActivity(nextIntent);
+            finish();
+        });
     }
 }

@@ -2,12 +2,13 @@ package com.example.mobileteamapp;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
-import androidx.annotation.NonNull;
 import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -16,46 +17,38 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-/**
- * Gemini API 호출을 담당하는 서비스 클래스
- */
+// Gemini API 호출 서비스 클래스
 public class GeminiApiService {
-    // ➊ Gemini API 엔드포인트 URL (키는 뒤에 붙여서 사용)
+    // Gemini API 엔드포인트 (키는 BuildConfig에서 분리관리)
     private static final String BASE_URL =
             "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=";
 
-    // ➋ 영어 시스템 프롬프트(영어가 더 좋은 해석 결과를 제공함) + “응답은 한국어로만”
+    // 시스템 프롬프트(영문, 응답은 반드시 한국어)
     private static final String SYSTEM_PROMPT =
             "You are a creative novelist and an expert in psychological analysis. "
                     + "Listen to the user’s dream and interpret its symbols and emotions in a richly narrative style. "
                     + "Respond only in Korean, use at least five sentences across multiple paragraphs, and do not ask any follow-up questions. "
                     + "Keep it concise—around 1,000 characters—and finish with a warm, encouraging sentence.";
-            /*"당신은 창의적인 소설가이자 심리 분석 전문가입니다."
-                    + 사용자의 꿈을 듣고 그 상징과 감정을 풍부한 서사 스타일로 해석하세요
-                    + "한국어로만 응답하고, 여러 문단에 걸쳐 최소 다섯 문장을 사용하며, 후속 질문은 하지 마세요."
-                    + "약 1,000자 정도의 간결함을 유지하고 따뜻하고 고무적인 문장으로 마무리하세요.";*/
 
-    // ➌ OkHttpClient 인스턴스
     private final OkHttpClient client = new OkHttpClient();
 
-    /** 콜백 인터페이스 정의 */
+    // 콜백 인터페이스
     public interface Callback {
         void onSuccess(String result);
         void onFailure(String errorMsg);
     }
 
     /**
-     * 꿈 텍스트를 보내고, 해석 결과(JSON)를 콜백으로 전달
-     *
-     * @param userInput 사용자 꿈 텍스트
-     * @param callback  결과 콜백
+     * 꿈 텍스트를 전송해 해몽결과(텍스트)를 콜백으로 전달
+     * @param userInput   꿈 텍스트
+     * @param callback    결과 콜백
      */
     public void requestGemini(String userInput, Callback callback) {
         String apiUrl = BASE_URL + BuildConfig.GEMINI_API_KEY;
 
         JSONObject json = new JSONObject();
         try {
-            // 시스템 프롬프트 + 사용자 입력을 하나의 text로 합침
+            // 프롬프트+꿈내용 합쳐서 하나의 text로
             String combined = SYSTEM_PROMPT
                     + "\n\nUser Dream:\n"
                     + userInput;
@@ -93,7 +86,7 @@ public class GeminiApiService {
         client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                callback.onFailure(e.getMessage());
+                callback.onFailure("네트워크 오류: " + e.getMessage());
             }
 
             @Override

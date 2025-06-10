@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">MobileTeamApp</string>
-    <string name="button_label">장르별 소설 보러가기</string>
+    <string name="button_label"> 장르별 소설 보러가기</string>
     <string name="button_label_2">"오늘의 꿈 일기\n 작성하러가기"</string>
-    <string name="button_label_3">"카카오를 통한 회원가입"</string>
+    <string name="button_label_3">"카카오를 통한 간편가입"</string>
     <string name="button_label_4">"소설 생성"</string>
     <string name="button_label_5">"꿈 분석 내용 확인"</string>
     <string name="button_label_6">"꿈 분석 내용"</string>
@@ -56,15 +56,15 @@
     <string name="q_btn_2">"다음 질문으로~"</string>
 
     <string-array name="genre_array">
-            <item>선택</item>
-            <item>스릴러</item>
-            <item>멜로</item>
-            <item>로맨틱</item>
-            <item>코미디</item>
-            <item>액션</item>
-            <item>SF</item>
-            <item>판타지</item>
-            <item>다큐멘터리</item>
+        <item>선택</item>
+        <item>스릴러</item>
+        <item>멜로</item>
+        <item>로맨틱</item>
+        <item>코미디</item>
+        <item>액션</item>
+        <item>SF</item>
+        <item>판타지</item>
+        <item>다큐멘터리</item>
     </string-array>
 
     <string name="button_select_date">주별 날짜</string>

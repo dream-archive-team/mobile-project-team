@@ -12,7 +12,6 @@ import java.util.List;
 
 @Dao
 public interface GenreDao {
-
     @Insert
     void insert(Genre genre);
 
@@ -27,4 +26,9 @@ public interface GenreDao {
 
     @Query("SELECT * FROM genre WHERE genre_id = :id")
     Genre getGenreById(int id);
+
+
+    @Query("SELECT genre_name FROM genre WHERE genre_id = :id LIMIT 1")
+    String getGenreNameById(int id);
+
 }

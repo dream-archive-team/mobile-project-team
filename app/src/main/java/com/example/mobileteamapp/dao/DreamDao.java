@@ -1,6 +1,5 @@
 package com.example.mobileteamapp.dao;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -13,9 +12,9 @@ import java.util.List;
 
 @Dao
 public interface DreamDao {
-
     @Insert
-    void insert(Dream dream);
+    long insert(Dream dream); // 반환형 long
+
 
     @Update
     void update(Dream dream);
@@ -23,13 +22,21 @@ public interface DreamDao {
     @Delete
     void delete(Dream dream);
 
-    @Query("SELECT * FROM dream")
-    LiveData<List<Dream>> getAllDreams();
+    // 꿈 일기 전체 조회(최신 날짜순으로 반환)
+    @Query("SELECT * FROM dream ORDER BY dream_date DESC")
+    List<Dream> getAllDreams();
 
+    // 특정 사용자의 단일 꿈 조회
     @Query("SELECT * FROM dream WHERE dream_id = :id")
     Dream getDreamById(String id);
 
-    @Query("SELECT * FROM dream WHERE member_id = :memberId")
-    List<Dream> getDreamsByMemberId(String memberId);
-}
+    // 오늘 날짜의 꿈이 있는지 조회
+    @Query("SELECT COUNT(*) FROM dream WHERE dream_date = :date")
+    int getDreamCountByDate(String date);
 
+    // 특정 날짜의 꿈을 조회
+    @Query("SELECT * FROM dream WHERE dream_date = :date LIMIT 1")
+    Dream getDreamByDate(String date);
+
+
+}

@@ -2,8 +2,6 @@ package com.example.mobileteamapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -12,133 +10,177 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.mobileteamapp.entity.Dream;
 import com.example.mobileteamapp.entity.Emotion;
-import com.example.mobileteamapp.viewModel.EmotionViewModel;
+import com.example.mobileteamapp.viewmodel.DreamViewModel;
+import com.example.mobileteamapp.viewmodel.EmotionViewModel;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class DreamBasedNovActivity extends AppCompatActivity {
-    private static final String TAG = "DreamBasedNovActivity";
 
-    // (A) 첫 번째 화면(예: DiaryActivity → SelectNovGenreActivity)에서 넘겨받은 값들
-    private String dreamContent;   // 사용자가 입력한 꿈 내용
-    private String selectedGenre;  // 사용자가 선택한 소설 장르
-
-    // UI 컴포넌트
-    private RadioGroup rgMood;
-    private EditText etMostVividScene, etDreamObjects;
-
-    private Button btnGenerateNovel;
-
+    private String selectedMood = "";
+    private DreamViewModel dreamViewModel;
     private EmotionViewModel emotionViewModel;
+
+    private RadioButton rbJoy, rbSad, rbAnger, rbSurprise, rbAnxiety;
+    private RadioGroup rgMood;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dream_based_nov);
+        setContentView(R.layout.activity_dream_based_nov);
 
-        // Intent로부터 “dream_content”와 “selected_genre” 받아오기
-        Intent intent = getIntent();
-        dreamContent  = intent.getStringExtra("dream_content");
-        selectedGenre = intent.getStringExtra("selected_genre");
-        if (dreamContent == null)  dreamContent  = "";
-        if (selectedGenre == null) selectedGenre = "";
-
-        Log.d(TAG, "onCreate: Received dreamContent = " + dreamContent);
-        Log.d(TAG, "onCreate: Received selectedGenre = " + selectedGenre);
-
-        // 뷰 초기화
-        rgMood           = findViewById(R.id.rgMood);
-        etMostVividScene = findViewById(R.id.etMostVividScene);
-        etDreamObjects   = findViewById(R.id.etDreamObjects);
-        btnGenerateNovel = findViewById(R.id.btnGenerateNovel);
-
-        // ViewModel 초기화
+        dreamViewModel = new ViewModelProvider(this).get(DreamViewModel.class);
         emotionViewModel = new ViewModelProvider(this).get(EmotionViewModel.class);
 
-        // 감정 DB 전체 조회 및 로그 출력(DB조회용)
-        emotionViewModel.getAllEmotions().observe(this, emotions -> {
-            for (Emotion e : emotions) {
-                Log.d("EmotionCheck", "ID: " + e.getEmotion_id() + ", 이름: " + e.getEmotion_name());
+        rgMood = findViewById(R.id.rgMood);
+        EditText etMostVividScene = findViewById(R.id.etMostVividScene);
+        EditText etDreamObjects = findViewById(R.id.etDreamObjects);
+
+        rbJoy      = findViewById(R.id.rbMoodJoy);
+        rbSad      = findViewById(R.id.rbMoodSad);
+        rbAnger    = findViewById(R.id.rbMoodAnger);
+        rbSurprise = findViewById(R.id.rbMoodSurprise);
+        rbAnxiety  = findViewById(R.id.rbMoodAnxiety);
+
+        final String dreamContent = getIntent().getStringExtra("dream_content");
+        final String dreamInterpretation = getIntent().getStringExtra("dream_interpretation");
+        final String selectedGenre = getIntent().getStringExtra("selected_genre");
+        final String intentDate = getIntent().getStringExtra("dream_date");
+        final String prevDreamId = getIntent().getStringExtra("dream_id");
+
+        final String dreamDate = (intentDate == null || intentDate.trim().isEmpty())
+                ? new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date())
+                : intentDate;
+
+
+
+        // ✅ 감정 자동 체크/비활성화 처리
+        new Thread(() -> {
+            Dream dream = null;
+            if (prevDreamId != null && !prevDreamId.trim().isEmpty()) {
+                dream = dreamViewModel.getDreamById(prevDreamId);
+            }
+            if (dream == null) {
+                dream = dreamViewModel.getDreamByDate(dreamDate);
+            }
+
+            if (dream != null && dream.emotion_id > 0) {
+                Emotion emotion = emotionViewModel.getEmotionById(dream.emotion_id);
+                if (emotion != null) {
+                    String emotionName = emotion.getEmotion_name();
+                    runOnUiThread(() -> {
+                        rbJoy.setEnabled(false);
+                        rbSad.setEnabled(false);
+                        rbAnger.setEnabled(false);
+                        rbSurprise.setEnabled(false);
+                        rbAnxiety.setEnabled(false);
+
+                        switch (emotionName) {
+                            case "기쁨":
+                                rbJoy.setChecked(true); rbJoy.setEnabled(true); selectedMood = "기쁨"; break;
+                            case "슬픔":
+                                rbSad.setChecked(true); rbSad.setEnabled(true); selectedMood = "슬픔"; break;
+                            case "분노":
+                                rbAnger.setChecked(true); rbAnger.setEnabled(true); selectedMood = "분노"; break;
+                            case "놀람":
+                                rbSurprise.setChecked(true); rbSurprise.setEnabled(true); selectedMood = "놀람"; break;
+                            case "불안":
+                                rbAnxiety.setChecked(true); rbAnxiety.setEnabled(true); selectedMood = "불안"; break;
+                        }
+                    });
+                }
+            } else {
+                runOnUiThread(() -> {
+                    rbJoy.setEnabled(true);
+                    rbSad.setEnabled(true);
+                    rbAnger.setEnabled(true);
+                    rbSurprise.setEnabled(true);
+                    rbAnxiety.setEnabled(true);
+                });
+            }
+        }).start();
+
+        // 감정 선택 리스너
+        rgMood.setOnCheckedChangeListener((group, checkedId) -> {
+            RadioButton checkedRadio = findViewById(checkedId);
+            if (checkedRadio != null && checkedRadio.isEnabled()) {
+                selectedMood = checkedRadio.getText().toString();
             }
         });
 
-        // “소설 생성하기” 버튼 클릭 리스너
-        btnGenerateNovel.setOnClickListener(v -> {
-            Log.d(TAG, "btnGenerateNovel clicked");
-            if (!validateAllInputs()) {
-                return;  // 입력 검증 실패 시 리턴
+        // 소설 생성 버튼
+        findViewById(R.id.btnGenerateNovel).setOnClickListener(v -> {
+            String vividScene = etMostVividScene.getText().toString().trim();
+            String dreamObjects = etDreamObjects.getText().toString().trim();
+
+            if (selectedMood.isEmpty()) {
+                Toast.makeText(this, "감정을 선택하세요.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (vividScene.isEmpty()) {
+                Toast.makeText(this, "가장 뚜렷했던 장면을 입력하세요.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (dreamObjects.isEmpty()) {
+                Toast.makeText(this, "꿈에 나온 물건을 입력하세요.", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            saveEmotionToDb();  // 감정 저장 메서드 호출
+            new Thread(() -> {
+                // 감정이 없으면 새로 db에 저장하고 ID 반환
+                Emotion emotion = emotionViewModel.getEmotionByName(selectedMood);
+                if (emotion == null) {
+                    emotion = new Emotion(selectedMood);
+                    long newEmotionId = emotionViewModel.insertAndReturnId(emotion);
+                    emotion.setEmotion_id((int) newEmotionId);
+                }
+                int emotionId = emotion.getEmotion_id();
 
-            sendToNovelDetail();
+                String sendDreamId = prevDreamId;
+
+                if (sendDreamId == null || sendDreamId.trim().isEmpty()) {
+                    Dream already = dreamViewModel.getDreamByDate(dreamDate);
+                    if (already == null) {
+                        Dream newDream = new Dream(dreamDate, dreamContent, dreamInterpretation, emotionId);
+                        long newId = dreamViewModel.insertAndReturnId(newDream);
+                        sendDreamId = String.valueOf(newId);
+                    } else {
+                        already.dream_content = dreamContent;
+                        already.interpretation = dreamInterpretation;
+                        already.emotion_id = emotionId;
+                        dreamViewModel.update(already);
+                        sendDreamId = String.valueOf(already.getDreamId());
+                    }
+                } else {
+                    Dream byId = dreamViewModel.getDreamById(sendDreamId);
+                    if (byId != null) {
+                        byId.dream_content = dreamContent;
+                        byId.interpretation = dreamInterpretation;
+                        byId.emotion_id = emotionId;
+                        dreamViewModel.update(byId);
+                    }
+                }
+
+                final String finalDreamId = sendDreamId;
+                runOnUiThread(() -> {
+                    Intent intent = new Intent(this, DreamBasedNov2Activity.class);
+                    intent.putExtra("dream_content", dreamContent);
+                    intent.putExtra("dream_interpretation", dreamInterpretation);
+                    intent.putExtra("selected_genre", selectedGenre);
+                    intent.putExtra("selected_mood", selectedMood);
+                    intent.putExtra("vivid_scene", vividScene);
+                    intent.putExtra("dream_objects", dreamObjects);
+                    intent.putExtra("dream_date", dreamDate);
+                    intent.putExtra("dream_id", finalDreamId);
+                    intent.putExtra("emotion_id",emotionId);
+                    startActivity(intent);
+                    finish();
+                });
+            }).start();
         });
-    }
-
-    private boolean validateAllInputs() {
-        // 1) 기분 선택 확인
-        int selectedMoodId = rgMood.getCheckedRadioButtonId();
-        if (selectedMoodId == -1) {
-            Toast.makeText(this, "1번 질문: 기분을 하나 선택해주세요.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        // 2) 가장 뚜렷했던 장면 입력 확인
-        String vividScene = etMostVividScene.getText().toString().trim();
-        if (vividScene.isEmpty()) {
-            Toast.makeText(this, "2번 질문: 가장 뚜렷했던 장면을 입력해주세요.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        // 3) 꿈 속 물건 입력 확인
-        String dreamObjects = etDreamObjects.getText().toString().trim();
-        if (dreamObjects.isEmpty()) {
-            Toast.makeText(this, "3번 질문: 꿈 속 물건을 입력해주세요.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        return true;
-    }
-
-    private void sendToNovelDetail() {
-        // 사용자 입력 데이터 수집
-        RadioButton rbMood = findViewById(rgMood.getCheckedRadioButtonId());
-        String moodText = rbMood.getText().toString();
-
-        String vividScene = etMostVividScene.getText().toString().trim();
-        String dreamObjects = etDreamObjects.getText().toString().trim();
-
-        Intent intent = new Intent(DreamBasedNovActivity.this, DreamBasedNov2Activity.class);
-        intent.putExtra("dream_content",  dreamContent);
-        intent.putExtra("selected_genre", selectedGenre);
-        intent.putExtra("mood",           moodText);
-        intent.putExtra("vivid_scene",    vividScene);
-        intent.putExtra("dream_objects",  dreamObjects);
-        startActivity(intent);
-    }
-
-    private int getEmotionIdFromName(String emotionName) {
-        switch (emotionName) {
-            case "기쁨": return 1;
-            case "슬픔": return 2;
-            case "분노": return 3;
-            case "놀람": return 4;
-            case "불안": return 5;
-            default: return 0;
-        }
-    }
-
-    private void saveEmotionToDb() {
-        RadioButton rbMood = findViewById(rgMood.getCheckedRadioButtonId());
-        String selectedEmotionName = rbMood.getText().toString();
-
-        int emotionId = getEmotionIdFromName(selectedEmotionName);
-
-        Emotion emotion = new Emotion();
-        emotion.setEmotion_id(emotionId);
-        emotion.setEmotion_name(selectedEmotionName);
-
-        emotionViewModel.insert(emotion);
-
-        Log.d(TAG, "saveEmotionToDb: 감정 저장됨 → ID: " + emotionId + ", 이름: " + selectedEmotionName);
     }
 }

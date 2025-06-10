@@ -2,9 +2,6 @@ package com.example.mobileteamapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -12,133 +9,67 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-/**
- * 사용자가 네 가지 질문(기분, 뚜렷했던 장면, 꿈 속 물건, 엔딩 선택)을 답변하면
- * 모든 데이터를 Intent에 담아 DreamBasedNewNov로 넘기는 역할만 수행합니다.
- */
+// 질문 화면 (2)
 public class DreamBasedNov2Activity extends AppCompatActivity {
-    private static final String TAG = "DreamBasedNovActivity";
 
-    // (A) 첫 번째 화면(예: DiaryActivity → SelectNovGenreActivity)에서 넘겨받은 값들
-    private String dreamContent;   // 사용자가 입력한 꿈 내용
-    private String selectedGenre;// 사용자가 선택한 소설 장르
-    private String mood;
-    private String vividScene;
-    private String dreamObjects;
-
-    private EditText etRequiredWords;
-    private RadioGroup rgEnding;
-    private Button btnGenerateNovel;
-
-    private RadioButton rbEndingOpen;
-    private RadioButton rbEndingHappy;
-    private RadioButton rbEndingTwist2;
-    private RadioButton rbEndingTwist;
-    private RadioButton rbEndingGrowth;
-    private RadioButton rbEndingSad;
-
+    private String selectedEnding = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dream_based_nov_2);
+        setContentView(R.layout.activity_dream_based_nov2);
 
-        // ───────────────────────────────────────────────────────────
-        // 1) Intent로부터 “dream_content”와 “selected_genre” 받아오기
-        Intent intent = getIntent();
-        dreamContent  = intent.getStringExtra("dream_content");
-        selectedGenre = intent.getStringExtra("selected_genre");
-        mood          = intent.getStringExtra("mood");
-        vividScene    = intent.getStringExtra("vivid_scene");
-        dreamObjects  = intent.getStringExtra("dream_objects");
+        // 이전 액티비티에서 값 받기
+        Intent prevIntent = getIntent();
+        String dreamContent = prevIntent.getStringExtra("dream_content");   // 꿈
+        String dreamInterpretation = prevIntent.getStringExtra("dream_interpretation"); // 해몽
+        String selectedGenre = prevIntent.getStringExtra("selected_genre");
+        String selectedMood = prevIntent.getStringExtra("selected_mood");
+        String vividScene = prevIntent.getStringExtra("vivid_scene");
+        String dreamObjects = prevIntent.getStringExtra("dream_objects");
+        String dreamDate = prevIntent.getStringExtra("dream_date"); // 날짜
+        String dreamId = prevIntent.getStringExtra("dream_id");
+        String nickname = prevIntent.getStringExtra("nickname");
+        String kakaoId = prevIntent.getStringExtra("kakaoId");
 
+        //Log.d("NovActivity2 : ", dreamContent);  // ⭐ 로그 확인
+        // UI 요소 연결
+        RadioGroup rgEnding = findViewById(R.id.rgEnding);
+        EditText etRequiredWords = findViewById(R.id.etRequiredWords);
 
-        Log.d(TAG, "onCreate: Received dreamContent = " + dreamContent);
-        Log.d(TAG, "onCreate: Received selectedGenre = " + selectedGenre);
-
-        // ───────────────────────────────────────────────────────────
-        // 2) 뷰 초기화
-        etRequiredWords  = findViewById(R.id.etRequiredWords);
-        btnGenerateNovel = findViewById(R.id.btnGenerateNovel);
-
-        // ───────────────────────────────────────────────────────────
-
-        rbEndingOpen   = findViewById(R.id.rbEndingOpen);
-        rbEndingHappy  = findViewById(R.id.rbEndingHappy);
-        rbEndingTwist2 = findViewById(R.id.rbEndingTwist2);
-        rbEndingTwist  = findViewById(R.id.rbEndingTwist);
-        rbEndingGrowth = findViewById(R.id.rbEndingGrowth);
-        rbEndingSad    = findViewById(R.id.rbEndingSad);
-
-// 여기서 endingButtons 배열 정의
-        RadioButton[] endingButtons = {rbEndingOpen, rbEndingHappy, rbEndingTwist2, rbEndingTwist, rbEndingGrowth, rbEndingSad};
-
-        // 3) “소설 생성하기” 버튼 클릭 리스너
-        btnGenerateNovel.setOnClickListener(v -> {
-            Log.d(TAG, "btnGenerateNovel clicked");
-            if (!validateAllInputs()) {
-                return;  // 입력 검증 실패 시 리턴
+        // 1. 엔딩 라디오 체크 버튼
+        rgEnding.setOnCheckedChangeListener((group, checkedId) -> {
+            RadioButton checkedRadio = findViewById(checkedId);
+            if (checkedRadio != null) {
+                selectedEnding = checkedRadio.getText().toString();
             }
-            sendToNovelDetail();
         });
-    }
 
-    /**
-     * 네 가지 입력(기분, 뚜렷했던 장면, 꿈 속 물건, 엔딩)을 모두 체크합니다.
-     * 하나라도 비어 있으면 Toast를 띄우고 false를 반환합니다.
-     */
-    private boolean validateAllInputs() {
-        // 4) 엔딩 선택 확인
-        if (!rbEndingOpen.isChecked()
-                && !rbEndingHappy.isChecked()
-                && !rbEndingTwist2.isChecked()
-                && !rbEndingTwist.isChecked()
-                && !rbEndingGrowth.isChecked()
-                && !rbEndingSad.isChecked()) {
+        // 2. 소설 생성 버튼
+        findViewById(R.id.btnGenerateNovel).setOnClickListener(v -> {
+            String requiredWords = etRequiredWords.getText().toString().trim();
 
-            Toast.makeText(this, "4번 질문: 엔딩 유형을 하나 선택해주세요.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
+            if (selectedEnding.isEmpty()) {
+                Toast.makeText(this, "엔딩 유형을 선택하세요.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-        // 5) 필수 단어(etRequiredWords)는 선택사항이므로 검증하지 않음
-
-        return true;
-    }
-
-    /**
-     * 모든 입력값을 Intent에 담아서 DreamBasedNewNov로 보냅니다.
-     * 이전에 얻어 놓은 dreamContent, selectedGenre와
-     * 여기서 새로 수집한 mood, vividScene, dreamObjects, ending, requiredWords를 함께 실어 보냄.
-     */
-    private void sendToNovelDetail() {
-
-        String endingText;
-        if (rbEndingOpen.isChecked()) {
-            endingText = rbEndingOpen.getText().toString();
-        } else if (rbEndingHappy.isChecked()) {
-            endingText = rbEndingHappy.getText().toString();
-        } else if (rbEndingTwist2.isChecked()) {
-            endingText = rbEndingTwist2.getText().toString();
-        } else if (rbEndingTwist.isChecked()) {
-            endingText = rbEndingTwist.getText().toString();
-        } else if (rbEndingGrowth.isChecked()) {
-            endingText = rbEndingGrowth.getText().toString();
-        } else {  // rbEndingSad.isChecked()
-            endingText = rbEndingSad.getText().toString();
-        }
-
-
-        String requiredWords = etRequiredWords.getText().toString().trim();
-
-        // (E) Intent 생성 → DreamBasedNewNov로 데이터 전달
-        Intent intent = new Intent(DreamBasedNov2Activity.this, DreamBasedNewNov.class);
-        intent.putExtra("dream_content",  dreamContent);
-        intent.putExtra("selected_genre", selectedGenre);
-        intent.putExtra("mood",           mood);
-        intent.putExtra("vivid_scene",    vividScene);
-        intent.putExtra("dream_objects",  dreamObjects);
-        intent.putExtra("ending",         endingText);
-        intent.putExtra("required_words", requiredWords);
-        startActivity(intent);
+            // 소설 생성 화면으로 이동 (정보만 전달)
+            Intent intent = new Intent(this, DreamBasedNewNovActivity.class);
+            intent.putExtra("dream_content", dreamContent);
+            intent.putExtra("dream_interpretation", dreamInterpretation);
+            intent.putExtra("selected_genre", selectedGenre);
+            intent.putExtra("selected_mood", selectedMood);
+            intent.putExtra("vivid_scene", vividScene);
+            intent.putExtra("dream_objects", dreamObjects);
+            intent.putExtra("ending", selectedEnding);
+            intent.putExtra("required_words", requiredWords);
+            intent.putExtra("dream_date", dreamDate);
+            intent.putExtra("dream_id", dreamId);
+            intent.putExtra("nickname", nickname);
+            intent.putExtra("kakaoId", kakaoId);
+            startActivity(intent);
+            finish();
+        });
     }
 }

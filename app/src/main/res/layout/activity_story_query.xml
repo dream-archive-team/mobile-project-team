@@ -62,17 +62,21 @@
     <!-- 소설 내용 -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginBottom="8dp">
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/box_border"
+        android:overScrollMode="always"
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/tvStoryContent"
-            android:text=""
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="#EEEEEE"
+            android:layout_height="match_parent"
+            android:hint="@string/h_null"
+            android:minLines="3"
             android:padding="8dp"
-            android:layout_marginBottom="8dp" />
+            android:textSize="15sp" />
+
     </ScrollView>
 
     <!-- 그래프 자리 -->
@@ -80,6 +84,7 @@
         android:id="@+id/graphContainer"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="8dp"
         android:background="#DDDDDD" />
 

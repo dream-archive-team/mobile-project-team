@@ -1,5 +1,6 @@
 package com.example.mobileteamapp;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,154 +11,184 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.datepicker.MaterialDatePicker;
+import com.example.mobileteamapp.entity.Novel;
+import com.example.mobileteamapp.viewmodel.NovelViewModel;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
 public class StoryQueryActivity extends AppCompatActivity {
 
-    Button btnSelectDate;
-    Button btnHome;  // 홈으로 가는 버튼
-    Spinner spinnerGenre;
-    LinearLayout layoutDateCheckboxes;
-    TextView tvStoryTitle, tvStoryContent;
+    private Spinner spinnerGenre;
+    private Button btnSelectDate, btnHome;
+    private LinearLayout layoutDateCheckboxes;
+    private TextView tvStoryTitle, tvStoryContent;
 
-    String selectedGenre = "";
-    List<String> selectedDates = new ArrayList<>();  // 선택한 날짜들
+    private NovelViewModel novelViewModel;
+    private List<Novel> filteredNovels = new ArrayList<>();
+    private String selectedGenre = "";
+    private String selectedDate = ""; // yyyy-MM-dd
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_story_query);
 
-        // UI 요소 초기화
+        // UI요소 연결
+        spinnerGenre = findViewById(R.id.spinnerGenre);
         btnSelectDate = findViewById(R.id.btnSelectDate);
         btnHome = findViewById(R.id.btnHome);
-        spinnerGenre = findViewById(R.id.spinnerGenre);
         layoutDateCheckboxes = findViewById(R.id.layoutDateCheckboxes);
         tvStoryTitle = findViewById(R.id.tvStoryTitle);
         tvStoryContent = findViewById(R.id.tvStoryContent);
 
-        // 장르 스피너 설정
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.genre_array,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // viewModel 연결
+        novelViewModel = new ViewModelProvider(this).get(NovelViewModel.class);
+
+        // 장르 스피너 세팅
+        String[] genres = {"전체", "판타지", "로맨틱", "SF", "다큐멘터리", "스릴러", "코미디", "액션"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, genres);
         spinnerGenre.setAdapter(adapter);
 
-        // 장르 선택 이벤트 처리
+        // 장르 선택 시 필터링
         spinnerGenre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedGenre = parent.getItemAtPosition(position).toString();
-                updateCheckboxes();  // 장르가 바뀌면 체크박스 갱신
+                selectedGenre = genres[position];
+                updateNovelList();
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        // 날짜 선택 버튼 이벤트 처리
-        btnSelectDate.setOnClickListener(v -> {
-            MaterialDatePicker.Builder<androidx.core.util.Pair<Long, Long>> builder =
-                    MaterialDatePicker.Builder.dateRangePicker();
-            builder.setTitleText("기간을 선택하세요");
+        // 날짜 선택 버튼
+        btnSelectDate.setOnClickListener(v -> showDatePicker());
 
-            final MaterialDatePicker<androidx.core.util.Pair<Long, Long>> picker = builder.build();
-            picker.show(getSupportFragmentManager(), picker.toString());
-
-            picker.addOnPositiveButtonClickListener(selection -> {
-                if (selection.first != null && selection.second != null) {
-                    Date start = new Date(selection.first);
-                    Date end = new Date(selection.second);
-                    selectedDates = getDatesBetween(start, end);
-
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
-                    String text = sdf.format(start) + " ~ " + sdf.format(end);
-                    btnSelectDate.setText(text);
-
-                    updateCheckboxes();
-                }
-            });
+        // 홈으로 버튼
+        btnHome.setOnClickListener(v -> {
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+            finish();
         });
 
-        // 홈으로 이동 버튼
-        btnHome.setOnClickListener(new View.OnClickListener() {
+        // novelViewModel이 LiveData이므로 observe 필요
+        novelViewModel.getAllNovels().observe(this, new Observer<List<Novel>>() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(StoryQueryActivity.this, HomeActivity.class);
-                intent.putExtra("member_id", getIntent().getStringExtra("member_id")); // 현재 받은 member_id 전달
-                startActivity(intent);
-                finish(); // 현재 액티비티 종료하여 뒤로가기 시 다시 돌아오지 않게
+            public void onChanged(List<Novel> novels) {
+                updateNovelList();
             }
         });
+
+        selectedGenre = "전체";
+        selectedDate = "";
     }
 
-    // 시작일 ~ 종료일 사이의 날짜 리스트 반환
-    private List<String> getDatesBetween(Date start, Date end) {
-        List<String> dates = new ArrayList<>();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(start);
+    private void showDatePicker() {
+        Calendar cal = Calendar.getInstance();
+        DatePickerDialog dlg = new DatePickerDialog(this,
+                (view, year, month, dayOfMonth) -> {
+                    selectedDate = String.format(Locale.KOREA, "%04d-%02d-%02d", year, month + 1, dayOfMonth);
+                    updateNovelList();
+                },
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        dlg.show();
+    }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+    // 소설 DB에서 장르+날짜별 목록 추출 후 체크박스 갱신
+    private void updateNovelList() {
+        List<Novel> allNovels = novelViewModel.getAllNovels().getValue();
+        if (allNovels == null) allNovels = new ArrayList<>();
 
-        while (!calendar.getTime().after(end)) {
-            dates.add(sdf.format(calendar.getTime()));
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        filteredNovels.clear();
+        for (Novel n : allNovels) {
+            boolean genreMatch = selectedGenre.equals("전체") || selectedGenre.equals(n.getGenre());
+            boolean dateMatch = selectedDate.isEmpty() || selectedDate.equals(n.getDream_date());
+            if (genreMatch && dateMatch) {
+                filteredNovels.add(n);
+            }
         }
 
-        return dates;
-    }
+        // ★ 최신 날짜(내림차순)로 정렬
+        Collections.sort(filteredNovels, new Comparator<Novel>() {
+            private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+            @Override
+            public int compare(Novel n1, Novel n2) {
+                try {
+                    String d1 = n1.getDream_date();
+                    String d2 = n2.getDream_date();
+                    if (d1 == null && d2 == null) return 0;
+                    if (d1 == null) return 1;
+                    if (d2 == null) return -1;
+                    return -sdf.parse(d1).compareTo(sdf.parse(d2)); // 내림차순!
+                } catch (ParseException e) {
+                    return 0;
+                }
+            }
+        });
 
-    // 체크박스 생성 및 갱신
-    private void updateCheckboxes() {
         layoutDateCheckboxes.removeAllViews();
+        tvStoryTitle.setText("");
+        tvStoryContent.setText("");
 
-        if (selectedDates.isEmpty() || selectedGenre.equals("선택") || selectedGenre.isEmpty()) {
+        if (filteredNovels.isEmpty()) {
+            Toast.makeText(this, "해당 조건의 소설이 없습니다.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        for (String date : selectedDates) {
-            CheckBox checkBox = new CheckBox(this);
-            checkBox.setText(date);
+        // 날짜별로 체크박스 추가
+        for (int i = 0; i < filteredNovels.size(); i++) {
+            Novel novel = filteredNovels.get(i);
+            CheckBox cb = new CheckBox(this);
+            String label = (novel.getDream_date() != null ? novel.getDream_date() : "") +
+                    " (" + (novel.getGenre() != null ? novel.getGenre() : "-") + ")";
+            cb.setText(label);
 
-            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            int idx = i;
+            cb.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
-                    // 다른 체크박스 해제
-                    for (int i = 0; i < layoutDateCheckboxes.getChildCount(); i++) {
-                        View child = layoutDateCheckboxes.getChildAt(i);
-                        if (child instanceof CheckBox && child != checkBox) {
-                            ((CheckBox) child).setChecked(false);
+                    // 체크된 소설 표시, 나머지 체크 해제
+                    for (int j = 0; j < layoutDateCheckboxes.getChildCount(); j++) {
+                        if (j != idx) {
+                            CheckBox other = (CheckBox) layoutDateCheckboxes.getChildAt(j);
+                            other.setChecked(false);
                         }
                     }
-                    // 해당 날짜 소설 로딩
-                    loadStory(date, selectedGenre);
+                    // 소설 제목 앞뒤 **, *, 공백 등 제거
+                    String cleanedTitle = cleanTitle(novel.getNovel_title());
+                    String cleanedContent = cleanContent(novel.getNovel_content());
+                    tvStoryTitle.setText(cleanedTitle);
+                    tvStoryContent.setText(cleanedContent);
                 } else {
-                    // 체크 해제 시 초기화
-                    tvStoryTitle.setText("꿈 제목");
-                    tvStoryContent.setText("");
+                    // 해제하면 내용 숨김
+                    if (tvStoryTitle.getText().toString().equals(cleanTitle(novel.getNovel_title()))) {
+                        tvStoryTitle.setText("");
+                        tvStoryContent.setText("");
+                    }
                 }
             });
-
-            layoutDateCheckboxes.addView(checkBox);
+            layoutDateCheckboxes.addView(cb);
         }
     }
 
-    // 소설 정보 로딩 (샘플 구현)
-    private void loadStory(String date, String genre) {
-        String title = date + "의 " + genre + " 소설";
-        String content = "이 날 꾼 꿈을 바탕으로 작성된 " + genre + " 장르의 소설 내용입니다.";
-        tvStoryTitle.setText(title);
-        tvStoryContent.setText(content);
+    // 소설 제목 앞뒤 **, *, 공백 등 제거
+    private String cleanTitle(String title) {
+        if (title == null) return "";
+        return title.replaceAll("^[\\*\\s]+", "").replaceAll("[\\*\\s]+$", "");
+    }
+
+    private String cleanContent(String content) {
+        if (content == null) return "";
+        return content.replaceAll("^[\\*\\s]+", "").replaceAll("[\\*\\s]+$", "");
     }
 }

@@ -3,17 +3,15 @@ package com.example.mobileteamapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileteamapp.entity.Dream;
-import com.example.mobileteamapp.viewModel.DreamViewModel;
+import com.example.mobileteamapp.viewmodel.DreamViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,134 +19,142 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.UUID;
 
-// 꿈 일기 작성 기능
+// 꿈 작성 및 분석 화면
 public class DiaryActivity extends AppCompatActivity {
 
-    private EditText etDreamInput;
     private DreamViewModel dreamViewModel;
-    private TextView tvDreamAnalysis;
-    private GeminiApiService service;
+    private GeminiApiService geminiApiService = new GeminiApiService();
+    private String latestInterpretation = ""; // 해몽 내용
+
+    private String selectedDate; // 선택한 날짜
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.diary);
-        Log.d("DiaryActivity", "onCreate called");
+        setContentView(R.layout.activity_diary);
 
-        etDreamInput = findViewById(R.id.etDreamInput);
-        Button btnAnalyze = findViewById(R.id.btnAnalyze);
-        Button btnGenerateStory = findViewById(R.id.btnGenerateStory);
-        tvDreamAnalysis = findViewById(R.id.tvDreamAnalysis);
+        // UI요소 연결
+        EditText etDreamInput = findViewById(R.id.etDreamInput);
+        TextView tvDreamAnalysis = findViewById(R.id.tvDreamAnalysis);
 
-        dreamViewModel = new ViewModelProvider(this).get(DreamViewModel.class);
-        service = new GeminiApiService();
+        // ViewModel 연결
+        dreamViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()))
+                .get(DreamViewModel.class);
 
-        // DB 전체 확인 로그
-        dreamViewModel.getAllDreams().observe(this, dreams -> {
-            for (Dream dream : dreams) {
-                Log.d("DreamCheck", "ID: " + dream.getDream_id()
-                        + ", 날짜: " + dream.getDream_date()
-                        + ", 내용: " + dream.getDream_content()
-                        + ", 해몽: " + dream.getInterpretation()
-                        + ", 사용자: " + dream.getMember_id());
-            }
-        });
+        // HomeActivity에서 날짜 받기
+        selectedDate = getIntent().getStringExtra("selected_date");
+        if (selectedDate == null || selectedDate.trim().isEmpty()) {
+            // 만약 인텐트로 날짜가 안 오면 오늘 날짜로 대체
+            selectedDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+            Toast.makeText(this, "선택된 날짜가 없어 오늘 날짜로 대체되었습니다.", Toast.LENGTH_SHORT).show();  // ⭐ 날짜 전달 확인용
+        }
 
-        // 분석 버튼 클릭
-        btnAnalyze.setOnClickListener(v -> {
+        // 1. 꿈 내용 입력 -> 꿈 분석, db 저장
+        findViewById(R.id.btnAnalyze).setOnClickListener(v -> {
             String dreamContent = etDreamInput.getText().toString().trim();
+            if (dreamContent.isEmpty()) {
+                Toast.makeText(this, "꿈 내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            if (!dreamContent.isEmpty()) {
-                String dreamId = UUID.randomUUID().toString();
-                String memberId = getCurrentUserId();
-                String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+            final String dateForDream = selectedDate; // 반드시 선택된 날짜
 
-                Dream dream = new Dream();
-                dream.setDream_id(dreamId);
-                dream.setMember_id(memberId);
-                dream.setDream_date(today);
-                dream.setDream_content(dreamContent);
-                dream.setInterpretation(""); // 초기 해몽 빈 값
+            // 이미 해당 날짜에 꿈이 있으면 update, 없으면 insert
+            new Thread(() -> {
+                Dream existing = dreamViewModel.getDreamByDate(dateForDream);
+                // 꿈이 없으면 insert
+                if (existing == null) {
+                    Dream newDream = new Dream(dateForDream, dreamContent, "", 0); // 해몽은 추후 update
 
-                dreamViewModel.insert(dream); // 저장 먼저
+                    // ⭐ 로그 확인
+                    Log.d("Dream", "[INSERT] dream_id(before) = " + newDream.getDreamId() + " date=" + dateForDream);
 
-                Toast.makeText(DiaryActivity.this, "꿈이 저장되었습니다.", Toast.LENGTH_SHORT).show();
-                tvDreamAnalysis.setText("로딩 중...");
+                    dreamViewModel.insert(newDream);
+                }
+                // 꿈이 있으면 작성 못함
+                else {
+                    runOnUiThread(() ->
+                            Toast.makeText(getApplicationContext(), "이미 해당 날짜에 등록된 꿈이 있습니다.", Toast.LENGTH_SHORT).show()
+                    );
+                    // ⭐ 로그 확인
+                    Log.d("Dream", "[BLOCKED] 이미 해당 날짜에 꿈이 존재합니다. dream_id = " + existing.getDreamId());
+                }
+            }).start();
 
-                service.requestGemini(dreamContent, new GeminiApiService.Callback() {
-                    @Override
-                    public void onSuccess(String result) {
-                        String fullText;
-                        try {
-                            JSONObject root = new JSONObject(result);
-                            JSONArray candidates = root.optJSONArray("candidates");
-                            if (candidates != null && candidates.length() > 0) {
-                                JSONObject contentObj = candidates.getJSONObject(0).optJSONObject("content");
-                                JSONArray parts = (contentObj != null) ? contentObj.optJSONArray("parts") : null;
-                                if (parts != null && parts.length() > 0) {
-                                    fullText = parts.getJSONObject(0).optString("text", "");
-                                } else {
-                                    fullText = "꿈 해석 결과가 없습니다.";
-                                }
-                            } else {
-                                fullText = "꿈 해석 결과가 없습니다.";
-                            }
-                        } catch (Exception e) {
-                            fullText = "파싱 오류: " + e.getMessage();
-                        }
+            tvDreamAnalysis.setText("꿈을 분석중입니다...");
 
-                        String formatted = fullText
-                                .replaceAll("([.!?])\\s+", "$1\n\n")
-                                .replaceAll("\\n{3,}", "\n\n");
 
-                        runOnUiThread(() -> {
-                            tvDreamAnalysis.setText(formatted);
 
-                            // 🔥 Gemini 결과 DB에 저장
-                            dream.setInterpretation(formatted);
+            geminiApiService.requestGemini(dreamContent, new GeminiApiService.Callback() {
+                @Override
+                public void onSuccess(String result) {
+                    String interpretation = parseGeminiResult(result);
+
+                    new Thread(() -> {
+                        Dream dream = dreamViewModel.getDreamByDate(dateForDream); // 날짜로 직접 조회
+
+                        if (dream != null) {
+                            dream.interpretation = interpretation;
+
+                            Log.d("Dream", "[ANALYSIS UPDATE] dream_id = " + dream.getDreamId() + " date=" + dateForDream);
                             dreamViewModel.update(dream);
 
-                            // 🔥 저장 확인 로그
-                            Log.d("DreamUpdate", "Updated Dream 해몽 저장됨 - ID: " + dream.getDream_id()
-                                    + ", 해몽: " + formatted);
-                        });
-                    }
-
-                    @Override
-                    public void onFailure(String errorMsg) {
-                        runOnUiThread(() -> tvDreamAnalysis.setText("오류: " + errorMsg));
-                    }
-                });
-
-            } else {
-                Toast.makeText(DiaryActivity.this, "꿈 내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
-            }
+                            runOnUiThread(() -> {
+                                tvDreamAnalysis.setText(interpretation);
+                                latestInterpretation = interpretation;
+                                Toast.makeText(DiaryActivity.this, "꿈 분석 완료!", Toast.LENGTH_SHORT).show();
+                            });
+                        } else {
+                            runOnUiThread(() -> {
+                                Toast.makeText(DiaryActivity.this, "꿈이 존재하지 않아 해몽을 저장할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                            });
+                        }
+                    }).start();
+                }
+                @Override
+                public void onFailure(String errorMsg) {
+                    runOnUiThread(() -> {
+                        tvDreamAnalysis.setText("꿈 분석 실패: " + errorMsg);
+                    });
+                }
+            });
         });
 
-        // 소설 생성 버튼
-        btnGenerateStory.setOnClickListener(v -> {
-            String analysisResult = tvDreamAnalysis.getText().toString().trim();
-
-            if (analysisResult.isEmpty()
-                    || analysisResult.equals("꿈 해석 결과가 없습니다.")
-                    || analysisResult.equals("로딩 중...")
-                    || analysisResult.startsWith("파싱 오류")) {
-                Toast.makeText(DiaryActivity.this, "해몽 결과가 있을 때만 소설을 생성할 수 있습니다.", Toast.LENGTH_SHORT).show();
-            } else {
-                String dreamContent = etDreamInput.getText().toString().trim();
-                Log.d("DiaryActivity", "Sending dreamContent: " + dreamContent);
-
-                Intent intent = new Intent(DiaryActivity.this, SelectNovGenreActivity.class);
-                intent.putExtra("dream_content", dreamContent);
-                startActivity(intent);
+        // 2. 소설 생성 버튼
+        findViewById(R.id.btnGenerateStory).setOnClickListener(v -> {
+            String dreamContent = etDreamInput.getText().toString().trim();
+            if (dreamContent.isEmpty()) {
+                Toast.makeText(this, "꿈 내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                return;
             }
+            if (latestInterpretation == null || latestInterpretation.trim().isEmpty()) {
+                Toast.makeText(this, "해몽 결과가 있을 때만 소설을 생성할 수 있습니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent intent = new Intent(this, SelectNovGenreActivity.class);
+            intent.putExtra("dream_content", dreamContent);
+            intent.putExtra("dream_content", dreamContent);
+            intent.putExtra("dream_interpretation", latestInterpretation);
+            intent.putExtra("dream_date", selectedDate);
+            intent.putExtra("from", "diary"); // 이 부분 추가!
+            startActivity(intent);
         });
+
     }
 
-    private String getCurrentUserId() {
-        return getIntent().getStringExtra("member_id");
+    private String parseGeminiResult(String resultJson) {
+        try {
+            JSONObject jsonObject = new JSONObject(resultJson);
+            JSONArray candidates = jsonObject.getJSONArray("candidates");
+            JSONObject first = candidates.getJSONObject(0);
+            JSONObject content = first.getJSONObject("content");
+            JSONArray parts = content.getJSONArray("parts");
+            JSONObject part = parts.getJSONObject(0);
+            return part.getString("text");
+        } catch (Exception e) {
+            Log.e("GeminiAPI", "JSON 파싱 오류", e);
+            return "해몽 결과 파싱 오류";
+        }
     }
 }
-

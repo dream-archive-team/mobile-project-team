@@ -1,339 +1,374 @@
 package com.example.mobileteamapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.room.Room;
 
-import com.example.mobileteamapp.database.AppDatabase;
-import com.example.mobileteamapp.viewModel.MemberViewModel;
-import com.example.mobileteamapp.entity.Member;
-
-import java.util.List;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarData;
-
-import android.graphics.Color;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.example.mobileteamapp.db.AppDatabase;
+import com.example.mobileteamapp.db.AppDatabaseInstance;
+import com.example.mobileteamapp.entity.Emotion;
+import com.example.mobileteamapp.entity.EmotionRecord;
+import com.example.mobileteamapp.repository.EmotionRepository;
+import com.example.mobileteamapp.viewmodel.DreamViewModel;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
-
-
+// 홈 화면 (캘린더 화면)
 public class HomeActivity extends AppCompatActivity {
 
-    private String memberId;
-    private MemberViewModel memberViewModel;
-    private Button buttonGoToDiary, buttonnov;
-    private String moodText;
-
-    private AppDatabase db;
+    private DreamViewModel dreamViewModel;
+    private Button btnDiary;
+    private String lastSelectedDate = null;
+    private int chartMode = 0; // 0=주간, 1=월간
+    private int weekOffset = 0, monthOffset = 0;
+    private String memberId = "1"; // 임시 memberId
+    private LineChart lineChart;
+    private TextView tvPeriod;
     private Map<String, Float> emotionMap;
-
-    private int weekOffset = 0;
-    private int monthOffset = 0;
+    private AppDatabase db;
+    private Button btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home);  // home.xml을 레이아웃으로 설정
+        setContentView(R.layout.activity_home);
 
-        // 로그인된 사용자 ID 받아오기
-        moodText = getIntent().getStringExtra("mood");
-        memberId = getIntent().getStringExtra("member_id");
-
-        String[] yLabels = {"", "불안", "놀람", "분노", "슬픔", "기쁨"};
-
-        CalendarView calendarView = findViewById(R.id.calendarView);
-        RadioGroup radioGroup = findViewById(R.id.radioGroupPeriod);
-        RadioButton radioWeekly = findViewById(R.id.radioWeekly);
-        RadioButton radioMonthly = findViewById(R.id.radioMonthly);
-        TextView tvPeriod = findViewById(R.id.tvPeriod);
-        BarChart barChart = findViewById(R.id.barChart);
+        // UI 요소 연결
+        Button btnNov = findViewById(R.id.btn_nov);
+        btnDiary = findViewById(R.id.buttonGoToDiary);
         Button btnPrev = findViewById(R.id.btnPrev);
         Button btnNext = findViewById(R.id.btnNext);
+        tvPeriod = findViewById(R.id.tvPeriod);
+        lineChart = findViewById(R.id.lineChart);
+        RadioGroup radioGroup = findViewById(R.id.radioGroupPeriod);
+        CalendarView calendarView = findViewById(R.id.calendarView);
+        btnLogout = findViewById(R.id.btnLogout);
 
+        // ViewModel 연결
+        dreamViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()))
+                .get(DreamViewModel.class);
 
-
-
-        // 감정 → 숫자 매핑
+        // 감정명 → 숫자 매핑
         emotionMap = new HashMap<>();
-        emotionMap.put("기쁨", 5f);
-        emotionMap.put("슬픔", 4f);
-        emotionMap.put("분노", 3f);
-        emotionMap.put("놀람", 2f);
         emotionMap.put("불안", 1f);
+        emotionMap.put("놀람", 2f);
+        emotionMap.put("분노", 3f);
+        emotionMap.put("슬픔", 4f);
+        emotionMap.put("기쁨", 5f);
 
-        db = Room.databaseBuilder(
-                getApplicationContext(),
-                AppDatabase.class,
-                "app_database"
-        ).allowMainThreadQueries().build();
+        db = AppDatabaseInstance.getInstance(this);
 
-        memberId = getIntent().getStringExtra("member_id");
-        // 최초: 주간 그래프 표시
-        showWeeklyChart(barChart, tvPeriod, memberId, weekOffset);
+        // 감정 데이터 최초 1회만 생성
+        EmotionRepository emotionRepository = new EmotionRepository(this);
+        new Thread(() -> {
+            if (emotionRepository.getAllEmotions().isEmpty()) {
+                emotionRepository.insert(new Emotion("기쁨"));
+                emotionRepository.insert(new Emotion("슬픔"));
+                emotionRepository.insert(new Emotion("분노"));
+                emotionRepository.insert(new Emotion("놀람"));
+                emotionRepository.insert(new Emotion("불안"));
+            }
+        }).start();
 
-        // 주간/월별 토글
+        // SharedPreferences에서 사용자 정보
+        SharedPreferences prefs = getSharedPreferences("user_info", MODE_PRIVATE);
+        String nickname = getIntent().getStringExtra("nickname");
+        String kakaoId = getIntent().getStringExtra("kakaoId");
+
+        if (nickname != null && !nickname.isEmpty()) {
+            prefs.edit().putString("nickname", nickname).apply();
+        } else {
+            nickname = prefs.getString("nickname", "게스트");
+        }
+        Toast.makeText(this, nickname + "님 환영합니다!", Toast.LENGTH_SHORT).show();
+
+        // 1. 장르별 소설 조회 화면 이동
+        btnNov.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, StoryQueryActivity.class);
+            intent.putExtra("member_id", memberId);
+            startActivity(intent);
+        });
+
+        // 오늘 날짜/캘린더 기본값 처리
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        lastSelectedDate = today;
+        setDiaryButtonForDate(today);
+
+        calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            String selectedDate = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth);
+            lastSelectedDate = selectedDate;
+            setDiaryButtonForDate(selectedDate);
+        });
+
+
+        // 2. 그래프 표시 로직
+        chartMode = 0;
+        weekOffset = 0;
+        showWeeklyChart();
+
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.radioWeekly) {
+                chartMode = 0;
                 weekOffset = 0;
-                showWeeklyChart(barChart, tvPeriod, memberId, weekOffset);
+                showWeeklyChart();
             } else if (checkedId == R.id.radioMonthly) {
+                chartMode = 1;
                 monthOffset = 0;
-                showMonthlyChart(barChart, tvPeriod, memberId, monthOffset);
+                showMonthlyChart();
             }
         });
 
         btnPrev.setOnClickListener(v -> {
-            if (radioWeekly.isChecked()) {
+            if (chartMode == 0) {
                 weekOffset++;
-                showWeeklyChart(barChart, tvPeriod, memberId, weekOffset);
-            } else if (radioMonthly.isChecked()) {
+                showWeeklyChart();
+            } else {
                 monthOffset++;
-                showMonthlyChart(barChart, tvPeriod, memberId, monthOffset);
+                showMonthlyChart();
             }
         });
-
         btnNext.setOnClickListener(v -> {
-            if (radioWeekly.isChecked() && weekOffset > 0) {
+            if (chartMode == 0 && weekOffset > 0) {
                 weekOffset--;
-                showWeeklyChart(barChart, tvPeriod, memberId, weekOffset);
-            } else if (radioMonthly.isChecked() && monthOffset > 0) {
+                showWeeklyChart();
+            } else if (chartMode == 1 && monthOffset > 0) {
                 monthOffset--;
-                showMonthlyChart(barChart, tvPeriod, memberId, monthOffset);
+                showMonthlyChart();
             }
         });
 
-
-
-
-    // ViewModel 초기화
-        memberViewModel = new ViewModelProvider(
-                this,
-                ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())
-        ).get(MemberViewModel.class);
-
-        // DB에 저장된 전체 회원 로그 출력(회원DB조회)
-        memberViewModel.getAllMembers().observe(this, members -> {
-            for (Member m : members) {
-                Log.d("MEMBER_DB", "id=" + m.getMember_id() + ", nickname=" + m.getNickname());
-            }
+        // 3. 로그아웃
+        btnLogout.setOnClickListener(v -> {
+            com.kakao.sdk.user.UserApiClient.getInstance().logout(error -> {
+                if (error != null) {
+                    Toast.makeText(HomeActivity.this, "로그아웃 실패: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(HomeActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
+                    // MainActivity로 이동 (액티비티 스택 클리어)
+                    Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+                return null;
+            });
         });
-
-
-        //캘린더 부분
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                // 날짜 문자열 생성 (선택사항)
-                String date = year + "/" + (month + 1) + "/" + dayOfMonth;
-
-                Intent intent = new Intent(HomeActivity.this, dream_look_screen_Activity_1.class);
-                intent.putExtra("member_id", getIntent().getStringExtra("member_id")); // MainActivity에서 받은 member_id를 그대로 전달
-                startActivity(intent);
-
-
-            }
-        });
-
-        // 메인페이지 -> 꿈 일기 작성 화면 이동 버튼
-        buttonGoToDiary = findViewById(R.id.buttonGoToDiary);
-        buttonnov = findViewById(R.id.btn_nov);
-        buttonGoToDiary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, DiaryActivity.class);
-                intent.putExtra("member_id", memberId); // ← memberId 전달
-                intent.putExtra("from", "HomeActivity");
-                startActivity(intent);
-            }
-        });
-
-        buttonnov.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, StoryQueryActivity.class);
-                intent.putExtra("member_id", memberId); // ← memberId 전달
-                startActivity(intent);
-            }
-        });
-
-
-
-
-    }
-    // 주간 그래프 표시 함수
-    private void showWeeklyChart(BarChart barChart, TextView tvPeriod, String memberId, int weekOffset) {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.WEEK_OF_YEAR, -weekOffset);
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-
-        List<String> xLabels = new ArrayList<>();
-        List<String> dateKeys = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-        SimpleDateFormat labelFormat = new SimpleDateFormat("M.d", Locale.KOREA);
-
-        for (int i = 0; i < 7; i++) {
-            Date date = cal.getTime();
-            xLabels.add(labelFormat.format(date)); // "8.1", "8.2", ...
-            dateKeys.add(sdf.format(date));        // "2024-08-01", ...
-            cal.add(Calendar.DAY_OF_MONTH, 1);
-        }
-
-        // 기간 표시
-        tvPeriod.setText(xLabels.get(0) + "~" + xLabels.get(6));
-
-        // DB에서 해당 주간 데이터 조회
-        String startDate = dateKeys.get(0);
-        String endDate = dateKeys.get(6);
-        List<EmotionRecord> weekRecords = db.emotionDao().getEmotionRecordsByPeriod(memberId, startDate, endDate);
-
-        // 날짜별 감정 매핑
-        Map<String, Float> dateToValue = new HashMap<>();
-        for (EmotionRecord record : weekRecords) {
-            dateToValue.put(record.dream_date, emotionMap.get(record.emotion_name));
-        }
-
-        // Entry 리스트 생성
-        List<BarEntry> entries = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
-            Float yValue = dateToValue.get(dateKeys.get(i));
-            if (yValue != null) entries.add(new BarEntry(i, yValue));
-            else entries.add(new BarEntry(i, Float.NaN));
-        }
-
-        updateChart(barChart, entries, xLabels, emotionMap);
+        // -----------------------------
     }
 
-    // 월별 그래프 표시 함수
-    private void showMonthlyChart(BarChart barChart, TextView tvPeriod, String memberId, int monthOffset) {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, -monthOffset); // monthOffset으로 월 이동
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH) + 1; // 0=1월, 1=2월, ...
-        // 원하는 포맷으로 표시
-        tvPeriod.setText(month + "월"); // "8월"처럼 표시
-        // 또는 tvPeriod.setText(year + "년 " + month + "월"); // "2024년 8월"
+    /**
+     * 4. 날짜별로 btnDiary 세팅 (꿈 작성하기 / 꿈 조회하기 변환)
+     * 해당 날짜에 이미 작성한 꿈이 있을 경우 꿈 조회하기 버튼,
+     * 해당 날짜에 작성한 꿈이 없을 경우 꿈 작성하기 버튼이 나타남
+     */
+    private void setDiaryButtonForDate(String date) {
+        new Thread(() -> {
+            int count = dreamViewModel.getDreamCountByDate(date);
+            runOnUiThread(() -> {
+                btnDiary.setEnabled(true);
+                btnDiary.setAlpha(1f);
 
-        String yearMonth = new SimpleDateFormat("yyyy-MM", Locale.KOREA).format(cal.getTime());
-
-        List<EmotionRecord> monthRecords = db.emotionDao().getEmotionRecordsByMonth(memberId, yearMonth);
-
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        List<String> xLabels = new ArrayList<>();
-        for (int i = 1; i <= daysInMonth; i++) xLabels.add(String.valueOf(i));
-
-        Map<Integer, Float> dayToValue = new HashMap<>();
-        for (EmotionRecord record : monthRecords) {
-            int day = Integer.parseInt(record.dream_date.substring(8, 10));
-            dayToValue.put(day, emotionMap.get(record.emotion_name));
-        }
-        List<BarEntry> entries = new ArrayList<>();
-        for (int i = 1; i <= daysInMonth; i++) {
-            Float yValue = dayToValue.get(i);
-            if (yValue != null) entries.add(new BarEntry(i - 1, yValue));
-            else entries.add(new BarEntry(i - 1, Float.NaN));
-        }
-        updateChart(barChart, entries, xLabels, emotionMap);
+                if (count > 0) {
+                    btnDiary.setText("꿈 보러가기");
+                    btnDiary.setOnClickListener(v -> {
+                        Intent intent = new Intent(this, dream_look_screen_Activity_1.class);
+                        intent.putExtra("selected_date", date); // 해당 날짜
+                        startActivity(intent);
+                    });
+                } else {
+                    btnDiary.setText("꿈 작성하기");
+                    btnDiary.setOnClickListener(v -> {
+                        Intent intent = new Intent(this, DiaryActivity.class);
+                        intent.putExtra("selected_date", date); // 해당 날짜
+                        startActivity(intent);
+                    });
+                }
+            });
+        }).start();
     }
 
-    // 그래프 갱신 함수
-    private void updateChart(BarChart barChart, List<BarEntry> entries, List<String> xLabels, Map<String, Float> emotionMap) {
-        BarDataSet dataSet = new BarDataSet(entries, "감정 변화");
+    // ----- 주간 그래프 표시 함수 -----
+    private void showWeeklyChart() {
+        new Thread(() -> {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.WEEK_OF_YEAR, -weekOffset);
+            cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+            List<String> xLabels = new ArrayList<>();
+            List<String> dateKeys = new ArrayList<>();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+            SimpleDateFormat labelFormat = new SimpleDateFormat("M.d", Locale.KOREA);
+
+            for (int i = 0; i < 7; i++) {
+                Date date = cal.getTime();
+                xLabels.add(labelFormat.format(date));
+                dateKeys.add(sdf.format(date));
+                cal.add(Calendar.DAY_OF_MONTH, 1);
+            }
+
+            String startDate = dateKeys.get(0);
+            String endDate = dateKeys.get(6);
+
+            List<EmotionRecord> weekRecords = db.emotionDao().getEmotionRecordsByPeriod(startDate, endDate);
+
+            Map<String, Float> dateToValue = new HashMap<>();
+            for (EmotionRecord record : weekRecords) {
+                dateToValue.put(record.dream_date, emotionMap.get(record.emotion_name));
+            }
+
+            // 감정이 있는 날만 Entry 추가
+            List<Entry> entries = new ArrayList<>();
+            for (int i = 0; i < 7; i++) {
+                Float yValue = dateToValue.get(dateKeys.get(i));
+                if (yValue != null) {
+                    entries.add(new Entry(i, yValue));
+                }
+            }
+
+            runOnUiThread(() -> {
+                tvPeriod.setText(xLabels.get(0) + "~" + xLabels.get(6));
+                updateLineChart(lineChart, entries, xLabels);
+            });
+        }).start();
+    }
+
+
+    // ----- 월간 그래프 표시 함수 -----
+    private void showMonthlyChart() {
+        new Thread(() -> {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MONTH, -monthOffset);
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH) + 1;
+
+            String yearMonth = new SimpleDateFormat("yyyy-MM", Locale.KOREA).format(cal.getTime());
+            List<EmotionRecord> monthRecords = db.emotionDao().getEmotionRecordsByMonth(yearMonth);
+
+            cal.set(Calendar.DAY_OF_MONTH, 1);
+            int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+            List<String> xLabels = new ArrayList<>();
+            for (int i = 1; i <= daysInMonth; i++) xLabels.add(String.valueOf(i));
+
+            Map<Integer, Float> dayToValue = new HashMap<>();
+            for (EmotionRecord record : monthRecords) {
+                int day = Integer.parseInt(record.dream_date.substring(8, 10));
+                dayToValue.put(day, emotionMap.get(record.emotion_name));
+            }
+
+            // 감정이 있는 날만 Entry 추가
+            List<Entry> entries = new ArrayList<>();
+            for (int i = 1; i <= daysInMonth; i++) {
+                Float yValue = dayToValue.get(i);
+                if (yValue != null) {
+                    entries.add(new Entry(i - 1, yValue));
+                }
+            }
+
+
+            runOnUiThread(() -> {
+                tvPeriod.setText(month + "월");
+                updateLineChart(lineChart, entries, xLabels);
+            });
+        }).start();
+    }
+
+    // ----- LineChart 갱신 함수 -----
+    private void updateLineChart(LineChart lineChart, List<Entry> entries, List<String> xLabels) {
+        LineDataSet dataSet = new LineDataSet(entries, "감정 변화");
+        dataSet.setColor(Color.RED);
+        dataSet.setCircleColor(Color.BLUE);
+        dataSet.setCircleRadius(4f);
+        dataSet.setLineWidth(2.5f);
         dataSet.setDrawValues(false);
+        dataSet.setDrawCircleHole(false);
+        dataSet.setMode(LineDataSet.Mode.LINEAR);  // 직선 연결
 
-        // 최고/최저점 색상 강조
-        int maxIdx = -1, minIdx = -1;
-        float maxY = -Float.MAX_VALUE, minY = Float.MAX_VALUE;
-        for (int i = 0; i < entries.size(); i++) {
-            float y = entries.get(i).getY();
-            if (!Float.isNaN(y)) {
-                if (y > maxY) { maxY = y; maxIdx = i; }
-                if (y < minY) { minY = y; minIdx = i; }
-            }
-        }
-        List<Integer> barColors = new ArrayList<>();
-        for (int i = 0; i < entries.size(); i++) {
-            if (i == maxIdx) barColors.add(Color.GREEN);
-            else if (i == minIdx) barColors.add(Color.RED);
-            else barColors.add(Color.BLUE);
-        }
-        dataSet.setColors(barColors);
+        LineData lineData = new LineData(dataSet);
+        lineChart.setData(lineData);
 
-        // BarData 설정
-        BarData barData = new BarData(dataSet);
-        barData.setBarWidth(0.4f);
-        barChart.setData(barData);
-        barChart.setFitBars(true);
-
-        // X축 설정 (강화)
-        XAxis xAxis = barChart.getXAxis();
+        // X축
+        XAxis xAxis = lineChart.getXAxis();
         xAxis.setGranularity(1f);
-        xAxis.setGranularityEnabled(true); // 추가
+        xAxis.setGranularityEnabled(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(xLabels));
-        xAxis.setLabelCount(xLabels.size(), false); // force를 false로
+        xAxis.setLabelCount(xLabels.size(), false);
         xAxis.setAvoidFirstLastClipping(true);
         xAxis.setDrawGridLines(false);
-        xAxis.setEnabled(true); // 명시적으로 활성화
-        xAxis.setDrawLabels(true); // 라벨 그리기 활성화
-        xAxis.setTextSize(12f); // 텍스트 크기 설정
-        xAxis.setAxisMinimum(-0.5f); // 양끝 여백 추가
-        xAxis.setAxisMaximum(xLabels.size() - 0.5f); // 양끝 여백 추가
+        xAxis.setEnabled(true);
+        xAxis.setDrawLabels(true);
+        xAxis.setTextSize(12f);
+        xAxis.setAxisMinimum(-0.5f);
+        xAxis.setAxisMaximum(xLabels.size() - 0.5f);
 
-
-        // Y축 설정 (감정명)
+        // Y축 (감정명)
         String[] yLabels = {"", "불안", "놀람", "분노", "슬픔", "기쁨"};
-        YAxis leftAxis = barChart.getAxisLeft();
+        YAxis leftAxis = lineChart.getAxisLeft();
         leftAxis.setGranularity(1f);
         leftAxis.setAxisMinimum(1f);
         leftAxis.setAxisMaximum(5f);
         leftAxis.setLabelCount(5, true);
         leftAxis.setValueFormatter(new IndexAxisValueFormatter(yLabels));
-        barChart.getAxisRight().setEnabled(false);
+        lineChart.getAxisRight().setEnabled(false);
 
-        // 기타 스타일
-        barChart.getDescription().setEnabled(false);
-        barChart.getLegend().setEnabled(false);
+        lineChart.getDescription().setEnabled(false);
+        lineChart.getLegend().setEnabled(false);
+        lineChart.invalidate();
 
-        barChart.invalidate();
-    }
-    // 날짜 → 요일 변환
-    private String getDayOfWeek(String dateStr) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-            Date date = sdf.parse(dateStr);
-            SimpleDateFormat dayFormat = new SimpleDateFormat("EEE", Locale.ENGLISH);
-            return dayFormat.format(date); // "Mon", "Tue", ...
-        } catch (Exception e) {
-            return "";
+        for (Entry e : entries) {
+            Log.d("LineChart", "Entry: x=" + e.getX() + ", y=" + e.getY());
         }
     }
 
-    // 기간 표시 포맷 (예: "8.1~8.7")
-    private String formatPeriodLabel(String start, String end) {
-        String[] s = start.split("-");
-        String[] e = end.split("-");
-        return Integer.parseInt(s[1]) + "." + Integer.parseInt(s[2]) + "~" + Integer.parseInt(e[1]) + "." + Integer.parseInt(e[2]);
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        SharedPreferences prefs = getSharedPreferences("user_info", MODE_PRIVATE);
+        String nickname = intent.getStringExtra("nickname");
+        if (nickname != null && !nickname.isEmpty()) {
+            prefs.edit().putString("nickname", nickname).apply();
+        } else {
+            nickname = prefs.getString("nickname", "게스트");
+        }
+        Toast.makeText(this, nickname + "님 환영합니다!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (lastSelectedDate == null) {
+            lastSelectedDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        }
+        setDiaryButtonForDate(lastSelectedDate);
+
+        // 그래프 재갱신
+        if (chartMode == 0) showWeeklyChart();
+        else showMonthlyChart();
     }
 }

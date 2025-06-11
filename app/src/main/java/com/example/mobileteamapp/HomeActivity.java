@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.RadioGroup;
@@ -20,9 +22,13 @@ import com.example.mobileteamapp.entity.Emotion;
 import com.example.mobileteamapp.entity.EmotionRecord;
 import com.example.mobileteamapp.repository.EmotionRepository;
 import com.example.mobileteamapp.viewmodel.DreamViewModel;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -47,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
     private int weekOffset = 0, monthOffset = 0;
     private String memberId = "1"; // 임시 memberId
     private LineChart lineChart;
+    private BarChart barChart;
     private TextView tvPeriod;
     private Map<String, Float> emotionMap;
     private AppDatabase db;
@@ -64,6 +71,7 @@ public class HomeActivity extends AppCompatActivity {
         Button btnNext = findViewById(R.id.btnNext);
         tvPeriod = findViewById(R.id.tvPeriod);
         lineChart = findViewById(R.id.lineChart);
+        barChart = new BarChart(this);
         RadioGroup radioGroup = findViewById(R.id.radioGroupPeriod);
         CalendarView calendarView = findViewById(R.id.calendarView);
         btnLogout = findViewById(R.id.btnLogout);
@@ -241,17 +249,21 @@ public class HomeActivity extends AppCompatActivity {
             }
 
             // 감정이 있는 날만 Entry 추가
-            List<Entry> entries = new ArrayList<>();
+            List<BarEntry> entries = new ArrayList<>();
             for (int i = 0; i < 7; i++) {
                 Float yValue = dateToValue.get(dateKeys.get(i));
                 if (yValue != null) {
-                    entries.add(new Entry(i, yValue));
+                    entries.add(new BarEntry(i, yValue));
                 }
             }
 
             runOnUiThread(() -> {
                 tvPeriod.setText(xLabels.get(0) + "~" + xLabels.get(6));
-                updateLineChart(lineChart, entries, xLabels);
+
+                // LineChart를 숨기고 BarChart 표시
+                lineChart.setVisibility(View.GONE);
+                replaceChartWithBarChart();
+                updateBarChart(barChart, entries, xLabels);
             });
         }).start();
     }
@@ -292,15 +304,69 @@ public class HomeActivity extends AppCompatActivity {
 
             runOnUiThread(() -> {
                 tvPeriod.setText(month + "월");
+
+                if (barChart != null) {
+                    barChart.setVisibility(View.GONE);
+                }
+                lineChart.setVisibility(View.VISIBLE);
                 updateLineChart(lineChart, entries, xLabels);
             });
         }).start();
+    }
+    private void replaceChartWithBarChart() {
+        if (barChart.getParent() == null) {
+            // BarChart를 LineChart와 같은 위치에 추가
+            ViewGroup parent = (ViewGroup) lineChart.getParent();
+            ViewGroup.LayoutParams params = lineChart.getLayoutParams();
+            parent.addView(barChart, params);
+        }
+        barChart.setVisibility(View.VISIBLE);
+    }
+    private void updateBarChart(BarChart barChart, List<BarEntry> entries, List<String> xLabels) {
+        BarDataSet dataSet = new BarDataSet(entries, "감정 변화");
+        dataSet.setColor(Color.BLACK);
+        dataSet.setValueTextColor(Color.BLUE);
+        dataSet.setValueTextSize(12f);
+        dataSet.setDrawValues(false);
+
+        BarData barData = new BarData(dataSet);
+        barData.setBarWidth(0.5f);
+        barChart.setData(barData);
+
+        // X축 설정
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setGranularity(1f);
+        xAxis.setGranularityEnabled(true);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(xLabels));
+        xAxis.setLabelCount(xLabels.size(), false);
+        xAxis.setAvoidFirstLastClipping(true);
+        xAxis.setDrawGridLines(false);
+        xAxis.setEnabled(true);
+        xAxis.setDrawLabels(true);
+        xAxis.setTextSize(12f);
+        xAxis.setAxisMinimum(-0.5f);
+        xAxis.setAxisMaximum(xLabels.size() - 0.5f);
+
+        // Y축 설정 (감정명)
+        String[] yLabels = {"", "불안", "놀람", "분노", "슬픔", "기쁨"};
+        YAxis leftAxis = barChart.getAxisLeft();
+        leftAxis.setGranularity(1f);
+        leftAxis.setAxisMinimum(1f);
+        leftAxis.setAxisMaximum(5f);
+        leftAxis.setLabelCount(5, true);
+        leftAxis.setValueFormatter(new IndexAxisValueFormatter(yLabels));
+        barChart.getAxisRight().setEnabled(false);
+
+        barChart.getDescription().setEnabled(false);
+        barChart.getLegend().setEnabled(false);
+        barChart.invalidate();
     }
 
     // ----- LineChart 갱신 함수 -----
     private void updateLineChart(LineChart lineChart, List<Entry> entries, List<String> xLabels) {
         LineDataSet dataSet = new LineDataSet(entries, "감정 변화");
-        dataSet.setColor(Color.RED);
+        dataSet.setColor(Color.BLUE);
         dataSet.setCircleColor(Color.BLUE);
         dataSet.setCircleRadius(4f);
         dataSet.setLineWidth(2.5f);

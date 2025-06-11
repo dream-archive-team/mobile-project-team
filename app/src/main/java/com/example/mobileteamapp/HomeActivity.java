@@ -366,8 +366,8 @@ public class HomeActivity extends AppCompatActivity {
     // ----- LineChart 갱신 함수 -----
     private void updateLineChart(LineChart lineChart, List<Entry> entries, List<String> xLabels) {
         LineDataSet dataSet = new LineDataSet(entries, "감정 변화");
-        dataSet.setColor(Color.BLUE);
-        dataSet.setCircleColor(Color.BLUE);
+        dataSet.setColor(Color.BLACK);
+        dataSet.setCircleColor(Color.BLACK);
         dataSet.setCircleRadius(4f);
         dataSet.setLineWidth(2.5f);
         dataSet.setDrawValues(false);
@@ -422,7 +422,7 @@ public class HomeActivity extends AppCompatActivity {
         } else {
             nickname = prefs.getString("nickname", "게스트");
         }
-        Toast.makeText(this, nickname + "님 환영합니다!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, nickname + "님 환영합니다!", Toast.LENGTH_SHORT).show();
     }
 
     @Override

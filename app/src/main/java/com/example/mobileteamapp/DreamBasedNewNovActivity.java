@@ -1,6 +1,7 @@
 package com.example.mobileteamapp;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -88,31 +89,40 @@ public class DreamBasedNewNovActivity extends AppCompatActivity {
         Log.d("Novel", "Novel 생성화면, 전달받은 dream_id = " + dreamId);
 
         // 1. 장르 자동 체크
+        // 라디오 버튼 배열 선언 및 비활성화
         RadioButton[] radios = {
                 radioFantasy, radioRomantic, radioSF, radioDocumentary,
                 radioThriller, radioComedy, radioAction
         };
-        for (RadioButton rb : radios) rb.setEnabled(false); // 모두 장르 비활성화
+        for (RadioButton rb : radios) {
+            rb.setEnabled(false); // 모두 비활성화
+        }
 
-        // 선택한 장르만 체크
+// 선택한 장르만 체크 및 텍스트 색상 검정으로
         if (selectedGenre != null) {
+            RadioButton selectedButton = null;
             switch (selectedGenre) {
                 case "판타지":
-                    radioFantasy.setChecked(true); break;
+                    selectedButton = radioFantasy; break;
                 case "로맨틱":
-                    radioRomantic.setChecked(true); break;
+                    selectedButton = radioRomantic; break;
                 case "SF":
-                    radioSF.setChecked(true); break;
+                    selectedButton = radioSF; break;
                 case "다큐멘터리":
-                    radioDocumentary.setChecked(true); break;
+                    selectedButton = radioDocumentary; break;
                 case "스릴러":
-                    radioThriller.setChecked(true); break;
+                    selectedButton = radioThriller; break;
                 case "코미디":
-                    radioComedy.setChecked(true); break;
+                    selectedButton = radioComedy; break;
                 case "액션":
-                    radioAction.setChecked(true); break;
+                    selectedButton = radioAction; break;
+            }
+            if (selectedButton != null) {
+                selectedButton.setChecked(true);
+                selectedButton.setTextColor(Color.BLACK); // 선택된 버튼만 검정색 유지
             }
         }
+
 
         // 프롬프트 생성
         basePrompt = buildPrompt(
@@ -141,26 +151,7 @@ public class DreamBasedNewNovActivity extends AppCompatActivity {
         });
 
         // 4. 새 장르 버튼 → SelectNovGenreActivity로 이동
-        btnSave.setOnClickListener(v -> {
-            Intent genreIntent = new Intent(this, SelectNovGenreActivity.class);
-            genreIntent.putExtra("exclude_genre", selectedGenre); // 현재 장르 전달(선택 불가)
-            // 이미 받은 값들 다 넘겨줌(필요시)
-            genreIntent.putExtra("dream_content", dreamContent);
-            genreIntent.putExtra("dream_interpretation", intent.getStringExtra("dream_interpretation"));
-            genreIntent.putExtra("selected_mood", moodText);
-            genreIntent.putExtra("vivid_scene", vividScene);
-            genreIntent.putExtra("dream_objects", dreamObjects);
-            genreIntent.putExtra("ending", endingText);
-            genreIntent.putExtra("required_words", requiredWords);
-            genreIntent.putExtra("dream_date", dreamDate);
-            genreIntent.putExtra("dream_id", dreamId);
-            genreIntent.putExtra("nickname", nickname);
-            genreIntent.putExtra("kakaoId", kakaoId);
-
-            startActivityForResult(genreIntent, REQ_SELECT_GENRE);
-        });
-
-        // 5. 소설 수정 요청 버튼
+        // DreamBasedNewNovActivity.java 의 onCreate() 내부
         btnSubmit.setOnClickListener(v -> {
             String userModification = etModification.getText().toString().trim();
             String userEditedNovel = tvDreamAnalysis.getText().toString().trim();
@@ -169,10 +160,45 @@ public class DreamBasedNewNovActivity extends AppCompatActivity {
                 Toast.makeText(this, "먼저 소설을 편집하거나 입력하세요.", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            // 1. 직접 수정만 한 경우 → DB 저장
             if (userModification.isEmpty()) {
-                Toast.makeText(this, "수정할 내용을 입력하세요.", Toast.LENGTH_SHORT).show();
+                String novelTitle = tvAnalysisLabel.getText().toString().trim();
+                String novelContent = userEditedNovel;
+
+                Novel novel = new Novel(
+                        novelTitle,
+                        novelContent,
+                        selectedGenre,
+                        moodText,
+                        vividScene,
+                        dreamObjects,
+                        endingText,
+                        requiredWords,
+                        dreamDate,
+                        dreamId
+                );
+
+                new Thread(() -> {
+                    // 1. 기존 소설 삭제
+                    Novel existing = novelViewModel.getNovelByDreamIdAndGenre(dreamId, selectedGenre);
+                    if (existing != null) {
+                        novelViewModel.delete(existing);
+                    }
+
+                    // 2. 새로운 소설 저장
+                    novelViewModel.insert(novel);
+
+                    runOnUiThread(() ->
+                            Toast.makeText(this, "수정된 소설이 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                    );
+                }).start();
+
                 return;
             }
+
+
+            // 2. 수정 지시사항이 있는 경우 → Gemini API 호출
             lastNovel = userEditedNovel;
             btnSubmit.setEnabled(false);
             tvDreamAnalysis.setText("수정 요청 중...");
@@ -191,6 +217,7 @@ public class DreamBasedNewNovActivity extends AppCompatActivity {
 
             sendNovelDetailsToApi(modifiedPrompt, true);
         });
+
     }
 
     // 6. 새 장르 선택 후 결과 처리

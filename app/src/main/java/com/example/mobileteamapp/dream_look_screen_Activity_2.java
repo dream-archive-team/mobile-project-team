@@ -204,7 +204,7 @@ public class dream_look_screen_Activity_2 extends AppCompatActivity {
             runOnUiThread(() -> {
                 currentNovel = novel;
                 if (novel == null) {
-                    tvDreamTitle.setText("이 장르로 생성된 소설이 없습니다.");
+                    tvDreamTitle.setText("생성된 소설이 없습니다.");
                     tvDreamAnalysis.setText("");
                     btnDeleteNovel.setEnabled(false);
                     btnSharing.setEnabled(false);

@@ -60,7 +60,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="kakao89a395ea9e3d5adeb7874ac8789884a4" />
+                <data android:scheme="kakaoe8f94e864e70780a25634db61c246de0" />
             </intent-filter>
         </activity>
     </application>

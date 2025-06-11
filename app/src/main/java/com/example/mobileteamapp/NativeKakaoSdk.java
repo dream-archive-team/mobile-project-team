@@ -10,6 +10,6 @@ public class NativeKakaoSdk extends Application {
     public void onCreate() {
         super.onCreate();
         // 카카오 로그인 사용
-        KakaoSdk.init(this, "89a395ea9e3d5adeb7874ac8789884a4");
+        KakaoSdk.init(this, "e8f94e864e70780a25634db61c246de0");
     }
 }

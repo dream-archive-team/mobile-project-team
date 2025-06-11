@@ -18,9 +18,13 @@ public class MainActivity extends AppCompatActivity {
         // 카카오 로그인 되어 있으면 바로 HomeActivity로 전환
         UserApiClient.getInstance().me((user, error) -> {
             if (user != null) {
-                // 이미 로그인 상태, 바로 HomeActivity로 이동
-                String nickname = user.getKakaoAccount().getProfile().getNickname();
+                String nickname = "사용자";  // 기본 닉네임
                 String kakaoId = String.valueOf(user.getId());
+
+                if (user.getKakaoAccount() != null && user.getKakaoAccount().getProfile() != null) {
+                    nickname = user.getKakaoAccount().getProfile().getNickname();
+                }
+
                 Intent intent = new Intent(this, HomeActivity.class);
                 intent.putExtra("nickname", nickname);
                 intent.putExtra("kakaoId", kakaoId);
@@ -36,8 +40,13 @@ public class MainActivity extends AppCompatActivity {
                         if (oAuthToken != null) {
                             UserApiClient.getInstance().me((newUser, meError) -> {
                                 if (newUser != null) {
-                                    String nickname = newUser.getKakaoAccount().getProfile().getNickname();
+                                    String nickname = "사용자";
                                     String kakaoId = String.valueOf(newUser.getId());
+
+                                    if (newUser.getKakaoAccount() != null && newUser.getKakaoAccount().getProfile() != null) {
+                                        nickname = newUser.getKakaoAccount().getProfile().getNickname();
+                                    }
+
                                     Intent intent = new Intent(this, HomeActivity.class);
                                     intent.putExtra("nickname", nickname);
                                     intent.putExtra("kakaoId", kakaoId);
@@ -53,5 +62,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         });
+
     }
 }

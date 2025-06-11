@@ -104,7 +104,7 @@ public class HomeActivity extends AppCompatActivity {
         } else {
             nickname = prefs.getString("nickname", "게스트");
         }
-        Toast.makeText(this, nickname + "님 환영합니다!", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, nickname + "님 환영합니다!", Toast.LENGTH_SHORT).show();
 
         // 1. 장르별 소설 조회 화면 이동
         btnNov.setOnClickListener(v -> {

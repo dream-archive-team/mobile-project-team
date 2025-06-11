@@ -22,8 +22,8 @@ public class dream_look_screen_Activity_2 extends AppCompatActivity {
     private NovelViewModel novelViewModel;
     private RadioGroup radioGroupGenre1, radioGroupGenre2;
     private TextView tvDreamTitle, tvDreamAnalysis;
-    private Button btnDeleteNovel, btnSharing, btnBack, btnHome,btnGenNovel;
-    private String dreamId;
+    private Button btnDeleteNovel, btnSharing, btnBack, btnHome, btnGenNovel;
+    private String dreamId, dreamContent, moodText, vividScene, dreamObjects, endingText, requiredWords, dreamDate, nickname, kakaoId;
     private Novel currentNovel;
     private boolean radioChanging = false;
 
@@ -41,7 +41,7 @@ public class dream_look_screen_Activity_2 extends AppCompatActivity {
         btnSharing = findViewById(R.id.btnSharing);
         btnBack = findViewById(R.id.btnBack);
         btnHome = findViewById(R.id.btnHome);
-        btnGenNovel=findViewById(R.id.btnGenNovel);
+        btnGenNovel = findViewById(R.id.btnGenNovel);
 
         RadioButton radioFantasy = findViewById(R.id.radio_fantasy);
         RadioButton radioRomantic = findViewById(R.id.radio_romantic);
@@ -54,7 +54,18 @@ public class dream_look_screen_Activity_2 extends AppCompatActivity {
         novelViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()))
                 .get(NovelViewModel.class);
 
-        dreamId = getIntent().getStringExtra("dream_id");
+        Intent intent = getIntent();
+        dreamId = intent.getStringExtra("dream_id");
+        dreamContent = intent.getStringExtra("dream_content");
+        moodText = intent.getStringExtra("selected_mood");
+        vividScene = intent.getStringExtra("vivid_scene");
+        dreamObjects = intent.getStringExtra("dream_objects");
+        endingText = intent.getStringExtra("ending");
+        requiredWords = intent.getStringExtra("required_words");
+        dreamDate = intent.getStringExtra("dream_date");
+        nickname = intent.getStringExtra("nickname");
+        kakaoId = intent.getStringExtra("kakaoId");
+
         Log.d("Novel", "조회 시 dream_id = " + dreamId);
 
         if (dreamId == null || dreamId.isEmpty()) {
@@ -63,7 +74,6 @@ public class dream_look_screen_Activity_2 extends AppCompatActivity {
             return;
         }
 
-        // 두 RadioGroup 모두에 리스너 등록
         radioGroupGenre1.setOnCheckedChangeListener((group, checkedId) -> {
             if (radioChanging) return;
             if (checkedId != -1) {
@@ -94,23 +104,32 @@ public class dream_look_screen_Activity_2 extends AppCompatActivity {
             }
         });
 
-        // 시작 시 아무것도 선택 안 함
         radioGroupGenre1.clearCheck();
         radioGroupGenre2.clearCheck();
 
-        // 소설 생성
         btnGenNovel.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SelectNovGenreActivity.class);
-            intent.putExtra("dream_id", dreamId);
-            intent.putExtra("from", "look"); // 이 부분 추가!
-            // 필요한 정보(날짜 등)도 넘겨도 됨
-            startActivity(intent);
+            Intent genreIntent = new Intent(this, SelectNovGenreActivity.class);
+            genreIntent.putExtra("exclude_genre", currentNovel != null ? currentNovel.genre : "");
+            genreIntent.putExtra("dream_content", dreamContent);
+            genreIntent.putExtra("dream_interpretation", intent.getStringExtra("dream_interpretation"));
+            genreIntent.putExtra("selected_mood", moodText);
+            genreIntent.putExtra("vivid_scene", vividScene);
+            genreIntent.putExtra("dream_objects", dreamObjects);
+            genreIntent.putExtra("ending", endingText);
+            genreIntent.putExtra("required_words", requiredWords);
+            genreIntent.putExtra("dream_date", dreamDate);
+            genreIntent.putExtra("dream_id", dreamId);
+            genreIntent.putExtra("nickname", nickname);
+            genreIntent.putExtra("kakaoId", kakaoId);
+
+            startActivityForResult(genreIntent, REQ_SELECT_GENRE);
         });
 
-
-        // 소설 삭제
         btnDeleteNovel.setOnClickListener(v -> {
-            if (currentNovel == null) return;
+            if (currentNovel == null) {
+                Toast.makeText(this, "삭제할 소설이 없습니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             new AlertDialog.Builder(this)
                     .setTitle("소설 삭제")
                     .setMessage("정말로 소설을 삭제하시겠습니까?")
@@ -119,7 +138,6 @@ public class dream_look_screen_Activity_2 extends AppCompatActivity {
                             novelViewModel.delete(currentNovel);
                             runOnUiThread(() -> {
                                 Toast.makeText(this, "소설이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
-                                // 삭제 후 다시 선택된 장르 조회
                                 int checkedId1 = radioGroupGenre1.getCheckedRadioButtonId();
                                 int checkedId2 = radioGroupGenre2.getCheckedRadioButtonId();
                                 if (checkedId1 != -1) {
@@ -136,7 +154,6 @@ public class dream_look_screen_Activity_2 extends AppCompatActivity {
                     .show();
         });
 
-        // 공유 버튼
         btnSharing.setOnClickListener(v -> {
             if (currentNovel == null) return;
             StringBuilder textToShare = new StringBuilder();
@@ -155,9 +172,9 @@ public class dream_look_screen_Activity_2 extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         btnHome.setOnClickListener(v -> {
-            Intent intent = new Intent(this, HomeActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
+            Intent intent2 = new Intent(this, HomeActivity.class);
+            intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent2);
         });
     }
 
@@ -181,7 +198,6 @@ public class dream_look_screen_Activity_2 extends AppCompatActivity {
         }
     }
 
-    // 장르별 소설 불러와서 표시
     private void loadNovelByGenre(String genre) {
         new Thread(() -> {
             Novel novel = novelViewModel.getNovelByDreamIdAndGenre(dreamId, genre);
@@ -203,23 +219,18 @@ public class dream_look_screen_Activity_2 extends AppCompatActivity {
         }).start();
     }
 
-    // 제목에서 **, *, 공백 등 제거 (앞뒤)
     private String cleanTitle(String title) {
         if (title == null) return "";
         return title.replaceAll("^[\\*\\s]+", "").replaceAll("[\\*\\s]+$", "");
     }
 
-    
-    // 생성 및 선택된 장르에서 돌아온 후 동작하려면
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_SELECT_GENRE && resultCode == RESULT_OK && data != null) {
-            // 새로 생성된 장르를 체크 등 필요 동작
             String newGenre = data.getStringExtra("selected_genre");
             if (newGenre != null) {
-                // 해당 장르 라디오 체크 (radioGroupGenre1, 2에서 id 찾아 체크)
-                // 또는 loadNovelByGenre(newGenre) 호출
+                loadNovelByGenre(newGenre);
             }
         }
     }

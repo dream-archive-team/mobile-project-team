@@ -315,16 +315,70 @@ public class HomeActivity extends AppCompatActivity {
     }
     private void replaceChartWithBarChart() {
         if (barChart.getParent() == null) {
-            // BarChart를 LineChart와 같은 위치에 추가
             ViewGroup parent = (ViewGroup) lineChart.getParent();
-            ViewGroup.LayoutParams params = lineChart.getLayoutParams();
-            parent.addView(barChart, params);
+
+            // 디스플레이 밀도 가져오기 (dp -> px 변환용)
+            float scale = getResources().getDisplayMetrics().density;
+
+            // BarChart 크기 및 위치 조정
+            int heightInDp = 330;    // 원하는 높이 (예: 380dp)
+            int topMarginInDp = 430; // 원하는 여백 (예: 100dp)
+
+            ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    (int) (heightInDp * scale + 0.5f) // height px 변환
+            );
+
+            // 👉 위쪽 마진 설정 (아래로 내리는 효과)
+            marginParams.topMargin = (int) (topMarginInDp * scale + 0.5f);
+
+            // 바 차트 레이아웃 파라미터 설정 및 추가
+            barChart.setLayoutParams(marginParams);
+            parent.addView(barChart);
         }
+
         barChart.setVisibility(View.VISIBLE);
     }
     private void updateBarChart(BarChart barChart, List<BarEntry> entries, List<String> xLabels) {
         BarDataSet dataSet = new BarDataSet(entries, "감정 변화");
-        dataSet.setColor(Color.BLACK);
+
+
+        //감정별 그래프 색상 다르게
+        ArrayList<Integer> colors = new ArrayList<>();
+        for (BarEntry entry : entries) {
+            switch ((int) entry.getY()) {
+                case 1:
+                    colors.add(Color.parseColor("#FF6B6B")); // 불안 - 빨강
+                    break;
+                case 2:
+                    colors.add(Color.parseColor("#FFE66D")); // 놀람 - 노랑
+                    break;
+                case 3:
+                    colors.add(Color.parseColor("#FF8E53")); // 분노 - 주황
+                    break;
+                case 4:
+                    colors.add(Color.parseColor("#4ECDC4")); // 슬픔 - 청록
+                    break;
+                case 5:
+                    colors.add(Color.parseColor("#45B7D1")); // 기쁨 - 파랑
+                    break;
+                default:
+                    colors.add(Color.GRAY);
+                    break;
+            }
+        }
+        dataSet.setColors(colors);
+        // 차트 여백 설정으로 배경 범위 확장
+        barChart.setExtraOffsets(7f, 40f, 7f, 30f); // 좌, 상, 우, 하 여백
+
+        // 차트 배경 색상 설정
+        barChart.setDrawGridBackground(true);
+        barChart.setGridBackgroundColor(Color.parseColor("#F7F5F3"));
+
+        // 그래프 배경 색상 설정 (축은 제외하고 차트 영역만)
+        barChart.setDrawGridBackground(true);  // 격자 배경 활성화
+        barChart.setGridBackgroundColor(Color.parseColor("#FFFFFF"));
+
         dataSet.setValueTextColor(Color.BLUE);
         dataSet.setValueTextSize(12f);
         dataSet.setDrawValues(false);
@@ -333,6 +387,7 @@ public class HomeActivity extends AppCompatActivity {
         barData.setBarWidth(0.5f);
         barChart.setData(barData);
 
+        barChart.setBackgroundColor(Color.parseColor("#F7F5F3"));
         // X축 설정
         XAxis xAxis = barChart.getXAxis();
         xAxis.setGranularity(1f);
@@ -355,10 +410,20 @@ public class HomeActivity extends AppCompatActivity {
         leftAxis.setAxisMinimum(1f);
         leftAxis.setAxisMaximum(5f);
         leftAxis.setLabelCount(5, true);
+
+
+        // 차트 제목을 상단 가운데로 설정
+        barChart.getDescription().setEnabled(true);
+        barChart.getDescription().setText("주간 감정 변화");
+        barChart.getDescription().setTextSize(18f);
+        barChart.getDescription().setTextColor(Color.parseColor("#2C3E50"));
+        barChart.getDescription().setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+
+        barChart.getDescription().setPosition(660f, 70f); // X, Y 좌표로 직접 설정
+
+
         leftAxis.setValueFormatter(new IndexAxisValueFormatter(yLabels));
         barChart.getAxisRight().setEnabled(false);
-
-        barChart.getDescription().setEnabled(false);
         barChart.getLegend().setEnabled(false);
         barChart.invalidate();
     }

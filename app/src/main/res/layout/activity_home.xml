@@ -50,6 +50,7 @@
         android:layout_marginTop="375dp"
         android:padding="8dp">
 
+
         <RadioGroup
             android:id="@+id/radioGroupPeriod"
             android:layout_width="wrap_content"
@@ -97,13 +98,13 @@
             android:textColor="@android:color/black" />
     </LinearLayout>
 
+
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChart"
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_below="@id/calendarView"
-        android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginBottom="30dp" />
+        android:layout_marginTop="-8dp"/>
 
 </RelativeLayout>

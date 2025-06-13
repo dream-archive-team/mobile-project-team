@@ -59,6 +59,8 @@ public class HomeActivity extends AppCompatActivity {
     private AppDatabase db;
     private Button btnLogout;
 
+    private TextView tvChartTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +77,9 @@ public class HomeActivity extends AppCompatActivity {
         RadioGroup radioGroup = findViewById(R.id.radioGroupPeriod);
         CalendarView calendarView = findViewById(R.id.calendarView);
         btnLogout = findViewById(R.id.btnLogout);
+
+
+
 
         // ViewModel 연결
         dreamViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()))
@@ -259,7 +264,6 @@ public class HomeActivity extends AppCompatActivity {
 
             runOnUiThread(() -> {
                 tvPeriod.setText(xLabels.get(0) + "~" + xLabels.get(6));
-
                 // LineChart를 숨기고 BarChart 표시
                 lineChart.setVisibility(View.GONE);
                 replaceChartWithBarChart();
@@ -375,7 +379,7 @@ public class HomeActivity extends AppCompatActivity {
         barChart.setDrawGridBackground(true);
         barChart.setGridBackgroundColor(Color.parseColor("#F7F5F3"));
 
-        // 그래프 배경 색상 설정 (축은 제외하고 차트 영역만)
+        // 그래프 배경 색상 설정
         barChart.setDrawGridBackground(true);  // 격자 배경 활성화
         barChart.setGridBackgroundColor(Color.parseColor("#FFFFFF"));
 
@@ -439,8 +443,40 @@ public class HomeActivity extends AppCompatActivity {
         dataSet.setDrawCircleHole(false);
         dataSet.setMode(LineDataSet.Mode.LINEAR);  // 직선 연결
 
+        // 감정별 색상 매핑
+        ArrayList<Integer> circleColors = new ArrayList<>();
+        for (Entry entry : entries) {
+            switch ((int) entry.getY()) {
+                case 1: circleColors.add(Color.parseColor("#FF6B6B")); break; // 불안
+                case 2: circleColors.add(Color.parseColor("#FFE66D")); break; // 놀람
+                case 3: circleColors.add(Color.parseColor("#FF8E53")); break; // 분노
+                case 4: circleColors.add(Color.parseColor("#4ECDC4")); break; // 슬픔
+                case 5: circleColors.add(Color.parseColor("#45B7D1")); break; // 기쁨
+                default: circleColors.add(Color.GRAY); break;
+            }
+        }
+        dataSet.setCircleColors(circleColors);
+
         LineData lineData = new LineData(dataSet);
         lineChart.setData(lineData);
+
+        // === [여기에 차트 배경 및 여백 스타일 추가] ===
+        lineChart.setDrawGridBackground(true);
+        lineChart.setGridBackgroundColor(Color.parseColor("#FFFFFF"));
+        lineChart.setBackgroundColor(Color.parseColor("#F7F5F3"));
+        lineChart.setExtraOffsets(7f, 40f, 7f, 30f);
+
+        // 차트 제목(Description) 설정
+        lineChart.getDescription().setEnabled(true);
+        lineChart.getDescription().setText("월간 감정 변화"); // 원하는 제목
+        lineChart.getDescription().setTextSize(18f);
+        lineChart.getDescription().setTextColor(Color.parseColor("#2C3E50"));
+        lineChart.getDescription().setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+
+        lineChart.getDescription().setPosition(lineChart.getWidth() / 1.7f, 70f);
+
+
+
 
         // X축
         XAxis xAxis = lineChart.getXAxis();
@@ -467,7 +503,7 @@ public class HomeActivity extends AppCompatActivity {
         leftAxis.setValueFormatter(new IndexAxisValueFormatter(yLabels));
         lineChart.getAxisRight().setEnabled(false);
 
-        lineChart.getDescription().setEnabled(false);
+
         lineChart.getLegend().setEnabled(false);
         lineChart.invalidate();
 

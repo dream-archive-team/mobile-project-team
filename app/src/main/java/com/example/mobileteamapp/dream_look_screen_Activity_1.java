@@ -1,6 +1,8 @@
 package com.example.mobileteamapp;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -10,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.CompoundButtonCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mobileteamapp.entity.Dream;
@@ -168,6 +171,17 @@ public class dream_look_screen_Activity_1 extends AppCompatActivity {
 
     // idx(-1: 전체 비활성화), 나머지: 그 감정만 체크/활성화, 나머지 버튼은 비활성화
     private void setRadioCheckedAndLock(int idx) {
+
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][] {
+                        new int[] {android.R.attr.state_checked},    // 체크된 상태
+                        new int[] {-android.R.attr.state_checked}    // 체크 안된 상태
+                },
+                new int[] {
+                        Color.BLACK,
+                        Color.BLACK// 체크된 상태: 검은색
+                }
+        );
         rbJoy.setEnabled(false);
         rbSad.setEnabled(false);
         rbAnger.setEnabled(false);
@@ -181,6 +195,18 @@ public class dream_look_screen_Activity_1 extends AppCompatActivity {
             case 3: rbSurprise.setChecked(true); break;
             case 4: rbAnxiety.setChecked(true); break;
         }
+        CompoundButtonCompat.setButtonTintList(rbJoy, colorStateList);
+        CompoundButtonCompat.setButtonTintList(rbSad, colorStateList);
+        CompoundButtonCompat.setButtonTintList(rbAnger, colorStateList);
+        CompoundButtonCompat.setButtonTintList(rbSurprise, colorStateList);
+        CompoundButtonCompat.setButtonTintList(rbAnxiety, colorStateList);
+
+        // 텍스트 색상도 검은색으로
+        rbJoy.setTextColor(Color.BLACK);
+        rbSad.setTextColor(Color.BLACK);
+        rbAnger.setTextColor(Color.BLACK);
+        rbSurprise.setTextColor(Color.BLACK);
+        rbAnxiety.setTextColor(Color.BLACK);
     }
 
     private int getEmotionIndex(String emotionName) {

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 로그아웃 부분 버튼 완전 투명하게 하는 부분 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#00000000"/> <!-- 완전 투명 -->
+    <corners android:radius="10dp"/>
+</shape>

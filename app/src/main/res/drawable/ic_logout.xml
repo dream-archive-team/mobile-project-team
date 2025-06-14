@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 로그아웃 부분 이미지 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="22"
+    android:viewportHeight="24">
+
+    <!-- 네모(문) - ㄷ자 모양 (왼쪽, 위, 아래만) -->
+    <path
+        android:strokeColor="#D32F2F"
+        android:strokeWidth="1.5"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M3,3v18h10v-6"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"/>
+
+    <path
+        android:strokeColor="#D32F2F"
+        android:strokeWidth="1.5"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M13,9v-6h-10"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"/>
+
+    <!-- 화살표 몸통 -->
+    <path
+        android:strokeColor="#D32F2F"
+        android:strokeWidth="1.5"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M9,12h10"
+        android:strokeLineCap="round"/>
+
+    <!-- 화살표 머리 -->
+    <path
+        android:strokeColor="#D32F2F"
+        android:strokeWidth="1.5"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M16,9l3,3 -3,3"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+</vector>
+

@@ -38,6 +38,7 @@ public class DiaryActivity extends AppCompatActivity {
         EditText etDreamInput = findViewById(R.id.etDreamInput);
         TextView tvDreamAnalysis = findViewById(R.id.tvDreamAnalysis);
 
+
         // ViewModel 연결
         dreamViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()))
                 .get(DreamViewModel.class);
@@ -137,7 +138,7 @@ public class DiaryActivity extends AppCompatActivity {
             intent.putExtra("dream_content", dreamContent);
             intent.putExtra("dream_interpretation", latestInterpretation);
             intent.putExtra("dream_date", selectedDate);
-            intent.putExtra("from", "diary"); // 이 부분 추가!
+            intent.putExtra("from", "diary");
             startActivity(intent);
         });
 

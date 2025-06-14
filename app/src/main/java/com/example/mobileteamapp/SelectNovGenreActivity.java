@@ -65,6 +65,7 @@ public class SelectNovGenreActivity extends AppCompatActivity {
         String dreamObjects = intent.getStringExtra("dream_objects");
         String nickname = intent.getStringExtra("nickname");
         String kakaoId = intent.getStringExtra("kakaoId");
+        String from = intent.getStringExtra("from");
 
         // 진입 경로 확인 (dream_look_screen_Activity_2에서 진입하면 true)
         fromLookScreen = intent.getBooleanExtra("from_look_screen", false);
@@ -109,8 +110,19 @@ public class SelectNovGenreActivity extends AppCompatActivity {
             genreViewModel.insert(genre);
 
             Intent nextIntent;
-            if (fromLookScreen) {
-                // 감정 이미 있음 → DreamBasedNov2Activity로 바로 이동
+            if ("diary".equals(from)) {
+                // 감정이 없음 → DreamBasedNovActivity로 이동
+                nextIntent = new Intent(this, DreamBasedNovActivity.class);
+                nextIntent.putExtra("dream_content", dreamContent);
+                nextIntent.putExtra("dream_interpretation", dreamInterpretation);
+                nextIntent.putExtra("selected_genre", selectedGenre);
+                nextIntent.putExtra("dream_date", dreamDate);
+                nextIntent.putExtra("dream_id", dreamId);
+                // 필요하다면 nickname, kakaoId도 추가
+                nextIntent.putExtra("nickname", nickname);
+                nextIntent.putExtra("kakaoId", kakaoId);
+            } else {
+                // 감정이 있음 → DreamBasedNov2Activity로 이동
                 nextIntent = new Intent(this, DreamBasedNov2Activity.class);
                 nextIntent.putExtra("dream_content", dreamContent);
                 nextIntent.putExtra("dream_interpretation", dreamInterpretation);
@@ -122,16 +134,7 @@ public class SelectNovGenreActivity extends AppCompatActivity {
                 nextIntent.putExtra("dream_id", dreamId);
                 nextIntent.putExtra("nickname", nickname);
                 nextIntent.putExtra("kakaoId", kakaoId);
-                Log.d("GenreActivity: dream_date확인 : ", dreamDate);  // ⭐ 로그 확인
-            } else {
-                // DiaryActivity에서 진입 → DreamBasedNovActivity로
-                nextIntent = new Intent(this, DreamBasedNovActivity.class);
-                nextIntent.putExtra("dream_content", dreamContent);
-                nextIntent.putExtra("dream_interpretation", dreamInterpretation);
-                nextIntent.putExtra("selected_genre", selectedGenre);
-                nextIntent.putExtra("dream_date", dreamDate);
-                nextIntent.putExtra("dream_id", dreamId);
-                // DreamBasedNovActivity → 이후 DreamBasedNov2Activity로 넘어감
+                Log.d("GenreActivity: dream_date확인 : ", dreamDate);
             }
             startActivity(nextIntent);
             finish();

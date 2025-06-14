@@ -2,6 +2,7 @@ package com.example.mobileteamapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,6 +87,13 @@ public class HomeActivity extends AppCompatActivity {
         // ViewModel 연결
         dreamViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()))
                 .get(DreamViewModel.class);
+
+        RadioButton radioWeekly = findViewById(R.id.radioWeekly);
+        RadioButton radioMonthly = findViewById(R.id.radioMonthly);
+
+// 검은색으로 설정
+        radioWeekly.setButtonTintList(ColorStateList.valueOf(Color.BLACK));
+        radioMonthly.setButtonTintList(ColorStateList.valueOf(Color.BLACK));
 
         // 감정명 → 숫자 매핑
         emotionMap = new HashMap<>();
@@ -473,7 +482,7 @@ public class HomeActivity extends AppCompatActivity {
         lineChart.getDescription().setEnabled(true);
         lineChart.getDescription().setText("월간 감정 변화"); // 원하는 제목
         lineChart.getDescription().setTextSize(18f);
-        lineChart.getDescription().setTextColor(Color.parseColor("#2C3E50"));
+        lineChart.getDescription().setTextColor(Color.parseColor("#000000"));
         lineChart.getDescription().setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
 
         lineChart.getDescription().setPosition(lineChart.getWidth() / 1.7f, 70f);

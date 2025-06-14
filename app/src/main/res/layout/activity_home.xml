@@ -13,6 +13,7 @@
         android:layout_marginTop="45dp"
         android:layout_marginStart="30dp"
         android:background="@drawable/rounded_button_10"
+        android:textStyle="bold"
         android:text="📘 장르별 소설 보러가기!"
         android:textColor="#4E4340"/>
 
@@ -22,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="45dp"
         android:layout_marginStart="230dp"
+        android:textStyle="bold"
         android:text="✏️  꿈 작성하기!"
         android:background="@drawable/rounded_button_10"
         android:textColor="#4E4340"/>
@@ -67,6 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="주간"
+
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"

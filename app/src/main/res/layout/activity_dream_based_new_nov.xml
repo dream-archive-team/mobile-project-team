@@ -120,23 +120,25 @@
             android:background="#000000" />
     </RadioGroup>
     <!-- 꿈 소설 텍스트 라벨 -->
+    <!-- 꿈 소설 텍스트 라벨 -->
     <TextView
         android:id="@+id/tvAnalysisLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/spoqahansansneo_bold"
         android:text="@string/title_1"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
-    <!-- ScrollView: 내부에 “로딩 중…” 혹은 생성된 소설을 표시 -->
+    <!-- 소설 표시 영역 -->
     <ScrollView
         android:id="@+id/scrollGenerated"
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="12dp"
         android:background="@drawable/box_border"
         android:overScrollMode="always"
         android:scrollbars="vertical">
@@ -149,11 +151,11 @@
             <EditText
                 android:id="@+id/tvDreamAnalysis"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/h_null"
                 android:minLines="3"
                 android:padding="8dp"
-                android:textSize="15sp" />
+                android:textSize="15sp"/>
         </LinearLayout>
     </ScrollView>
 
@@ -163,68 +165,68 @@
         android:layout_height="wrap_content"
         android:text="@string/title_que_2"
         android:textSize="16sp"
-        android:layout_marginStart="13dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/spoqahansansneo_bold"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <!-- 아래 사용자 입력 영역 -->
-
-    <!-- 하단 버튼들 -->
-
     <EditText
         android:id="@+id/etDreamInput_1"
-        android:layout_width="355dp"
+        android:layout_width="match_parent"
         android:layout_height="190dp"
-        android:layout_margin="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
         android:autofillHints="username"
         android:background="@drawable/tv_border_2"
         android:gravity="top"
         android:textStyle="bold"
         android:hint="@string/title_que_h_4"
         android:inputType="textMultiLine"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp" />
+        android:padding="8dp"/>
 
+    <!-- 하단 버튼들 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:paddingTop="8dp">
+        android:paddingTop="8dp"
+        android:layout_marginBottom="8dp">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_home"
-            android:layout_width="110dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
+            android:layout_weight="1"
             android:text="@string/btn_tit_1"
             android:textColor="#FFFFFF"
             android:background="@drawable/rounded_login"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:gravity="center"
-            android:layout_marginEnd="10dp"
-            android:padding="0dp" />
+            android:layout_marginEnd="8dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_save"
-            android:layout_width="110dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
+            android:layout_weight="1"
             android:text="@string/btn_tit_2"
             android:textColor="#FFFFFF"
             android:background="@drawable/rounded_login"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:gravity="center"
-            android:layout_marginEnd="10dp"
-            android:padding="0dp" />
+            android:layout_marginEnd="8dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_submit"
-            android:layout_width="110dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
+            android:layout_weight="1"
             android:text="@string/btn_tit_3"
             android:textColor="#FFFFFF"
             android:background="@drawable/rounded_login"
-            android:textSize="12sp"
-            android:gravity="center"
-            android:padding="0dp" />
+            android:textSize="14sp"
+            android:gravity="center"/>
     </LinearLayout>
 </LinearLayout>

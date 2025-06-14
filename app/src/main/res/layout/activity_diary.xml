@@ -3,33 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
     android:background="#FFFFFF">
 
     <!-- 꿈 입력 -->
     <TextView
-        android:layout_marginStart="13dp"
         android:id="@+id/tvDreamPrompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_label_8"
-        android:layout_marginTop="10dp"
-        android:textSize="16sp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:textSize="20sp"
         android:textStyle="bold"
-        android:layout_marginBottom="0dp"
-        android:fontFamily="@font/spoqahansansneo_bold"
-        />
+        android:fontFamily="@font/spoqahansansneo_bold"/>
 
     <EditText
         android:id="@+id/etDreamInput"
-        android:layout_width="355dp"
+        android:layout_width="match_parent"
         android:layout_height="250dp"
         android:gravity="top"
         android:background="@drawable/tv_border"
         android:hint="@string/button_label_7"
-        android:layout_margin="12dp"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
+        android:paddingStart="10dp"
+        android:paddingLeft="10dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:padding="16dp"
         android:inputType="textMultiLine"
         android:autofillHints="username"/>
 
@@ -39,19 +39,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_label_6"
-        android:layout_marginTop="10dp"
-        android:textSize="16sp"
-        android:layout_marginStart="13dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:textSize="20sp"
         android:fontFamily="@font/spoqahansansneo_bold"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
-    <!-- 버튼들 -->
-
+    <!-- 해몽 결과 텍스트 영역 -->
     <ScrollView
-        android:layout_width="355dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
         android:layout_weight="1"
         android:background="@drawable/box_border"
         android:overScrollMode="always"
@@ -59,44 +59,46 @@
 
         <TextView
             android:id="@+id/tvDreamAnalysis"
-            android:layout_width="355dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textSize="14sp" />
+            android:padding="16dp"
+            android:textSize="14sp"/>
     </ScrollView>
 
+    <!-- 버튼들 -->
     <LinearLayout
-        android:layout_width="355dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
-        android:layout_margin="10dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        android:layout_marginBottom="40dp"
         android:weightSum="2"
         android:gravity="center">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnAnalyze"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="60dp"
             android:layout_weight="1"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:background="@drawable/rounded_login"
             android:textColor="@color/white"
             android:fontFamily="@font/spoqahansansneo_bold"
-            android:text="@string/button_label_5" />
+            android:text="@string/button_label_5"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnGenerateStory"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="60dp"
             android:layout_weight="1"
             android:text="@string/button_label_4"
             android:fontFamily="@font/spoqahansansneo_bold"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:textColor="@color/white"
             android:background="@drawable/rounded_login"
-            android:layout_marginStart="8dp" />
+            android:layout_marginStart="8dp"/>
     </LinearLayout>
 
 </LinearLayout>

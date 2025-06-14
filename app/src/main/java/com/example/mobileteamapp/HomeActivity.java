@@ -81,6 +81,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
+
         // ViewModel 연결
         dreamViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()))
                 .get(DreamViewModel.class);
@@ -206,14 +207,14 @@ public class HomeActivity extends AppCompatActivity {
                 btnDiary.setAlpha(1f);
 
                 if (count > 0) {
-                    btnDiary.setText("꿈 보러가기");
+                    btnDiary.setText("\uD83D\uDCD6  꿈 보러가기");
                     btnDiary.setOnClickListener(v -> {
                         Intent intent = new Intent(this, dream_look_screen_Activity_1.class);
                         intent.putExtra("selected_date", date); // 해당 날짜
                         startActivity(intent);
                     });
                 } else {
-                    btnDiary.setText("꿈 작성하기");
+                    btnDiary.setText("✏\uFE0F  꿈 작성하기");
                     btnDiary.setOnClickListener(v -> {
                         Intent intent = new Intent(this, DiaryActivity.class);
                         intent.putExtra("selected_date", date); // 해당 날짜
@@ -407,6 +408,7 @@ public class HomeActivity extends AppCompatActivity {
         xAxis.setAxisMinimum(-0.5f);
         xAxis.setAxisMaximum(xLabels.size() - 0.5f);
 
+
         // Y축 설정 (감정명)
         String[] yLabels = {"", "불안", "놀람", "분노", "슬픔", "기쁨"};
         YAxis leftAxis = barChart.getAxisLeft();
@@ -416,11 +418,12 @@ public class HomeActivity extends AppCompatActivity {
         leftAxis.setLabelCount(5, true);
 
 
+
         // 차트 제목을 상단 가운데로 설정
         barChart.getDescription().setEnabled(true);
         barChart.getDescription().setText("주간 감정 변화");
         barChart.getDescription().setTextSize(18f);
-        barChart.getDescription().setTextColor(Color.parseColor("#2C3E50"));
+        barChart.getDescription().setTextColor(Color.parseColor("#000000"));
         barChart.getDescription().setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
 
         barChart.getDescription().setPosition(660f, 70f); // X, Y 좌표로 직접 설정

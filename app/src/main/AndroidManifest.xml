@@ -29,16 +29,19 @@
             android:exported="false" />
         <activity
             android:name=".DreamBasedNov2Activity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".DreamBasedNovActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".SelectNovGenreActivity"
             android:exported="false" />
         <activity
             android:name=".DiaryActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".HomeActivity"
             android:exported="false" />

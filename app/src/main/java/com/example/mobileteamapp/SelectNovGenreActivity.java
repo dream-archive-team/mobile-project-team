@@ -110,7 +110,8 @@ public class SelectNovGenreActivity extends AppCompatActivity {
             genreViewModel.insert(genre);
 
             Intent nextIntent;
-            if ("diary".equals(from)) {
+            if ("diary".equals(from)
+                    || selectedMood == null || selectedMood.isEmpty()) {
                 // 감정이 없음 → DreamBasedNovActivity로 이동
                 nextIntent = new Intent(this, DreamBasedNovActivity.class);
                 nextIntent.putExtra("dream_content", dreamContent);

@@ -10,13 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="10dp"
-        android:layout_above="@+id/btnGenerateNovel">
+        android:layout_above="@+id/btnGenerateNovel"
+        android:layout_marginBottom="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
 
             <!-- 4. 소설 엔딩은 어떻게 할까요? -->
             <TextView
@@ -37,19 +37,18 @@
                 android:layout_marginBottom="10dp"/>
 
             <!-- RadioGroup 안에 RadioButton을 직접 자식으로 나열해야 getCheckedRadioButtonId()가 정상 동작합니다. -->
-
-            <!-- 첫 번째 줄 (3개) -->
             <RadioGroup
                 android:id="@+id/rgEnding"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="16dp">
 
                 <RadioButton
                     android:id="@+id/rbEndingOpen"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="@string/custom_radio_se_6"
                     android:textSize="18sp"
                     android:paddingStart="5dp"
@@ -62,6 +61,7 @@
                     android:id="@+id/rbEndingHappy"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="@string/custom_radio_se_7"
                     android:textSize="18sp"
                     android:paddingStart="5dp"
@@ -74,6 +74,7 @@
                     android:id="@+id/rbEndingTwist2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="@string/custom_radio_se_11"
                     android:textSize="18sp"
                     android:paddingStart="5dp"
@@ -86,6 +87,7 @@
                     android:id="@+id/rbEndingTwist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="@string/custom_radio_se_9"
                     android:textSize="18sp"
                     android:paddingStart="5dp"
@@ -98,6 +100,7 @@
                     android:id="@+id/rbEndingGrowth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="@string/custom_radio_se_10"
                     android:textSize="18sp"
                     android:paddingStart="5dp"
@@ -119,6 +122,7 @@
                     android:gravity="center" />
 
             </RadioGroup>
+
             <!-- 5. 반드시 들어갔으면 하는 문장이나 단어 -->
             <TextView
                 android:id="@+id/tvQuestion5"
@@ -139,11 +143,9 @@
 
             <EditText
                 android:id="@+id/etRequiredWords"
-                android:layout_width="370dp"
+                android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:layout_marginBottom="24dp"
-                android:layout_marginStart="3dp"
-                android:layout_marginEnd="3dp"
                 android:autofillHints="username"
                 android:background="@drawable/tv_border"
                 android:gravity="top"
@@ -162,7 +164,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/q_btn_1"
         android:textSize="16sp"
         android:textColor="@color/white"

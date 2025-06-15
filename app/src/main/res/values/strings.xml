@@ -5,9 +5,9 @@
     <string name="button_label_3">"카카오를 통한 간편가입"</string>
     <string name="button_label_4">"소설 생성"</string>
     <string name="button_label_5">"꿈 분석 내용 확인"</string>
-    <string name="button_label_6">"꿈 분석 내용"</string>
+    <string name="button_label_6">"✨꿈 분석 결과✨ "</string>
     <string name="button_label_7">"꿈을 입력하세요"</string>
-    <string name="button_label_8">"오늘 꾼 꿈은 무엇인가요?"</string>
+    <string name="button_label_8">"🌙오늘 꾼 꿈은 무엇인가요?🌙"</string>
     <string name="button_label_9">"소설 생성하기"</string>
 
     <string name="custom_radio_se_1">"기쁨"</string>
@@ -23,11 +23,11 @@
     <string name="custom_radio_se_10">"성장형 결말"</string>
     <string name="custom_radio_se_11">"반전 결말"</string>
 
-    <string name="que_1">"1. 꿈을 쓴 후 기분이 어땠나요?"</string>
-    <string name="que_2">"2. 가장 뚜렷했던 장면이 무엇이었나요?"</string>
-    <string name="que_3">"3. 꿈 속에 나온 물건이 무엇인가요?"</string>
-    <string name="que_4">"4. 소설 엔딩은 어떻게 할까요?"</string>
-    <string name="que_5">"5. 반드시 들어갔으면 하는 문장이나 단어"</string>
+    <string name="que_1">"✨꿈을 쓴 후 기분이 어땠나요?✨"</string>
+    <string name="que_2">"✨가장 뚜렷했던 장면이 무엇이었나요?✨"</string>
+    <string name="que_3">"✨꿈 속에 나온 물건이 무엇인가요?✨"</string>
+    <string name="que_4">"✨소설 엔딩은 어떻게 할까요✨"</string>
+    <string name="que_5">"✨반드시 들어갔으면 하는 문장이나 단어✨"</string>
 
     <string name="que_h_1">"꿈의 가장 뚜렷했던 장면을 입력하시오."</string>
     <string name="que_h_2">"꿈 속 물건을 입력하시오."</string>
@@ -71,7 +71,7 @@
     <string name="button_home">홈으로</string>
     <string name="story_title">꿈 제목</string>
 
-    <string name="button_label_10">"꿈 일기"</string>
+    <string name="button_label_10">"꿈 일기✏️"</string>
     <string name="btn_delete">꿈 일기 삭제</string>
     <string name="btn_go_to_novel">소설 보러 가기</string>
 

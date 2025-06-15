@@ -19,7 +19,7 @@
             android:id="@+id/btnSelectDate"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:text="@string/button_select_date"
             android:textColor="@android:color/white"
             android:background="@drawable/rounded_login"
@@ -32,13 +32,14 @@
             android:id="@+id/spinnerGenre"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="48dp" />
     </LinearLayout>
 
     <!-- 체크박스 목록 -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
         android:layout_marginBottom="8dp">
 
         <LinearLayout
@@ -52,6 +53,7 @@
     <TextView
         android:id="@+id/tvStoryTitle"
         android:text="@string/story_title"
+        android:layout_marginStart="10dp"
         android:textStyle="bold"
         android:textSize="16sp"
         android:layout_width="match_parent"
@@ -62,7 +64,8 @@
     <!-- 소설 내용 -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="0dp"
+        android:layout_weight="2"
         android:background="@drawable/box_border"
         android:overScrollMode="always"
         android:layout_margin="10dp"
@@ -79,16 +82,16 @@
 
     </ScrollView>
 
-
     <!-- 홈으로 버튼 -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnHome"
         android:text="@string/button_home"
         android:textColor="@android:color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:background="@drawable/rounded_login"
         android:fontFamily="@font/spoqahansansneo_bold"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:layout_marginTop="8dp" />
 
 </LinearLayout>

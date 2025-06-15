@@ -137,27 +137,39 @@
             android:gravity="center_vertical" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnGenNovel"
-            android:layout_width="80dp"
-            android:layout_height="35dp"
-            android:background="@drawable/rounded_login"
+            android:id="@+id/btnSharing"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="1dp"
+            android:background="@drawable/rounded_button_8"
             android:fontFamily="@font/spoqahansansneo_bold"
-            android:text="소설 생성"
+            android:text="🔗"
             android:textColor="@android:color/white"
-            android:textSize="15sp" />
+            android:textSize="22sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnGenNovel"
+            android:layout_width="35dp"
+            android:layout_height="40dp"
+            android:background="@drawable/rounded_button_8"
+            android:text="➕"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnDeleteNovel"
-            android:layout_width="80dp"
-            android:layout_height="35dp"
-            android:background="@drawable/rounded_login"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="❌"
+            android:background="@drawable/rounded_button_8"
             android:fontFamily="@font/spoqahansansneo_bold"
-            android:text="소설 삭제"
             android:textColor="@android:color/white"
-            android:layout_marginStart="5dp"
-            android:textSize="15sp" />
+            android:layout_marginStart="1dp"
+            android:textSize="20sp" />
     </LinearLayout>
 
+    <!-- 소설 내용 영역 -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -182,17 +194,20 @@
         </LinearLayout>
     </ScrollView>
 
+    <!-- 하단 버튼 영역 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:gravity="center">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnBack"
-            android:layout_width="90dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
-            android:layout_marginEnd="60dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
             android:background="@drawable/rounded_login"
             android:fontFamily="@font/spoqahansansneo_bold"
             android:text="이전"
@@ -200,20 +215,10 @@
             android:textSize="15sp" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnSharing"
-            android:layout_width="90dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="50dp"
-            android:background="@drawable/rounded_login"
-            android:fontFamily="@font/spoqahansansneo_bold"
-            android:text="공유"
-            android:textColor="@android:color/white"
-            android:textSize="15sp" />
-
-        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnHome"
-            android:layout_width="90dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
+            android:layout_weight="1"
             android:background="@drawable/rounded_login"
             android:fontFamily="@font/spoqahansansneo_bold"
             android:text="홈"

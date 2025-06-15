@@ -19,7 +19,7 @@
             android:layout_height="130dp"
             android:layout_centerHorizontal="true"
             android:layout_marginHorizontal="3dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="40dp"
             android:background="@drawable/rounded_button_6"
             android:paddingStart="8dp">
@@ -184,7 +184,7 @@
         android:layout_height="55dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/q_btn_2"
         android:textSize="16sp"
         android:textColor="@color/white"

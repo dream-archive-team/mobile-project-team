@@ -398,6 +398,9 @@ public class HomeActivity extends AppCompatActivity {
         dataSet.setValueTextColor(Color.BLUE);
         dataSet.setValueTextSize(12f);
         dataSet.setDrawValues(false);
+        barChart.setScaleEnabled(false);            // 모든 축 확대/축소 비활성화
+        barChart.setPinchZoom(false);               // 핀치 줌(두 손가락 확대) 비활성화
+        barChart.setDoubleTapToZoomEnabled(false);  // 더블탭 확대 비활성화
 
         BarData barData = new BarData(dataSet);
         barData.setBarWidth(0.5f);
@@ -456,6 +459,9 @@ public class HomeActivity extends AppCompatActivity {
         dataSet.setDrawValues(false);
         dataSet.setDrawCircleHole(false);
         dataSet.setMode(LineDataSet.Mode.LINEAR);  // 직선 연결
+        lineChart.setScaleEnabled(false);          // 모든 축 확대/축소 비활성화
+        lineChart.setPinchZoom(false);             // 핀치 줌(두 손가락 확대) 비활성화
+        lineChart.setDoubleTapToZoomEnabled(false); // 더블탭 확대 비활성화
 
         // 감정별 색상 매핑
         ArrayList<Integer> circleColors = new ArrayList<>();

@@ -60,6 +60,12 @@ public class DreamBasedNewNovActivity extends AppCompatActivity {
         btnSubmit = findViewById(R.id.btn_submit);
         Button btnHome = findViewById(R.id.btn_home);
 
+        btnSave.setOnClickListener(v -> {
+            Intent i = new Intent(this, SelectNovGenreActivity.class);
+            i.putExtra("selected_genre", selectedGenre);
+            startActivityForResult(i, REQ_SELECT_GENRE);
+        });
+
         RadioGroup radioGroup = findViewById(R.id.radioGroup_genre);
         RadioButton radioFantasy = findViewById(R.id.radio_fantasy);
         RadioButton radioRomantic = findViewById(R.id.radio_romantic);

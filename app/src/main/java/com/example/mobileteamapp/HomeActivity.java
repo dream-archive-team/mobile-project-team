@@ -35,6 +35,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -501,6 +503,7 @@ public class HomeActivity extends AppCompatActivity {
         xAxis.setDrawGridLines(false);
         xAxis.setEnabled(true);
         xAxis.setDrawLabels(true);
+        xAxis.setDrawLabels(false);
         xAxis.setTextSize(12f);
         xAxis.setAxisMinimum(-0.5f);
         xAxis.setAxisMaximum(xLabels.size() - 0.5f);
@@ -517,6 +520,18 @@ public class HomeActivity extends AppCompatActivity {
 
 
         lineChart.getLegend().setEnabled(false);
+        lineChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                int index = (int) e.getX();
+                String date = xLabels.get(index);
+                Toast.makeText(HomeActivity.this,
+                        date + "일",
+                        Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onNothingSelected() {}
+        });
         lineChart.invalidate();
 
         for (Entry e : entries) {

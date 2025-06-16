@@ -176,7 +176,7 @@
         android:layout_width="match_parent"
         android:layout_height="190dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="10dp"
         android:autofillHints="username"
         android:background="@drawable/tv_border_2"
         android:gravity="top"
@@ -191,7 +191,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:paddingTop="8dp"
         android:layout_marginBottom="8dp">
 
         <androidx.appcompat.widget.AppCompatButton

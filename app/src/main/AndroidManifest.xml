@@ -26,7 +26,8 @@
             android:exported="false" />
         <activity
             android:name=".DreamBasedNewNovActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".DreamBasedNov2Activity"
             android:exported="false"

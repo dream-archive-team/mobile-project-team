@@ -60,28 +60,11 @@ public class DreamBasedNewNovActivity extends AppCompatActivity {
         btnSubmit = findViewById(R.id.btn_submit);
         Button btnHome = findViewById(R.id.btn_home);
 
-        btnSave.setOnClickListener(v -> {
-
-            Intent i = new Intent(this, SelectNovGenreActivity.class);
-            i.putExtra("selected_genre", selectedGenre);
-            startActivityForResult(i, REQ_SELECT_GENRE);
-
-        });
-
-        RadioGroup radioGroup = findViewById(R.id.radioGroup_genre);
-        RadioButton radioFantasy = findViewById(R.id.radio_fantasy);
-        RadioButton radioRomantic = findViewById(R.id.radio_romantic);
-        RadioButton radioSF = findViewById(R.id.radio_sf);
-        RadioButton radioDocumentary = findViewById(R.id.radio_documentary);
-        RadioButton radioThriller = findViewById(R.id.radio_thriller);
-        RadioButton radioComedy = findViewById(R.id.radio_comedy);
-        RadioButton radioAction = findViewById(R.id.radio_action);
-
         // ViewModel 연결
         novelViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()))
                 .get(NovelViewModel.class);
 
-        // Intent로 값 받기
+        // 인텐트 값 받기
         Intent intent = getIntent();
         dreamContent = intent.getStringExtra("dream_content");
         selectedGenre = intent.getStringExtra("selected_genre");
@@ -94,6 +77,35 @@ public class DreamBasedNewNovActivity extends AppCompatActivity {
         dreamId = intent.getStringExtra("dream_id");
         nickname = intent.getStringExtra("nickname");
         kakaoId = intent.getStringExtra("kakaoId");
+
+        // btnSave 동작 수정 (기존 SelectNovGenreActivity 호출 → 꿈 정보 포함하도록 변경)
+        btnSave.setOnClickListener(v -> {
+            Intent genreIntent = new Intent(this, SelectNovGenreActivity.class);
+            genreIntent.putExtra("exclude_genre", selectedGenre);
+            genreIntent.putExtra("dream_content", dreamContent);
+            genreIntent.putExtra("dream_interpretation", intent.getStringExtra("dream_interpretation"));
+            genreIntent.putExtra("selected_mood", moodText);
+            genreIntent.putExtra("vivid_scene", vividScene);
+            genreIntent.putExtra("dream_objects", dreamObjects);
+            genreIntent.putExtra("ending", endingText);
+            genreIntent.putExtra("required_words", requiredWords);
+            genreIntent.putExtra("dream_date", dreamDate);
+            genreIntent.putExtra("dream_id", dreamId);
+            genreIntent.putExtra("nickname", nickname);
+            genreIntent.putExtra("kakaoId", kakaoId);
+            startActivityForResult(genreIntent, REQ_SELECT_GENRE);
+        });
+
+
+        RadioGroup radioGroup = findViewById(R.id.radioGroup_genre);
+        RadioButton radioFantasy = findViewById(R.id.radio_fantasy);
+        RadioButton radioRomantic = findViewById(R.id.radio_romantic);
+        RadioButton radioSF = findViewById(R.id.radio_sf);
+        RadioButton radioDocumentary = findViewById(R.id.radio_documentary);
+        RadioButton radioThriller = findViewById(R.id.radio_thriller);
+        RadioButton radioComedy = findViewById(R.id.radio_comedy);
+        RadioButton radioAction = findViewById(R.id.radio_action);
+
         Log.d("Novel", "Novel 생성화면, 전달받은 dream_id = " + dreamId);
 
         // 1. 장르 자동 체크
@@ -158,7 +170,7 @@ public class DreamBasedNewNovActivity extends AppCompatActivity {
             finish();
         });
 
-        // 4. 새 장르 버튼 → SelectNovGenreActivity로 이동
+        // 4. 수정 버튼 → SelectNovGenreActivity로 이동
         // DreamBasedNewNovActivity.java 의 onCreate() 내부
         btnSubmit.setOnClickListener(v -> {
             String userModification = etModification.getText().toString().trim();

@@ -1,5 +1,6 @@
 package com.example.mobileteamapp.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -22,7 +23,7 @@ public interface NovelDao {
     void delete(Novel novel);
 
     @Query("SELECT * FROM novel ORDER BY novel_id DESC")
-    List<Novel> getAllNovels();
+    LiveData<List<Novel>> getAllNovels();  // ← 변경
 
     @Query("SELECT * FROM novel WHERE novel_id = :id")
     Novel getNovelById(int id);

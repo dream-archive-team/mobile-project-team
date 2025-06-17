@@ -2,6 +2,8 @@ package com.example.mobileteamapp.repository;
 
 import android.content.Context;
 
+import androidx.lifecycle.LiveData;
+
 import com.example.mobileteamapp.dao.NovelDao;
 import com.example.mobileteamapp.db.AppDatabaseInstance;
 import com.example.mobileteamapp.entity.Novel;
@@ -31,7 +33,7 @@ public class NovelRepository {
         executorService.execute(() -> novelDao.delete(novel));
     }
 
-    public List<Novel> getAllNovels() {
+    public LiveData<List<Novel>> getAllNovels() {
         return novelDao.getAllNovels();
     }
 

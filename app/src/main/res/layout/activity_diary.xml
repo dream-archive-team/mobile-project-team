@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:background="#fcfcfc">
 
     <!-- 꿈 입력 -->
     <TextView
@@ -29,21 +29,41 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
-        android:padding="16dp"
+        android:padding="4dp"
         android:inputType="textMultiLine"
         android:autofillHints="username"/>
 
-    <!-- 해몽 결과 -->
-    <TextView
-        android:id="@+id/tvAnalysisLabel"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_label_6"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:textSize="20sp"
-        android:fontFamily="@font/spoqahansansneo_bold"
-        android:textStyle="bold"/>
+        >
+
+        <!-- 해몽 결과 -->
+        <TextView
+            android:id="@+id/tvAnalysisLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_label_6"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textSize="20sp"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:textStyle="bold"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAnalyze"
+            android:layout_width="70dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="150dp"
+            android:textSize="15sp"
+            android:background="@drawable/rounded_login"
+            android:textColor="@color/white"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:text="@string/button_label_5"/>
+    </LinearLayout>
+
+
 
     <!-- 해몽 결과 텍스트 영역 -->
     <ScrollView
@@ -65,40 +85,19 @@
             android:textSize="14sp"/>
     </ScrollView>
 
-    <!-- 버튼들 -->
-    <LinearLayout
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnGenerateStory"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="30dp"
-        android:layout_marginTop="14dp"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        android:gravity="center">
+        android:text="@string/button_label_4"
+        android:fontFamily="@font/spoqahansansneo_bold"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:background="@drawable/rounded_login"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnAnalyze"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_weight="1"
-            android:textSize="18sp"
-            android:background="@drawable/rounded_login"
-            android:textColor="@color/white"
-            android:fontFamily="@font/spoqahansansneo_bold"
-            android:text="@string/button_label_5"/>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnGenerateStory"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_weight="1"
-            android:text="@string/button_label_4"
-            android:fontFamily="@font/spoqahansansneo_bold"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:background="@drawable/rounded_login"
-            android:layout_marginStart="8dp"/>
-    </LinearLayout>
 
 </LinearLayout>

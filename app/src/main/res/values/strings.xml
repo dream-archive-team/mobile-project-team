@@ -4,7 +4,7 @@
     <string name="button_label_2">"오늘의 꿈 일기\n 작성하러가기"</string>
     <string name="button_label_3">"카카오를 통한 간편가입"</string>
     <string name="button_label_4">"소설 생성"</string>
-    <string name="button_label_5">"꿈 분석 내용 확인"</string>
+    <string name="button_label_5">"분석🔎"</string>
     <string name="button_label_6">"✨꿈 분석 결과✨ "</string>
     <string name="button_label_7">"꿈을 입력하세요"</string>
     <string name="button_label_8">"🌙오늘 꾼 꿈은 무엇인가요?🌙"</string>
@@ -41,14 +41,16 @@
     <string name="nov_6">"코미디"</string>
     <string name="nov_7">"액션"</string>
 
-    <string name="title_1">"꿈 소설"</string>
+    <string name="del_1">❌</string>
+
+    <string name="title_1">"📖 꿈 소설 📖"</string>
     <string name="title_que_2">" 수정할 내용을 입력하시오."</string>
     <string name="title_que_h_4">" 구체적으로 입력하시오."</string>
 
 
     <string name="btn_tit_1">" 홈으로"</string>
     <string name="btn_tit_2">" 새 장르"</string>
-    <string name="btn_tit_3">" 수정"</string>
+    <string name="btn_tit_3">" 수정🔁"</string>
 
     <string name="h_null">""</string>
 

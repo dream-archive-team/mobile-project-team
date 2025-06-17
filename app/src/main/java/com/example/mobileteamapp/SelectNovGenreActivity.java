@@ -8,6 +8,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -28,6 +32,11 @@ public class SelectNovGenreActivity extends AppCompatActivity {
 
     private RadioButton radioFantasy, radioRomantic, radioSF, radioDocumentary,
             radioThriller, radioComedy, radioAction;
+
+    private static final Set<String> MOODS_FOR_NOV2_ACTIVITY = new HashSet<>(
+            Arrays.asList("기쁨", "슬픔", "놀람", "분노", "불안")
+    );
+
 
     private boolean fromLookScreen = false; // 진입 경로 플래그
 
@@ -65,7 +74,6 @@ public class SelectNovGenreActivity extends AppCompatActivity {
         String dreamObjects = intent.getStringExtra("dream_objects");
         String nickname = intent.getStringExtra("nickname");
         String kakaoId = intent.getStringExtra("kakaoId");
-        String from = intent.getStringExtra("from");
 
         // 진입 경로 확인 (dream_look_screen_Activity_2에서 진입하면 true)
         fromLookScreen = intent.getBooleanExtra("from_look_screen", false);
@@ -110,8 +118,7 @@ public class SelectNovGenreActivity extends AppCompatActivity {
             genreViewModel.insert(genre);
 
             Intent nextIntent;
-            if ("diary".equals(from)
-                    || selectedMood == null || selectedMood.isEmpty()) {
+            if (selectedMood != null && MOODS_FOR_NOV2_ACTIVITY.contains(selectedMood)) {
                 // 감정이 없음 → DreamBasedNovActivity로 이동
                 nextIntent = new Intent(this, DreamBasedNovActivity.class);
                 nextIntent.putExtra("dream_content", dreamContent);

@@ -61,9 +61,11 @@ public class DreamBasedNewNovActivity extends AppCompatActivity {
         Button btnHome = findViewById(R.id.btn_home);
 
         btnSave.setOnClickListener(v -> {
+
             Intent i = new Intent(this, SelectNovGenreActivity.class);
             i.putExtra("selected_genre", selectedGenre);
             startActivityForResult(i, REQ_SELECT_GENRE);
+
         });
 
         RadioGroup radioGroup = findViewById(R.id.radioGroup_genre);
@@ -231,6 +233,7 @@ public class DreamBasedNewNovActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_SELECT_GENRE && resultCode == RESULT_OK && data != null) {
+            etModification.setText("");
             // 새로 선택한 장르 받아서 값 갱신
             selectedGenre = data.getStringExtra("selected_genre");
             // 나머지 값들도 필요하면 갱신
@@ -286,7 +289,9 @@ public class DreamBasedNewNovActivity extends AppCompatActivity {
                     case "액션":
                         ((RadioButton) findViewById(R.id.radio_action)).setChecked(true); break;
                 }
+
             }
+
         }
     }
 
@@ -478,6 +483,7 @@ public class DreamBasedNewNovActivity extends AppCompatActivity {
                     }
 
                     if (isModify) {
+                        etModification.setText("");
                         Toast.makeText(DreamBasedNewNovActivity.this, "소설 수정 완료!", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(DreamBasedNewNovActivity.this, "소설 생성 및 저장 완료!", Toast.LENGTH_LONG).show();

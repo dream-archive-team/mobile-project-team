@@ -104,7 +104,6 @@ public class DiaryActivity extends AppCompatActivity {
                             runOnUiThread(() -> {
                                 tvDreamAnalysis.setText(interpretation);
                                 latestInterpretation = interpretation;
-                                Toast.makeText(DiaryActivity.this, "꿈 분석 완료!", Toast.LENGTH_SHORT).show();
                             });
                         } else {
                             runOnUiThread(() -> {
